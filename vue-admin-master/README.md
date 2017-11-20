@@ -1,26 +1,25 @@
-# 本地启动方式
-# 进入项目根目录
+本地启动方式
+进入项目根目录
+
 npm install
 
 npm run dev
 
-```
-
-# Folder structure
+目录结构
 * build - webpack config files
 * config - webpack config files
 * dist - build
-* src -your app
+* src 
     * api
     * assets
     * common
-    * components - your vue components
+    * components
     * mock
     * styles
-    * views - your pages
+    * views
     * vuex
     * App.vue
-    * main.js - main file
+    * main.js
     * routes.js
 * static - static assets
 
