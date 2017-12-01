@@ -14,10 +14,12 @@
             </el-col>
 			<el-col :span="4" class="userinfo">
 				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img src="../assets/menu-icon2.png" /> {{sysUserName}}</span>
+					<span class="el-dropdown-link userinfo-inner">
+                        <img src="../assets/menu-icon2.png" />
+                        {{sysUserName}}
+                    </span>
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -26,24 +28,32 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
+                <el-menu class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
 					 unique-opened router v-if="!collapsed">
-					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-						<el-submenu :index="index + ''" v-if="!item.leaf">
-							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
-						</el-submenu>
-						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
-					</template>
+                     <template v-for="(item,index) in navbars" v-if="!item.hidden">
+                        <el-submenu :index="index + ''" v-if="item.name">
+                            <template slot="title"><i :class="$router.options.routes"></i>{{item.name}}</template>
+                                <router-link v-for="subs in item.sub" :key="subs.id" :name="subs.name"
+                                :to="{name: subs.name}" tag="li" class="routerLink el-menu-item is-active">
+                                    <a class="link">{{subs.name}}</a>
+                                </router-link>
+                        </el-submenu>
+                    </template>
 				</el-menu>
 				<!--导航菜单-折叠后-->
-				<ul class="el-menu el-menu-vertical-demo collapsed" v-else="collapsed" ref="menuCollapsed">
-					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
+                <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
+					<li v-for="(item,index) in navbars" v-if="!item.hidden" class="el-submenu item">
 						<template v-if="!item.leaf">
-							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls"></i></div>
+							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="$router.iconCls"></i></div>
 							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
-								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
-							</ul>
+								<router-link :to="{name: subs.name}" 
+                                tag="li" 
+                                v-for="subs in item.sub" 
+                                v-if="!subs.hidden" 
+                                :key="subs.id" 
+                                class="el-menu-item" style="padding-left: 40px;">{{subs.name}}</router-link>
+                                <!-- :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)" -->
+                            </ul>
 						</template>
 						<template v-else>
 							<li class="el-submenu">
@@ -82,6 +92,7 @@ export default {
       collapsed: false,
       sysUserName: "",
       sysUserAvatar: "",
+      navbars: [],
       form: {
         name: "",
         region: "",
@@ -93,6 +104,31 @@ export default {
         desc: ""
       }
     };
+  },
+  created() {
+    this.$http({
+      method: "post", //方法
+      url: "login", //地址
+      data: {
+        oper_id: JSON.parse(localStorage.getItem("userName")),
+        oper_pwd: JSON.parse(localStorage.getItem("userPwd"))
+      },
+      headers: {
+        sign: localStorage.getItem("sign")
+      }
+    }).then(res => {
+      this.navbars = res.data.data.permission_list;
+      var listID = this.navbars;
+      for (var i = 0; i < listID.length; i++) {
+        var id = listID[i].sub;
+        for (var j = 0; j < i; j++) {
+          console.log(id[j].id);
+          localStorage.setItem("uid", id[j].id);
+        }
+        // console.log(id1);
+        // localStorage.setItem("uid", id1);
+      }
+    });
   },
   methods: {
     onSubmit() {
@@ -112,7 +148,7 @@ export default {
         //type: 'warning'
       })
         .then(() => {
-          sessionStorage.removeItem("user");
+          localStorage.removeItem("oper_id");
           _this.$router.push("/login");
         })
         .catch(() => {});
@@ -128,20 +164,28 @@ export default {
     }
   },
   mounted() {
-    var user = sessionStorage.getItem("user");
-    if (user) {
-      user = JSON.parse(user);
-      this.sysUserName = user.name || "";
-      this.sysUserAvatar = user.avatar || "";
-    }
+    this.sysUserName = JSON.parse(localStorage.getItem("userName"));
   }
 };
 </script>
 
 <style scoped lang="scss">
 @import "~scss_vars";
+.link {
+  text-decoration: none;
+  display: block;
+  width: 130%;
+  color: #48576a;
+}
+.router-link-active .link {
+  color: #fff;
+}
+.router-link-active {
+  background-color: #20a0ff;
+}
 .container {
   position: absolute;
+  background-color: #ffffff;
   top: 0px;
   bottom: 0px;
   width: 100%;

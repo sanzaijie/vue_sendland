@@ -1,101 +1,177 @@
 <template>
-  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">系统登录</h3>
-    <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
-    </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-    <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
-      <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
-    </el-form-item>
-  </el-form>
+    <div class="bgLogo">
+        <el-form :model="ruleForm2" ref="ruleForm2" :rules="rules2" label-position="left" class="demo-ruleForm login-container">
+            <h3 class="title">实地客户主数据系统</h3>
+            <el-form-item prop="oper_id">
+            <el-input type="text" v-model="ruleForm2.oper_id" auto-complete="off" placeholder="账号"></el-input>
+            </el-form-item>
+            <el-form-item prop="oper_pwd">
+            <el-input type="password" v-model="ruleForm2.oper_pwd" auto-complete="off" placeholder="密码"></el-input>
+            </el-form-item>
+            <el-checkbox v-model="checked" class="remember" @click="rmPwd">记住密码</el-checkbox>
+            <el-button type="text" @click="forget" class="fr">忘记密码</el-button>
+            <el-form-item class="wid">
+            <el-button type="primary" class="wid" @click.native.prevent="handleSubmit2(ruleForm2)" :loading="logining">登录</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
-  //import NProgress from 'nprogress'
-  export default {
-    data() {
-      return {
-        logining: false,
-        ruleForm2: {
-          account: 'admin',
-          checkPass: '123456'
-        },
-        rules2: {
-          account: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
-            //{ validator: validaePass }
-          ],
-          checkPass: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            //{ validator: validaePass2 }
-          ]
-        },
-        checked: true
-      };
-    },
-    methods: {
-      handleReset2() {
-        this.$refs.ruleForm2.resetFields();
+export default {
+  name: "login",
+  data() {
+    return {
+      data: [],
+      logining: false,
+      sign: "",
+      msg: [],
+      ruleForm2: {
+        oper_id: "",
+        oper_pwd: ""
       },
-      handleSubmit2(ev) {
-        var _this = this;
-        this.$refs.ruleForm2.validate((valid) => {
-          if (valid) {
-            //_this.$router.replace('/table');
-            this.logining = true;
-            //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            requestLogin(loginParams).then(data => {
-              this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                });
-              } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/custList' });
+      rules2: {
+        oper_id: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 3 到 16 个字符", trigger: "blur" }
+        ],
+        oper_pwd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
+        ]
+      },
+      checked: false
+    };
+  },
+  methods: {
+    forget() {
+      this.$alert("请与系统管理员联系，找回密码。", "忘记密码", {
+        confirmButtonText: "确定"
+      });
+    },
+    // 登陆
+    handleSubmit2(ruleForm2) {
+      //   this.logining = true;
+      //   this.$refs.ruleForm2.validate(valid => {
+      //     if (valid) {
+      //       this.$http({
+      //         method: "post",
+      //         url: "login",
+      //         data: this.ruleForm2,
+      //         timeout: 1000
+      //       }).then(
+      //         res => {
+      //           this.sign = res.data.data.sign;
+      //           this.logining = false;
+      //           localStorage.setItem(
+      //             "userPwd",
+      //             JSON.stringify(ruleForm2.oper_pwd)
+      //           );
+      //           localStorage.setItem(
+      //             "userName",
+      //             JSON.stringify(ruleForm2.oper_id)
+      //           );
+      //           localStorage.setItem("sign", JSON.stringify(self.sign));
+      //           this.$router.push({ path: "/main" });
+      //         },
+      //         err => {
+      //           console.log(err);
+      //         }
+      //       );
+      //     } else {
+      //       return false;
+      //     }
+      //   });
+      var self = this;
+      self.$refs.ruleForm2.validate(valid => {
+        if (valid) {
+          self.logining = true;
+          self
+            .$http({
+              method: "post",
+              url: "login",
+              data: self.ruleForm2,
+              timeout: 5000
+            })
+            .then(
+              res => {
+                self.sign = res.data.data.sign;
+                self.logining = false;
+                let { error_code } = res;
+                if (res.error_code == 30004) {
+                  alert(res.error_message);
+                } else {
+                  localStorage.setItem(
+                    "userPwd",
+                    JSON.stringify(ruleForm2.oper_pwd)
+                  );
+                  localStorage.setItem(
+                    "userName",
+                    JSON.stringify(ruleForm2.oper_id)
+                  );
+                  localStorage.setItem("sign", JSON.stringify(self.sign));
+                  self.$router.push({ path: "/main" });
+                }
+              },
+              err => {
+                console.log(err);
               }
-            });
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      }
+            );
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    rmPwd() {
+      this.checked = !this.checked;
+      localStorage.setItem(
+        ruleForm2.oper_pwd,
+        JSON.stringify(ruleForm2.oper_pwd)
+      );
     }
   }
-
+};
 </script>
 
 <style lang="scss" scoped>
-  .login-container {
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    background-clip: padding-box;
-    margin: 150px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-    .title {
-      margin: 0px auto 40px auto;
-      text-align: center;
-      color: #505458;
-    }
-    .remember {
-      margin: 0px 0px 35px 0px;
-    }
+// body {
+// //   background: url(../assets/logobg.png) no-repeat;
+// }
+.wid {
+  width: 100%;
+}
+.bgLogo {
+  height: 100%;
+  width: 100%;
+  background: url(../assets/loginbg.png) no-repeat;
+  background-size: 100% 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.login-container {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  background-clip: padding-box;
+  margin: 145px auto;
+  width: 350px;
+  padding: 35px 35px 15px 35px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  //   box-shadow: 0 0 25px #cac6c6;
+  .title {
+    margin: 0px auto 40px auto;
+    text-align: center;
+    color: #505458;
   }
+  .remember {
+    margin: 0px 0px 35px 0px;
+  }
+  .fr {
+    float: right;
+    margin-top: -5px;
+  }
+}
 </style>

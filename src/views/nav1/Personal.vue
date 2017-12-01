@@ -1,11 +1,13 @@
 <template>
     <section>
-        <el-form :inline="true" :model="addUser">
+        <el-form :inline="true" :model="{addUser}"  status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">客户核心信息</strong>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-input v-model="addUser.cst_name" placeholder="客户名称"></el-input>
+                        <el-form-item class="rulesinput" prop="cst_name" :rules="[{required: true, message: '客户名称不能为空'}]">
+                            <el-input v-model="addUser.cst_name" placeholder="客户名称" ></el-input>
+                        </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">   
                         <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
@@ -21,7 +23,9 @@
                         </el-select>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-input v-model="addUser.mobile_phones" placeholder="身份识别手机号"></el-input>
+                        <el-form-item class="rulesinput" prop="cst_phone">
+                            <el-input v-model="addUser.cst_phone" placeholder="身份识别手机号" ></el-input>
+                        </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="50">
@@ -50,8 +54,8 @@
                         </el-select>
                     </el-col>
                 </el-row>
-            </el-col>
-            <el-col class="toolbar" style="border-radius: 4px;">
+            <!-- </el-col>
+            <el-col class="toolbar" style="border-radius: 4px;"> -->
                 <strong class="title">客户基础信息</strong>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
@@ -204,88 +208,110 @@
                         <el-input v-model="addUser.pro_pertycnt" placeholder="置业次数:"></el-input>
                     </el-col>
                 </el-row>
+                <div class="fr">
+                    <el-button @click="goback">取消</el-button>
+                    <el-button type="primary" @click="sendPersonal">提交</el-button>
+                </div>
             </el-col>
+
+        </el-form>
+        <el-form :inline="true" :model="{banks}"  status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">银行账户</strong>
                 <el-row>
-                    <el-button type="primary">新增银行</el-button>
+                    <el-button type="primary" @click="addBank">新增银行</el-button>
                 </el-row>
-                <component v-bind:is="which_to_show"></component>
+
+              <!-- 新增银行 -->
+                <el-form-item v-for="(bank, index) in banks">
+                    <el-row :gutter="50">
+                        <el-col :span="4" style="padding-bottom: 0px;">
+                            <el-select v-model="bank.bank_delegate" placeholder="卡类型">
+                                <el-option value="1" label="储蓄卡">储蓄卡</el-option>
+                                <el-option value="2" label="信用卡">信用卡</el-option>
+                                <el-option value="3" label="准贷记卡">准贷记卡</el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="6" style="padding-bottom: 0px;">
+                            <el-input v-model="bank.bank_name" placeholder="开户行"></el-input>
+                        </el-col>
+                        <el-col :span="5" style="padding-bottom: 0px;">
+                            <el-input v-model="bank.bank_account_name" placeholder="开户姓名"></el-input>
+                        </el-col>
+                        <el-col :span="6" style="padding-bottom: 0px;">
+                            <el-input v-model="bank.bank_account_code" placeholder="银行账号"></el-input>
+                        </el-col>
+                        <el-col :span="2" style="padding-bottom: 0px;">
+                            <el-button @click.prevent="removeBank(bank)">移除</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <div class="fr">
+                    <el-button @click="goback">取消</el-button>
+                    <el-button type="primary" @click="sendBank">提交</el-button>
+                </div>
             </el-col>
+        </el-form>
+        <el-form :inline="true" :model="{relaCusts}"  status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">关联客户</strong>
                 <el-row>
-                    <el-button type="primary">新增关联客户</el-button>
+                    <el-button type="primary" @click="addRelaCust">新增关联客户</el-button>
                 </el-row>
-                <component v-bind:is="which_to_show"></component>
+              <!-- 新增关联客户 -->
+                <el-form-item v-for="(relaCust, index) in relaCusts" >
+                    <el-row :gutter="50">
+                        <el-col :span="4" style="padding-bottom: 0px;">
+                            <el-input v-model="relaCust.cst_name" placeholder="客户姓名"></el-input>
+                        </el-col>
+                        <el-col :span="3" style="padding-bottom: 0px;">
+                            <el-select v-model="relaCust.gender" placeholder="性别">
+                                <el-option value="未知">未知</el-option>
+                                <el-option value="男">男</el-option>
+                                <el-option value="女">女</el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="4" style="padding-bottom: 0px;">
+                            <el-select v-model="relaCust.rela_type1" placeholder="关系类型1">
+                                <el-option value="家人">家人</el-option>
+                                <el-option value="保姆">保姆</el-option>
+                                <el-option value="租户">租户</el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="4" style="padding-bottom: 0px;">
+                            <el-select v-model="relaCust.rela_type2" placeholder="关系类型2">
+                                <el-option value="家人">家人</el-option>
+                                <el-option value="保姆">保姆</el-option>
+                                <el-option value="租户">租户</el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="4" style="padding-bottom: 0px;">
+                            <el-input v-model="relaCust.cst_phone" placeholder="手机号码"></el-input>
+                        </el-col>
+                        <el-col :span="2" style="padding-bottom: 0px;">
+                            <el-button @click.prevent="removeRelaCust(relaCust)">移除</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <div class="fr">
+                    <el-button @click="goback">取消</el-button>
+                    <el-button type="primary" @click="sendRela">提交</el-button>
+                </div>
             </el-col>
         </el-form>
-        <el-col :span="3" push=21>
-			<el-button>取消</el-button>
-			<el-button type="primary">提交</el-button>
-		</el-col>
     </section>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      addUser: {
-        cst_name: "",
-        cst_type: "",
-        mobile_phones: "",
-        gender: "",
-        card_type: "",
-        cer_no: "",
-        birthday: "",
-        age_group: "",
-        cst_sort: "",
-        nationality: "",
-        nation: "",
-        viptag: "",
-        contact1: "",
-        contact2: "",
-        contact3: "",
-        residential_phones: "",
-        office_phone: "",
-        resided_state: "",
-        height: "",
-        weight: "",
-        comefrom: "",
-        home_area: "",
-        work_area: "",
-        address: "",
-        work_type: "",
-        email: "",
-        post_code: "",
-        family: "",
-        children_cnt: "",
-        edu_level: "",
-        have_bm: "",
-        ismain_jcz: "",
-        pet_stag: "",
-        hobby: "",
-        fax: "",
-        pro_pertycnt: "",
-        gender: "",
-        rela_type: "",
-        rela_type2: "",
-        mobile_phones: "",
-        bank_delegate: ""
-      },
-      to_show: false,
-      which_to_show: "",
-      pickerOptions0: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
-      }
-    };
-  },
-  methods: {}
-};
-</script>
 <style scoped>
+.fr {
+  float: right;
+  margin: 10px 0;
+}
+.rulesinput {
+  width: 100%;
+}
+.rulesinput .el-input {
+  width: 125%;
+}
 .title {
   display: block;
   margin-bottom: 10px;
@@ -321,3 +347,186 @@ export default {
   width: 100%;
 }
 </style>
+
+<script>
+export default {
+  data() {
+    var validatePhone = (rule, value, callback) => {
+      var reg = 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+      if (value === "") {
+        callback(new Error("请输入手机号码!"));
+      } else if (!reg.test(value)) {
+        callback(new Error("手机号码格式不正确!"));
+      } else {
+        callback();
+      }
+    };
+
+    return {
+      banks: [
+        {
+          cust_id: "",
+          bank_name: "",
+          bank_delegate: "",
+          bank_account_name: "",
+          bank_account_cod: ""
+        }
+      ],
+      relaCusts: [
+        {
+          cust_id: "",
+          cst_name: "",
+          gender: "",
+          rela_type1: "",
+          rela_type2: "",
+          cst_phone: ""
+        }
+      ],
+      addUser: {
+        cst_name: "",
+        cst_type: "",
+        cst_phone: "",
+        gender: "",
+        card_type: "",
+        cer_no: "",
+        birthday: "",
+        age_group: "",
+        cst_sort: "",
+        nationality: "",
+        nation: "",
+        viptag: "",
+        contact1: "",
+        contact2: "",
+        contact3: "",
+        residential_phones: "",
+        office_phone: "",
+        resided_state: "",
+        height: "",
+        weight: "",
+        comefrom: "",
+        home_area: "",
+        work_area: "",
+        address: "",
+        work_type: "",
+        email: "",
+        post_code: "",
+        family: "",
+        children_cnt: "",
+        edu_level: "",
+        have_bm: "",
+        ismain_jcz: "",
+        pet_stag: "",
+        hobby: "",
+        fax: "",
+        pro_pertycnt: "",
+        gender: "",
+        rela_type: "",
+        rela_type2: ""
+        // cst_phone: "",
+      },
+      rulesPerson: {
+        cst_phone: [{ validator: validatePhone, trigger: "blur" }]
+      },
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      }
+    };
+  },
+  methods: {
+    goback() {
+      this.$router.back();
+    },
+    sendPersonal() {
+      let addUser = this.addUser;
+      let reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}@[0-9]{1,3}$/;
+      if (addUser.cst_phone == "") {
+        alert("请输入手机号码");
+      } else if (!reg.test(addUser.cst_phone)) {
+        alert("手机格式不正确");
+      } else {
+        // 新增个人客户
+        this.$http({
+          method: "post",
+          url: "cust/person/basic/add",
+          data: addUser,
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        }).then(
+          res => {
+            console.log(res);
+          },
+          err => {
+            console.log(err);
+          }
+        );
+      }
+    },
+    sendBank() {
+      // 新增个人客户银行卡
+      let banks = this.banks;
+      banks.cust_id = this.$router.query(cust_id);
+      this.$http({
+        method: "post",
+        url: "cust/person/bank/add",
+        data: banks,
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    },
+    sendRela() {
+      // 新增个人客户关联客户
+      this.$http({
+        method: "post",
+        url: "cust/person/relation/add",
+        data: addUser,
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    },
+    removeBank(item) {
+      var index = this.banks.indexOf(item);
+      if (index !== -1) {
+        this.banks.splice(index, 1);
+      }
+    },
+    addBank() {
+      this.banks.push({
+        value: "",
+        key: Date.now()
+      });
+    },
+    removeRelaCust(item) {
+      var index = this.relaCusts.indexOf(item);
+      if (index !== -1) {
+        this.addUser.splice(index, 1);
+      }
+    },
+    addRelaCust() {
+      this.addUser.push({
+        value: "",
+        key: Date.now()
+      });
+    }
+  }
+};
+</script>
+

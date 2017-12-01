@@ -3,33 +3,35 @@ import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-//import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
 import Vuex from 'vuex'
-//import NProgress from 'nprogress'
-//import 'nprogress/nprogress.css'
 import routes from './routes'
-import Mock from './mock'
-Mock.bootstrap();
+import Axios from "axios";
+import change from './api/change'
+Vue.prototype.change = change
+// import Mock from './mock'
 import 'font-awesome/css/font-awesome.min.css'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
-//NProgress.configure({ showSpinner: false });
-
+Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
+// Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
+Axios.defaults.timeout = 5000;
+Vue.prototype.$http = Axios
 const router = new VueRouter({
     routes
 })
 
 router.beforeEach((to, from, next) => {
-    //NProgress.start();
     if (to.path == '/login') {
-        sessionStorage.removeItem('user');
+        localStorage.removeItem('sign');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('uid');
+        localStorage.removeItem('userPwd');
     }
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = JSON.parse(localStorage.getItem('sign'));
     if (!user && to.path != '/login') {
         next({ path: '/login' })
     } else {
@@ -37,16 +39,8 @@ router.beforeEach((to, from, next) => {
     }
 })
 
-//router.afterEach(transition => {
-//NProgress.done();
-//});
-
 new Vue({
-    // el: '#app',
-    //template: '<App/>',
     router,
     store,
-    //components: { App }
     render: h => h(App)
 }).$mount('#app')
-
