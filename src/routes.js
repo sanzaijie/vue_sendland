@@ -3,12 +3,13 @@ import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 import Cust_List from './views/nav1/Cust_List.vue'
-import Form from './views/nav1/Form.vue'
-import user from './views/nav1/user.vue'
+import EnCust_List from './views/nav1/EnCust_List.vue'
 import Personal from './views/nav1/Personal.vue'
 import Enterprise from './views/nav1/Enterprise'
 import PersonalDetail from './views/nav1/PersonalDetail.vue'
+import EnterpriseDetail from './views/nav1/EnterpriseDetail.vue'
 import PersonalEdit from './views/nav1/PersonalEdit.vue'
+import EnterpriseEdit from './views/nav1/EnterpriseEdit.vue'
 import MonitorDoQuery from './views/nav2/MonitorDoQuery.vue'
 import PubCustChange from './views/nav2/PubCustChange.vue'
 import MsgDoQueryPage from './views/nav2/MsgDoQueryPage.vue'
@@ -33,21 +34,21 @@ let routes = [
         name: '',
         hidden: true
     },
-    {
-        path: '/',
-        component: Home,
-        name: '首页',
-        meta: {
-            // 添加该字段，表示进入这个路由是需要登录的
-            requireAuth: true,
-        },
-        hidden: false,
-        iconCls: 'el-icon-location-outline',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/main', component: Main, name: '首页' }
-        ]
-    },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '首页',
+    //     meta: {
+    //         // 添加该字段，表示进入这个路由是需要登录的
+    //         requireAuth: true,
+    //     },
+    //     hidden: false,
+    //     iconCls: 'el-icon-location-outline',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/main', component: Main, name: '首页' }
+    //     ]
+    // },
     {
         path: '/',
         component: Home,
@@ -62,7 +63,7 @@ let routes = [
             {
                 path: '/custList',
                 component: Cust_List,
-                name: '客户列表',
+                name: '个人客户列表',
                 meta: {
                     // 添加该字段，表示进入这个路由是需要登录的
                     requireAuth: true,
@@ -70,7 +71,17 @@ let routes = [
                 hidden: false
             },
             {
-                path: '/enterprise',
+                path: '/encust_list',
+                component: EnCust_List,
+                name: '企业客户列表',
+                meta: {
+                    // 添加该字段，表示进入这个路由是需要登录的
+                    requireAuth: true,
+                },
+                hidden: false
+            },
+            {
+                path: '/encust_list/enterprise',
                 component: Enterprise,
                 name: '新增企业客户',
                 meta: {
@@ -80,7 +91,7 @@ let routes = [
                 hidden: true
             },
             {
-                path: '/personal',
+                path: '/custList/personal',
                 component: Personal,
                 name: '新增个人客户',
                 meta: {
@@ -105,6 +116,26 @@ let routes = [
         path: '/home/custList/personaledit',
         component: PersonalEdit,
         name: '个人客户编辑',
+        meta: {
+            // 添加该字段，表示进入这个路由是需要登录的
+            requireAuth: true,
+        },
+        hidden: true
+    },
+    {
+        path: '/home/encust_list/enterprisedetail',
+        component: PersonalDetail,
+        name: '企业客户详情',
+        meta: {
+            // 添加该字段，表示进入这个路由是需要登录的
+            requireAuth: true,
+        },
+        hidden: true
+    },
+    {
+        path: '/home/encust_list/enterpriseedit',
+        component: PersonalEdit,
+        name: '企业客户编辑',
         meta: {
             // 添加该字段，表示进入这个路由是需要登录的
             requireAuth: true,

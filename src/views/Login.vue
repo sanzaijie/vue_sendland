@@ -51,37 +51,6 @@ export default {
     },
     // 登陆
     handleSubmit2(ruleForm2) {
-      //   this.logining = true;
-      //   this.$refs.ruleForm2.validate(valid => {
-      //     if (valid) {
-      //       this.$http({
-      //         method: "post",
-      //         url: "login",
-      //         data: this.ruleForm2,
-      //         timeout: 1000
-      //       }).then(
-      //         res => {
-      //           this.sign = res.data.data.sign;
-      //           this.logining = false;
-      //           localStorage.setItem(
-      //             "userPwd",
-      //             JSON.stringify(ruleForm2.oper_pwd)
-      //           );
-      //           localStorage.setItem(
-      //             "userName",
-      //             JSON.stringify(ruleForm2.oper_id)
-      //           );
-      //           localStorage.setItem("sign", JSON.stringify(self.sign));
-      //           this.$router.push({ path: "/main" });
-      //         },
-      //         err => {
-      //           console.log(err);
-      //         }
-      //       );
-      //     } else {
-      //       return false;
-      //     }
-      //   });
       var self = this;
       self.$refs.ruleForm2.validate(valid => {
         if (valid) {
@@ -91,7 +60,7 @@ export default {
               method: "post",
               url: "login",
               data: self.ruleForm2,
-              timeout: 5000
+              timeout: 1000
             })
             .then(
               res => {
@@ -110,11 +79,16 @@ export default {
                     JSON.stringify(ruleForm2.oper_id)
                   );
                   localStorage.setItem("sign", JSON.stringify(self.sign));
-                  self.$router.push({ path: "/main" });
+                  localStorage.setItem(
+                    "listId",
+                    JSON.stringify(res.data.data.permission_list)
+                  );
+                  self.$router.push({ path: "/custList" });
                 }
               },
               err => {
                 console.log(err);
+                source.cancel("Operation canceled by the user.");
               }
             );
         } else {
@@ -135,9 +109,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// body {
-// //   background: url(../assets/logobg.png) no-repeat;
-// }
 .wid {
   width: 100%;
 }

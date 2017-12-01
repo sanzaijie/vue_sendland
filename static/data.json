@@ -1,0 +1,15 @@
+{
+    "error_code": 0,
+    "error_message": "succeed",
+    "data": [
+        {
+            "cust_id": "13131131",
+            "cst_name": "adada",
+            "gender": 1, // 男0 女1 未知2
+            "cst_phone": "11131313131",
+            "cst_type": 0, // 0个人、1公司 
+            "card_type": 0,
+            "cer_no": "13131313qqeqeq"
+        }
+    ]
+}

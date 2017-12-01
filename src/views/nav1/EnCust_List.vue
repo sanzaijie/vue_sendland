@@ -21,12 +21,12 @@
 				<el-form-item v-for="item in listId" v-if="item.name==='更多查询'">
 					<el-button type="primary" @click="handleAdd">更多查询</el-button>
 				</el-form-item>
-                <el-form-item v-for="item in listId" v-if="item.name==='新增个人客户'">
+                <!-- <el-form-item v-for="item in listId" v-if="item.name==='新增个人客户'">
 					<el-button type="primary" @click="$router.push('/personal')">新增个人客户</el-button>
-				</el-form-item>
-                <!-- <el-form-item v-for="item in listId" v-if="item.name==='新增企业客户'">
-					<el-button type="primary" @click="$router.push('/enterprise')">新增企业客户</el-button>
 				</el-form-item> -->
+                <el-form-item v-for="item in listId" v-if="item.name==='新增企业客户'">
+					<el-button type="primary" @click="$router.push('/enterprise')">新增企业客户</el-button>
+				</el-form-item>
 			</el-form>
 		</el-col>
 
@@ -72,11 +72,11 @@
 		</el-col>
 		<!--更多查询界面-->
 		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="{addForm}" label-width="80px" ref="addForm">
+			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
                 <el-col style="margin-bottom:10px;">
                     <!-- {{checklists}} -->
-                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="index" :value="name.remark" :label="name.remark">
-                        <span class="checkBoxs_name">{{name.remark + "："}}</span>
+                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="checkName in checkNames" :key="checkName.value" :value="checkName.value" :label="checkName.label">
+                        <span class="checkBoxs_name">{{checkName.name + "："}}</span>
                         <el-checkbox :label="checkBoxs.name" class="checkWidth" v-for="checkBoxs in checkName.checkBoxs" :key="checkBoxs.value" :value="checkBoxs.value">{{checkBoxs.name}}</el-checkbox>
                         <!-- <el-checkbox label="复选框 B"></el-checkbox>
                         <el-checkbox label="复选框 C"></el-checkbox> -->
@@ -112,6 +112,53 @@ export default {
         value: ""
       },
       checkList: [],
+      checkNames: [
+        {
+          list: 1,
+          name: "性别",
+          checkBoxs: [
+            { id: 1, name: "男" },
+            { id: 2, name: "女" },
+            { id: 3, name: "未知" }
+          ]
+        },
+        {
+          list: 2,
+          name: "客户类型",
+          checkBoxs: [
+            { id: 4, name: "男" },
+            { id: 5, name: "女" },
+            { id: 6, name: "未知" }
+          ]
+        },
+        {
+          list: 4,
+          name: "教育程度",
+          checkBoxs: [
+            { id: 7, name: "男" },
+            { id: 8, name: "女" },
+            { id: 9, name: "未知" }
+          ]
+        },
+        {
+          list: 5,
+          name: "家庭结构",
+          checkBoxs: [
+            { id: 10, name: "男" },
+            { id: 11, name: "女" },
+            { id: 12, name: "未知" }
+          ]
+        },
+        {
+          list: 6,
+          name: "子女人数",
+          checkBoxs: [
+            { id: 13, name: "男" },
+            { id: 14, name: "女" },
+            { id: 15, name: "未知" }
+          ]
+        }
+      ],
       users: [],
       btn: [],
       page_num: 1,
@@ -124,10 +171,19 @@ export default {
       editFormRules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       },
-      addFormVisible: false, //更多查询界面是否显示
+      addFormVisible: false, //新增界面是否显示
       addLoading: false,
-      //更多查询界面数据
-      addForm: []
+      addFormRules: {
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+      },
+      //新增界面数据
+      addForm: {
+        name: "",
+        sex: -1,
+        age: 0,
+        birth: "",
+        addr: ""
+      }
     };
   },
   beforeCreate() {
@@ -136,7 +192,7 @@ export default {
       method: "post",
       url: "btn/permission",
       data: {
-        id: localStorage.getItem("个人客户列表")
+        id: localStorage.getItem("企业客户列表")
       },
       headers: {
         sign: localStorage.getItem("sign")
@@ -169,17 +225,13 @@ export default {
     //显示更多查询界面
     handleAdd: function() {
       this.addFormVisible = true;
-      let self = this;
-      self.$http({
-        method: "post",
-        url: "cust/filter",
-        headers: {
-          sign: localStorage.getItem("sign")
-        }
-      }).then(res => {
-        self.addForm = res.data.data;
-      });
-      console.log(self.addForm);
+      //   this.addForm = {
+      //     name: "",
+      //     sex: -1,
+      //     age: 0,
+      //     birth: "",
+      //     addr: ""
+      //   };
     },
     //删除
     deleteRow(index, rows) {
@@ -208,12 +260,33 @@ export default {
     }
   },
   mounted() {
+    // this.$http({
+    //   method: "post",
+    //   url: "btn/permission",
+    //   data
+    // });
+    // this.getUsers();
+    // 合并请求
+    // function getMsg(res1, res2) {
+    //   confirm.log(res1);
+    //   confirm.log(res2);
+    // }
+    // this.$http
+    //   .all([
+    //     this.$http.post("cust/list", { cst_type: 1 }),
+    //     this.$http.post("cust/admin", { page_num: 1 })
+    //   ])
+    //   // 分发响应
+    //   .then(this.$http.spread(getMsg))
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
     this.$http({
       // 客户列表
       method: "post", //方法
       url: "cust/list", //地址
       data: {
-        cst_type: 1,
+        cst_type: 0,
         page_num: 1,
         page_size: 20
       },
@@ -235,6 +308,21 @@ export default {
       this.users = usersG;
       this.listLoading = false;
     });
+    // this.$http({
+    //   // 按钮权限
+    //   method: "post", //方法
+    //   url: "btn/permission", //地址
+    //   data: {
+    //     id: "755405eacaa611e7b73e005056bd1eff"
+    //   },
+    //   headers: {
+    //     sign: localStorage.getItem("sign")
+    //   }
+    // }).then(res => {
+    //   console.log(res);
+    //   this.btn = res.data.data.data;
+    //   console.log(this.btn);
+    // });
   },
   created() {}
 };
