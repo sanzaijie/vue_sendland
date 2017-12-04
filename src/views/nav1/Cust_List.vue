@@ -285,7 +285,7 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
-      this.usersData = res.data.data;
+      this.usersData = res.data.data.result;
       let usersG = this.usersData;
       for (let i = 0; i < usersG.length; i++) {
         if (usersG[i].gender == 2) {
