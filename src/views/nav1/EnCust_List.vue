@@ -175,7 +175,7 @@ export default {
         }
       }).then(response => {
         //this.users = res.data.data;
-        let usersG = response.data.data;
+        let usersG = response.data.data.result;
         for (let i = 0; i < usersG.length; i++) {
           if (usersG[i].gender == 2) {
             usersG[i].gender = "未知";
@@ -215,7 +215,7 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
-        this.users = res.data.data;
+        this.users = res.data.data.result;
         let usersG = this.users;
         for (let i = 0; i < usersG.length; i++) {
           if (usersG[i].gender == 2) {
