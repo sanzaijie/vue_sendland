@@ -8,7 +8,7 @@
             <el-form-item prop="oper_pwd">
             <el-input type="password" v-model="ruleForm2.oper_pwd" auto-complete="off" placeholder="密码"></el-input>
             </el-form-item>
-            <el-checkbox v-model="checked" class="remember" @click="checkPwd">记住密码</el-checkbox>
+            <el-checkbox v-model="checked" class="remember" @click="rmPwd">记住密码</el-checkbox>
             <el-button type="text" @click="forget" class="fr">忘记密码</el-button>
             <el-form-item class="wid">
             <el-button type="primary" class="wid" @click.native.prevent="handleSubmit2(ruleForm2)" :loading="logining">登录</el-button>
@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  name: "login",
   data() {
     return {
       data: [],
@@ -31,12 +32,12 @@ export default {
       },
       rules2: {
         oper_id: [
-          { required: true, message: "请输入账号", trigger: "blur" }
-          //{ validator: validaePass }
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 3 到 16 个字符", trigger: "blur" }
         ],
         oper_pwd: [
-          { required: true, message: "请输入密码", trigger: "blur" }
-          //{ validator: validaePass2 }
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 3, max: 20, message: "长度在 3 到 20 个字符", trigger: "blur" }
         ]
       },
       checked: false
@@ -58,8 +59,7 @@ export default {
             .$http({
               method: "post",
               url: "login",
-              data: self.ruleForm2,
-              timeout: 1000
+              data: self.ruleForm2
             })
             .then(
               res => {
@@ -78,12 +78,16 @@ export default {
                     JSON.stringify(ruleForm2.oper_id)
                   );
                   localStorage.setItem("sign", JSON.stringify(self.sign));
-                  self.$router.push({ path: "/main" });
+                  localStorage.setItem(
+                    "listId",
+                    JSON.stringify(res.data.data.permission_list)
+                  );
+                  self.$router.push({ path: "/custList" });
                 }
               },
               err => {
                 console.log(err);
-                source.cancel("Operation canceled by the user.");
+                // source.cancel("Operation canceled by the user.");
               }
             );
         } else {
@@ -92,7 +96,7 @@ export default {
         }
       });
     },
-    checkPwd() {
+    rmPwd() {
       this.checked = !this.checked;
       localStorage.setItem(
         ruleForm2.oper_pwd,
@@ -104,9 +108,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// body {
-// //   background: url(../assets/logobg.png) no-repeat;
-// }
 .wid {
   width: 100%;
 }

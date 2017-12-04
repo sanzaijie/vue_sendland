@@ -17,7 +17,10 @@ Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 // Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
-Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
+// Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
+Axios.defaults.baseURL = 'http://localhost:9091/api/rest/1.0/'
+// Axios.defaults.baseURL = 'http://172.16.3.215:9091/api/rest/1.0/'
+Axios.defaults.headers = { "Content-Type": "application/json" }
 Axios.defaults.timeout = 5000;
 Vue.prototype.$http = Axios
 const router = new VueRouter({
@@ -26,10 +29,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.path == '/login') {
-        localStorage.removeItem('sign');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('uid');
-        localStorage.removeItem('userPwd');
+        localStorage.clear()
     }
     let user = JSON.parse(localStorage.getItem('sign'));
     if (!user && to.path != '/login') {

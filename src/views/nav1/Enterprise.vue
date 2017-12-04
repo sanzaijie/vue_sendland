@@ -46,6 +46,12 @@
                     <el-col :span="6" style="padding-bottom: 0px;">
                         <el-input v-model="addUser.cer_no" placeholder="证件号码"></el-input>
                     </el-col>
+                    <el-col :span="6" style="padding-bottom: 0px;">   
+                        <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
+                            <el-option value="个人客户">个人客户</el-option>
+                            <el-option value="企业客户">企业客户</el-option>
+                        </el-select>
+                    </el-col>
                 </el-row>
             </el-col>
 

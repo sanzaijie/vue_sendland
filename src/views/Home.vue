@@ -28,10 +28,15 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
-                <el-menu class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
-					 unique-opened router v-if="!collapsed">
+                <el-menu :default-active="'1'"
+                class="el-menu-vertical-demo" 
+                @open="handleopen" 
+                @close="handleclose" 
+                @select="handleselect"
+                router 
+                v-if="!collapsed">
                      <template v-for="(item,index) in navbars" v-if="!item.hidden">
-                        <el-submenu :index="index + ''" v-if="item.name">
+                        <el-submenu :index="item.name" v-if="item.name">
                             <template slot="title"><i :class="$router.options.routes"></i>{{item.name}}</template>
                                 <router-link v-for="subs in item.sub" :key="subs.id" :name="subs.name"
                                 :to="{name: subs.name}" tag="li" class="routerLink el-menu-item is-active">
@@ -116,19 +121,14 @@ export default {
       headers: {
         sign: localStorage.getItem("sign")
       }
-    }).then(res => {
-      this.navbars = res.data.data.permission_list;
-      var listID = this.navbars;
-      for (var i = 0; i < listID.length; i++) {
-        var id = listID[i].sub;
-        for (var j = 0; j < i; j++) {
-          console.log(id[j].id);
-          localStorage.setItem("uid", id[j].id);
-        }
-        // console.log(id1);
-        // localStorage.setItem("uid", id1);
+    }).then(
+      res => {
+        this.navbars = res.data.data.permission_list;
+      },
+      err => {
+        console.log(err);
       }
-    });
+    );
   },
   methods: {
     onSubmit() {
@@ -165,6 +165,16 @@ export default {
   },
   mounted() {
     this.sysUserName = JSON.parse(localStorage.getItem("userName"));
+    // 获取导航栏ID
+    this.listId = JSON.parse(localStorage.getItem("listId"));
+    // console.log(this.listId);
+    let listId = this.listId;
+    for (var i in listId) {
+      for (var j in listId[i].sub) {
+        // console.log(listId[i].sub[j].name + ":" + listId[i].sub[j].id);
+        localStorage.setItem(listId[i].sub[j].name, listId[i].sub[j].id);
+      }
+    }
   }
 };
 </script>

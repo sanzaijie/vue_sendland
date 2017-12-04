@@ -9,14 +9,23 @@
                 <el-form-item>
 					<el-input v-model="filters.cst_phone" placeholder="手机号码"></el-input>
 				</el-form-item>
+                <!-- <el-form-item>
+					<el-select v-model="filters.cst_type" placeholder="客户类型">
+                        <el-option value="个人客户">个人客户</el-option>
+                        <el-option value="企业客户">企业客户</el-option>
+                    </el-select>
+				</el-form-item> -->
 				<el-form-item v-for="item in listId" v-if="item.name==='查询'">
 					<el-button type="primary" v-on:click="getUsers" >查询</el-button>
 				</el-form-item>
 				<el-form-item v-for="item in listId" v-if="item.name==='更多查询'">
 					<el-button type="primary" @click="handleAdd">更多查询</el-button>
 				</el-form-item>
+                <!-- <el-form-item v-for="item in listId" v-if="item.name==='新增个人客户'">
+					<el-button type="primary" @click="$router.push('/personal')">新增个人客户</el-button>
+				</el-form-item> -->
                 <el-form-item v-for="item in listId" v-if="item.name==='新增'">
-					<el-button type="primary" @click="$router.push('/custList/personal')">新增个人客户</el-button>
+					<el-button type="primary" @click="$router.push('/encust_list/enterprise')">新增企业客户</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -42,10 +51,10 @@
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
-                        <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/encust_list/enterprisedetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
                     </el-button>                                                          
 					<el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
-                        <router-link class="routerBtn" :to="{path: `/home/custList/personaledit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/encust_list/enterpriseedit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
                     </el-button>
 					<el-button type="danger" size="small" @click.native.prevent="deleteRow(scope.$index, users)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
 				</template>
@@ -139,7 +148,7 @@ export default {
       method: "post",
       url: "btn/permission",
       data: {
-        id: localStorage.getItem("个人客户列表")
+        id: localStorage.getItem("企业客户列表")
       },
       headers: {
         sign: localStorage.getItem("sign")
@@ -157,7 +166,7 @@ export default {
         method: "post", //方法
         url: "cust/list", //地址
         data: {
-          cst_type: 0,
+          cst_type: 1,
           page_num: pageNum,
           page_size: pageSize
         },
@@ -199,7 +208,7 @@ export default {
         method: "post", //方法
         url: "cust/list", //地址
         data: {
-          cst_type: 0,
+          cst_type: 1,
           checkList: {}
         },
         headers: {
@@ -232,7 +241,6 @@ export default {
       //   //     this.listLoading = false;
       //   //   });
     },
-    //显示更多查询界面
     handleAdd: function() {
       let self = this;
       self
@@ -248,6 +256,10 @@ export default {
         });
       //   console.log(self.addForm);
       this.addFormVisible = true;
+    },
+    //删除
+    deleteRow(index, rows) {
+      rows.splice(index, 1);
     },
     handleDel: function(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
@@ -272,12 +284,33 @@ export default {
     }
   },
   mounted() {
+    // this.$http({
+    //   method: "post",
+    //   url: "btn/permission",
+    //   data
+    // });
+    // this.getUsers();
+    // 合并请求
+    // function getMsg(res1, res2) {
+    //   confirm.log(res1);
+    //   confirm.log(res2);
+    // }
+    // this.$http
+    //   .all([
+    //     this.$http.post("cust/list", { cst_type: 1 }),
+    //     this.$http.post("cust/admin", { page_num: 1 })
+    //   ])
+    //   // 分发响应
+    //   .then(this.$http.spread(getMsg))
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
     this.$http({
       // 客户列表
       method: "post", //方法
       url: "cust/list", //地址
       data: {
-        cst_type: 0,
+        cst_type: 1,
         page_num: 1,
         page_size: 20
       },
@@ -285,9 +318,9 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
-      this.usersData = res.data.data;
-      let usersG = this.usersData;
-      for (let i = 0; i < usersG.length; i++) {
+      this.users = res.data.data;
+      var usersG = this.users;
+      for (var i = 0; i < usersG.length; i++) {
         if (usersG[i].gender == 2) {
           usersG[i].gender = "未知";
         } else if (usersG[i].gender == 1) {
