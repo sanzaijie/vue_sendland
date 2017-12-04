@@ -31,7 +31,7 @@
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
+		<el-table :data="usersData" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
 			<!-- <el-table-column type="selection" width="0">
 			</el-table-column> -->
 			<el-table-column type="index" label="序号" align="center" width="70">
@@ -64,9 +64,11 @@
 		<el-col :span="24" class="toolbar">
 			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
 			<el-pagination layout="prev, pager, next, jumper"
+            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :page-size="page_size"
-            :total="10"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            :total="total"
             style="float:right;">
 			</el-pagination>
 		</el-col>
@@ -112,11 +114,13 @@ export default {
         value: ""
       },
       checkList: [],
-      users: [],
+      usersData: [],
       btn: [],
       page_num: 1,
-      page_size: 20,
+      pageSize: 20,
       page: 1,
+      currentPage: 1,
+      total: 1000,
       listLoading: true,
       sels: [], //列表选中列
       editFormVisible: false, //编辑界面是否显示
@@ -148,9 +152,44 @@ export default {
     });
   },
   methods: {
+	//加载分页数据
+	loadData(pageNum, pageSize){                    
+		this.$http({          
+                method: "post", //方法
+                url: "cust/list", //地址
+                data: {
+                    cst_type: 0,
+                    page_num: pageNum,
+                    page_size: pageSize
+                },
+                headers: {
+                    sign: localStorage.getItem("sign")
+                }
+			}).then((response) =>{
+		      //this.users = res.data.data;
+		      var usersG = response.data.data;
+		      for (var i = 0; i < usersG.length; i++) {
+		        if (usersG[i].gender == 2) {
+		          usersG[i].gender = "未知";
+		        } else if (usersG[i].gender == 1) {
+		          usersG[i].gender = "女";
+		        } else {
+		          usersG[i].gender = "男";
+		        }
+		      }
+              this.usersData = usersG;
+              this.listLoading = false;
+		});     
+    },
+    handleSizeChange: function(val) {
+        console.log(`每页 ${val} 条`);
+    },
     handleCurrentChange(val) {
-      this.page = val;
-      this.getUsers();
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.loadData(this.currentPage, this.pageSize);
+      //this.page = val;
+      //this.getUsers();
     },
     //获取用户列表
     getUsers() {
@@ -213,7 +252,7 @@ export default {
       method: "post", //方法
       url: "cust/list", //地址
       data: {
-        cst_type: 1,
+        cst_type: 0,
         page_num: 1,
         page_size: 20
       },
@@ -221,7 +260,7 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
-      this.users = res.data.data;
+      this.usersData = res.data.data;
       var usersG = this.users;
       for (var i = 0; i < usersG.length; i++) {
         if (usersG[i].gender == 2) {
@@ -232,7 +271,7 @@ export default {
           usersG[i].gender = "男";
         }
       }
-      this.users = usersG;
+      this.usersData = usersG;
       this.listLoading = false;
     });
   },
