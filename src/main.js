@@ -17,8 +17,9 @@ Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 // Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
-// Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
-Axios.defaults.baseURL = 'http://localhost:9091/api/rest/1.0/'
+
+Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
+// Axios.defaults.baseURL = 'http://localhost:9091/api/rest/1.0/'
 // Axios.defaults.baseURL = 'http://172.16.3.215:9091/api/rest/1.0/'
 Axios.defaults.headers = { "Content-Type": "application/json" }
 Axios.defaults.timeout = 5000;
