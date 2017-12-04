@@ -24,8 +24,8 @@
                 <!-- <el-form-item v-for="item in listId" v-if="item.name==='新增个人客户'">
 					<el-button type="primary" @click="$router.push('/personal')">新增个人客户</el-button>
 				</el-form-item> -->
-                <el-form-item v-for="item in listId" v-if="item.name==='新增企业客户'">
-					<el-button type="primary" @click="$router.push('/enterprise')">新增企业客户</el-button>
+                <el-form-item v-for="item in listId" v-if="item.name==='新增'">
+					<el-button type="primary" @click="$router.push('/encust_list/enterprise')">新增企业客户</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -50,11 +50,11 @@
 			</el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
-					<el-button size="small" v-for="item in listId" v-if="item.name==='详情'">
-                        <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
+					<el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
+                        <router-link class="routerBtn" :to="{path: `/home/encust_list/enterprisedetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
                     </el-button>                                                          
 					<el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
-                        <router-link class="routerBtn" :to="{path: `/home/custList/personaledit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/encust_list/enterpriseedit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
                     </el-button>
 					<el-button type="danger" size="small" @click.native.prevent="deleteRow(scope.$index, users)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
 				</template>
@@ -64,28 +64,28 @@
 		<el-col :span="24" class="toolbar">
 			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
 			<el-pagination layout="prev, pager, next, jumper"
+            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :page-size="page_size"
-            :total="10"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            :total="total"
             style="float:right;">
 			</el-pagination>
 		</el-col>
 		<!--更多查询界面-->
 		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+			<el-form :model="{checkList}" label-width="80px" ref="addForm">
                 <el-col style="margin-bottom:10px;">
-                    <!-- {{checklists}} -->
-                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="checkName in checkNames" :key="checkName.value" :value="checkName.value" :label="checkName.label">
-                        <span class="checkBoxs_name">{{checkName.name + "："}}</span>
-                        <el-checkbox :label="checkBoxs.name" class="checkWidth" v-for="checkBoxs in checkName.checkBoxs" :key="checkBoxs.value" :value="checkBoxs.value">{{checkBoxs.name}}</el-checkbox>
-                        <!-- <el-checkbox label="复选框 B"></el-checkbox>
-                        <el-checkbox label="复选框 C"></el-checkbox> -->
+                    <el-checkbox-group v-model="checkList.type" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" :value="name.remark">
+                        <span class="checkBoxs_name">{{name.remark + "："}}</span>
+                        <el-checkbox :label="valueName.name" class="checkWidth" v-for="valueName in name.value" :key="valueName.name" :name="valueName.type"></el-checkbox>
+                        <hr>
                     </el-checkbox-group>
                 </el-col>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="getUsers" :loading="addLoading">查询</el-button>
+				<el-button type="primary" @click="getUsers(checkList)" :loading="addLoading">查询</el-button>
 			</div>
 		</el-dialog>
 	</section>
@@ -111,59 +111,24 @@ export default {
         cst_type: "",
         value: ""
       },
-      checkList: [],
-      checkNames: [
-        {
-          list: 1,
-          name: "性别",
-          checkBoxs: [
-            { id: 1, name: "男" },
-            { id: 2, name: "女" },
-            { id: 3, name: "未知" }
-          ]
-        },
-        {
-          list: 2,
-          name: "客户类型",
-          checkBoxs: [
-            { id: 4, name: "男" },
-            { id: 5, name: "女" },
-            { id: 6, name: "未知" }
-          ]
-        },
-        {
-          list: 4,
-          name: "教育程度",
-          checkBoxs: [
-            { id: 7, name: "男" },
-            { id: 8, name: "女" },
-            { id: 9, name: "未知" }
-          ]
-        },
-        {
-          list: 5,
-          name: "家庭结构",
-          checkBoxs: [
-            { id: 10, name: "男" },
-            { id: 11, name: "女" },
-            { id: 12, name: "未知" }
-          ]
-        },
-        {
-          list: 6,
-          name: "子女人数",
-          checkBoxs: [
-            { id: 13, name: "男" },
-            { id: 14, name: "女" },
-            { id: 15, name: "未知" }
-          ]
-        }
-      ],
+      checkList: {
+        type: []
+        //   gender: [],
+        //   cst_sort: [],
+        //   edu_level: [],
+        //   family: [],
+        //   children_cnt: [],
+        //   work_type: [],
+        //   cst_status: []
+      },
+      usersData: [],
       users: [],
       btn: [],
       page_num: 1,
-      page_size: 20,
+      pageSize: 20,
       page: 1,
+      currentPage: 1,
+      total: 1000,
       listLoading: true,
       sels: [], //列表选中列
       editFormVisible: false, //编辑界面是否显示
@@ -171,19 +136,10 @@ export default {
       editFormRules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       },
-      addFormVisible: false, //新增界面是否显示
+      addFormVisible: false, //更多查询界面是否显示
       addLoading: false,
-      addFormRules: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
-      },
-      //新增界面数据
-      addForm: {
-        name: "",
-        sex: -1,
-        age: 0,
-        birth: "",
-        addr: ""
-      }
+      //更多查询界面数据
+      addForm: []
     };
   },
   beforeCreate() {
@@ -204,34 +160,102 @@ export default {
     });
   },
   methods: {
+    //加载分页数据
+    loadData(pageNum, pageSize) {
+      this.$http({
+        method: "post", //方法
+        url: "cust/list", //地址
+        data: {
+          cst_type: 1,
+          page_num: pageNum,
+          page_size: pageSize
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(response => {
+        //this.users = res.data.data;
+        let usersG = response.data.data;
+        for (let i = 0; i < usersG.length; i++) {
+          if (usersG[i].gender == 2) {
+            usersG[i].gender = "未知";
+          } else if (usersG[i].gender == 1) {
+            usersG[i].gender = "女";
+          } else {
+            usersG[i].gender = "男";
+          }
+        }
+        this.users = usersG;
+        this.listLoading = false;
+      });
+    },
+    handleSizeChange: function(val) {
+      console.log(`每页 ${val} 条`);
+    },
     handleCurrentChange(val) {
-      this.page = val;
-      this.getUsers();
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.loadData(this.currentPage, this.pageSize);
+      //this.page = val;
+      //this.getUsers();
     },
     //获取用户列表
-    getUsers() {
-      let para = {
-        page: this.page,
-        name: this.filters.cst_name
-      };
-      this.listLoading = true;
-      //   getUserListPage(para).then(res => {
-      //     this.total = res.data.total;
-      //     this.users = res.data.users;
-      //     this.addFormVisible = false;
-      //     this.listLoading = false;
-      //   });
-    },
-    //显示更多查询界面
-    handleAdd: function() {
-      this.addFormVisible = true;
-      //   this.addForm = {
-      //     name: "",
-      //     sex: -1,
-      //     age: 0,
-      //     birth: "",
-      //     addr: ""
+    getUsers(checkList) {
+      //   let self = this;
+      this.addFormVisible = false;
+      this.$http({
+        // 客户列表
+        method: "post", //方法
+        url: "cust/list", //地址
+        data: {
+          cst_type: 1,
+          checkList: {}
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.users = res.data.data;
+        let usersG = this.users;
+        for (let i = 0; i < usersG.length; i++) {
+          if (usersG[i].gender == 2) {
+            usersG[i].gender = "未知";
+          } else if (usersG[i].gender == 1) {
+            usersG[i].gender = "女";
+          } else {
+            usersG[i].gender = "男";
+          }
+        }
+        this.users = usersG;
+        this.listLoading = false;
+      });
+      //   let para = {
+      //     page: this.page,
+      //     name: this.filters.cst_name
       //   };
+      //   this.listLoading = true;
+      //   //   getUserListPage(para).then(res => {
+      //   //     this.total = res.data.total;
+      //   //     this.users = res.data.users;
+      //   //     this.addFormVisible = false;
+      //   //     this.listLoading = false;
+      //   //   });
+    },
+    handleAdd: function() {
+      let self = this;
+      self
+        .$http({
+          method: "post",
+          url: "cust/filter",
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        })
+        .then(res => {
+          self.addForm = res.data.data;
+        });
+      //   console.log(self.addForm);
+      this.addFormVisible = true;
     },
     //删除
     deleteRow(index, rows) {
@@ -286,7 +310,7 @@ export default {
       method: "post", //方法
       url: "cust/list", //地址
       data: {
-        cst_type: 0,
+        cst_type: 1,
         page_num: 1,
         page_size: 20
       },
@@ -308,21 +332,6 @@ export default {
       this.users = usersG;
       this.listLoading = false;
     });
-    // this.$http({
-    //   // 按钮权限
-    //   method: "post", //方法
-    //   url: "btn/permission", //地址
-    //   data: {
-    //     id: "755405eacaa611e7b73e005056bd1eff"
-    //   },
-    //   headers: {
-    //     sign: localStorage.getItem("sign")
-    //   }
-    // }).then(res => {
-    //   console.log(res);
-    //   this.btn = res.data.data.data;
-    //   console.log(this.btn);
-    // });
   },
   created() {}
 };

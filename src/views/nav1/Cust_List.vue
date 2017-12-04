@@ -9,29 +9,20 @@
                 <el-form-item>
 					<el-input v-model="filters.cst_phone" placeholder="手机号码"></el-input>
 				</el-form-item>
-                <!-- <el-form-item>
-					<el-select v-model="filters.cst_type" placeholder="客户类型">
-                        <el-option value="个人客户">个人客户</el-option>
-                        <el-option value="企业客户">企业客户</el-option>
-                    </el-select>
-				</el-form-item> -->
 				<el-form-item v-for="item in listId" v-if="item.name==='查询'">
 					<el-button type="primary" v-on:click="getUsers" >查询</el-button>
 				</el-form-item>
 				<el-form-item v-for="item in listId" v-if="item.name==='更多查询'">
 					<el-button type="primary" @click="handleAdd">更多查询</el-button>
 				</el-form-item>
-                <el-form-item v-for="item in listId" v-if="item.name==='新增个人客户'">
-					<el-button type="primary" @click="$router.push('/personal')">新增个人客户</el-button>
+                <el-form-item v-for="item in listId" v-if="item.name==='新增'">
+					<el-button type="primary" @click="$router.push('/custList/personal')">新增个人客户</el-button>
 				</el-form-item>
-                <!-- <el-form-item v-for="item in listId" v-if="item.name==='新增企业客户'">
-					<el-button type="primary" @click="$router.push('/enterprise')">新增企业客户</el-button>
-				</el-form-item> -->
 			</el-form>
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="usersData" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
+		<el-table :data="users" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
 			<!-- <el-table-column type="selection" width="0">
 			</el-table-column> -->
 			<el-table-column type="index" label="序号" align="center" width="70">
@@ -50,7 +41,7 @@
 			</el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
-					<el-button size="small" v-for="item in listId" v-if="item.name==='详情'">
+					<el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
                         <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
                     </el-button>                                                          
 					<el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
@@ -74,20 +65,18 @@
 		</el-col>
 		<!--更多查询界面-->
 		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="{addForm}" label-width="80px" ref="addForm">
+			<el-form :model="{checkList}" label-width="80px" ref="addForm">
                 <el-col style="margin-bottom:10px;">
-                    <!-- {{checklists}} -->
-                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="index" :value="name.remark" :label="name.remark">
+                    <el-checkbox-group v-model="checkList.type" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" :value="name.remark">
                         <span class="checkBoxs_name">{{name.remark + "："}}</span>
-                        <el-checkbox :label="checkBoxs.name" class="checkWidth" v-for="checkBoxs in checkName.checkBoxs" :key="checkBoxs.value" :value="checkBoxs.value">{{checkBoxs.name}}</el-checkbox>
-                        <!-- <el-checkbox label="复选框 B"></el-checkbox>
-                        <el-checkbox label="复选框 C"></el-checkbox> -->
+                        <el-checkbox :label="valueName.name" class="checkWidth" v-for="valueName in name.value" :key="valueName.name" :name="valueName.type"></el-checkbox>
+                        <hr>
                     </el-checkbox-group>
                 </el-col>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="getUsers" :loading="addLoading">查询</el-button>
+				<el-button type="primary" @click="getUsers(checkList)" :loading="addLoading">查询</el-button>
 			</div>
 		</el-dialog>
 	</section>
@@ -113,8 +102,18 @@ export default {
         cst_type: "",
         value: ""
       },
-      checkList: [],
+      checkList: {
+        type: []
+        //   gender: [],
+        //   cst_sort: [],
+        //   edu_level: [],
+        //   family: [],
+        //   children_cnt: [],
+        //   work_type: [],
+        //   cst_status: []
+      },
       usersData: [],
+      users: [],
       btn: [],
       page_num: 1,
       pageSize: 20,
@@ -152,37 +151,37 @@ export default {
     });
   },
   methods: {
-	//加载分页数据
-	loadData(pageNum, pageSize){                    
-		this.$http({          
-                method: "post", //方法
-                url: "cust/list", //地址
-                data: {
-                    cst_type: 0,
-                    page_num: pageNum,
-                    page_size: pageSize
-                },
-                headers: {
-                    sign: localStorage.getItem("sign")
-                }
-			}).then((response) =>{
-		      //this.users = res.data.data;
-		      var usersG = response.data.data;
-		      for (var i = 0; i < usersG.length; i++) {
-		        if (usersG[i].gender == 2) {
-		          usersG[i].gender = "未知";
-		        } else if (usersG[i].gender == 1) {
-		          usersG[i].gender = "女";
-		        } else {
-		          usersG[i].gender = "男";
-		        }
-		      }
-              this.usersData = usersG;
-              this.listLoading = false;
-		});     
+    //加载分页数据
+    loadData(pageNum, pageSize) {
+      this.$http({
+        method: "post", //方法
+        url: "cust/list", //地址
+        data: {
+          cst_type: 0,
+          page_num: pageNum,
+          page_size: pageSize
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(response => {
+        //this.users = res.data.data;
+        let usersG = response.data.data;
+        for (let i = 0; i < usersG.length; i++) {
+          if (usersG[i].gender == 2) {
+            usersG[i].gender = "未知";
+          } else if (usersG[i].gender == 1) {
+            usersG[i].gender = "女";
+          } else {
+            usersG[i].gender = "男";
+          }
+        }
+        this.users = usersG;
+        this.listLoading = false;
+      });
     },
     handleSizeChange: function(val) {
-        console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
@@ -192,37 +191,63 @@ export default {
       //this.getUsers();
     },
     //获取用户列表
-    getUsers() {
-      let para = {
-        page: this.page,
-        name: this.filters.cst_name
-      };
-      this.listLoading = true;
-      //   getUserListPage(para).then(res => {
-      //     this.total = res.data.total;
-      //     this.users = res.data.users;
-      //     this.addFormVisible = false;
-      //     this.listLoading = false;
-      //   });
-    },
-    //显示更多查询界面
-    handleAdd: function() {
-      this.addFormVisible = true;
-      let self = this;
-      self.$http({
-        method: "post",
-        url: "cust/filter",
+    getUsers(checkList) {
+      //   let self = this;
+      this.addFormVisible = false;
+      this.$http({
+        // 客户列表
+        method: "post", //方法
+        url: "cust/list", //地址
+        data: {
+          cst_type: 0,
+          checkList: {}
+        },
         headers: {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
-        self.addForm = res.data.data;
+        this.users = res.data.data;
+        let usersG = this.users;
+        for (let i = 0; i < usersG.length; i++) {
+          if (usersG[i].gender == 2) {
+            usersG[i].gender = "未知";
+          } else if (usersG[i].gender == 1) {
+            usersG[i].gender = "女";
+          } else {
+            usersG[i].gender = "男";
+          }
+        }
+        this.users = usersG;
+        this.listLoading = false;
       });
-      console.log(self.addForm);
+      //   let para = {
+      //     page: this.page,
+      //     name: this.filters.cst_name
+      //   };
+      //   this.listLoading = true;
+      //   //   getUserListPage(para).then(res => {
+      //   //     this.total = res.data.total;
+      //   //     this.users = res.data.users;
+      //   //     this.addFormVisible = false;
+      //   //     this.listLoading = false;
+      //   //   });
     },
-    //删除
-    deleteRow(index, rows) {
-      rows.splice(index, 1);
+    //显示更多查询界面
+    handleAdd: function() {
+      let self = this;
+      self
+        .$http({
+          method: "post",
+          url: "cust/filter",
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        })
+        .then(res => {
+          self.addForm = res.data.data;
+        });
+      //   console.log(self.addForm);
+      this.addFormVisible = true;
     },
     handleDel: function(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
@@ -261,8 +286,8 @@ export default {
       }
     }).then(res => {
       this.usersData = res.data.data;
-      var usersG = this.users;
-      for (var i = 0; i < usersG.length; i++) {
+      let usersG = this.usersData;
+      for (let i = 0; i < usersG.length; i++) {
         if (usersG[i].gender == 2) {
           usersG[i].gender = "未知";
         } else if (usersG[i].gender == 1) {
@@ -271,7 +296,7 @@ export default {
           usersG[i].gender = "男";
         }
       }
-      this.usersData = usersG;
+      this.users = usersG;
       this.listLoading = false;
     });
   },

@@ -28,10 +28,15 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
-                <el-menu  class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
-					 unique-opened router v-if="!collapsed">
+                <el-menu :default-active="'1'"
+                class="el-menu-vertical-demo" 
+                @open="handleopen" 
+                @close="handleclose" 
+                @select="handleselect"
+                router 
+                v-if="!collapsed">
                      <template v-for="(item,index) in navbars" v-if="!item.hidden">
-                        <el-submenu :index="index + ''" v-if="item.name">
+                        <el-submenu :index="item.name" v-if="item.name">
                             <template slot="title"><i :class="$router.options.routes"></i>{{item.name}}</template>
                                 <router-link v-for="subs in item.sub" :key="subs.id" :name="subs.name"
                                 :to="{name: subs.name}" tag="li" class="routerLink el-menu-item is-active">

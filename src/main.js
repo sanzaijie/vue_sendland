@@ -16,7 +16,8 @@ import 'font-awesome/css/font-awesome.min.css'
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
+//Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
+Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
 Axios.defaults.timeout = 5000;
 Axios.defaults.headers  = {
        'Content-Type': 'application/json'  

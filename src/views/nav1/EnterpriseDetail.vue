@@ -7,6 +7,12 @@
             <el-col class="toolbar">
                 <strong class="title">客户核心信息</strong>
                 <el-row :gutter="50">
+                    <el-col :span="24">
+                        <label>客户ID：</label>
+                        <span>{{detailUser.cust_id}}</span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
                         <label>客户姓名:</label>
                         <span>{{detailUser.cst_name}}</span>
@@ -335,10 +341,10 @@ export default {
     }
   },
   created() {
-    // 查看个人客户详情
+    // 查看企业客户详情
     this.$http({
       method: "post",
-      url: "cust/person/basic/detail",
+      url: "cust/company/basic/detail",
       data: {
         cust_id: this.$route.query.cust_id
       },
@@ -349,10 +355,10 @@ export default {
       //   console.log(res);
       this.detailUser = res.data.data;
     });
-    // 查看个人客户银行卡
+    // 查看企业客户银行卡
     this.$http({
       method: "post",
-      url: "cust/person/bank/detail",
+      url: "cust/company/bank/detail",
       data: {
         cust_id: this.$route.query.cust_id
       },
@@ -363,10 +369,10 @@ export default {
       //   console.log(res);
       this.bankData = res.data.data;
     });
-    // 查看个人客户所属项目
+    // 查看企业客户所属项目
     this.$http({
       method: "post",
-      url: "cust/person/project/detail",
+      url: "cust/company/project/detail",
       data: {
         cust_id: this.$route.query.cust_id
       },
@@ -377,24 +383,10 @@ export default {
       //   console.log(res);
       this.projectData = res.data.data;
     });
-    // 查看个人客户关联客户
+    // 查看企业客户需求信息
     this.$http({
       method: "post",
-      url: "cust/person/relation/detail",
-      data: {
-        cust_id: this.$route.query.cust_id
-      },
-      headers: {
-        sign: localStorage.getItem("sign")
-      }
-    }).then(res => {
-      //   console.log(res);
-      this.relationData = res.data.data;
-    });
-    // 查看个人客户需求信息
-    this.$http({
-      method: "post",
-      url: "cust/person/need/detail",
+      url: "cust/company/need/detail",
       data: {
         cust_id: this.$route.query.cust_id
       },
@@ -405,21 +397,21 @@ export default {
       this.needUser = res.data.data;
       console.log(this.needUser);
     });
-    // 查看个人客户跟进信息
-    // this.$http({
-    //   method: "post",
-    //   url: "cust/person/follow/detail",
-    //   data: {
-    //     cust_id: this.$route.query.cust_id,
-    //     intention_id: this.needUser.intention_id
-    //   },
-    //   headers: {
-    //     sign: localStorage.getItem("sign")
-    //   }
-    // }).then(res => {
-    //   //   console.log(res);
-    //   this.followUser = res.data.data;
-    // });
+    // 查看企业客户跟进信息
+    this.$http({
+      method: "post",
+      url: "cust/company/follow/detail",
+      data: {
+        cust_id: this.$route.query.cust_id,
+        intention_id: this.needUser.intention_id
+      },
+      headers: {
+        sign: localStorage.getItem("sign")
+      }
+    }).then(res => {
+      //   console.log(res);
+      this.followUser = res.data.data;
+    });
   }
 };
 </script>
