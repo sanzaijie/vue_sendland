@@ -134,8 +134,8 @@
 
 <script>
 import util from "../../common/js/util";
-// import moment from "../../api/moment";
-import dateFormat from "../../api/dateformat.js";
+import moment from "../../api/moment";
+//import dateFormat from "../../api/dateformat.js";
 // import //   getUserListPage,
 // //   removeUser,
 // //   batchRemoveUser,
@@ -428,15 +428,15 @@ export default {
           });
         })
         .catch(() => {});
-    }
+    },
     //时间格式化
-    // dateFormat: function() {
-    // //   var date = row[column.property];
-    //   if (date == undefined) {
-    //     return "";
-    //   }
-    //   return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    // }
+    dateFormat: function() {
+       var date = row[column.property];
+      if (date == undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    }
   },
   mounted() {
     // this.getUsers();
@@ -451,7 +451,7 @@ export default {
     }).then(res => {
       this.users = res.data.data.result;
       this.total = res.data.data.total_count;
-      this.users = this.dateFormat(res.data.data.result);
+      //this.users = this.dateFormat(res.data.data.result);
       console.log(this.users)
       this.listLoading = false;
     });

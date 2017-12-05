@@ -9,9 +9,9 @@ import Vuex from 'vuex'
 import routes from './routes'
 import Axios from "axios";
 import change from './api/change'
-import dateFormat from './api/dateformat'
+//
 Vue.prototype.change = change
-Vue.prototype.$dateFormat = dateFormat
+//Vue.prototype.$dateFormat = dateFormat
 // import Mock from './mock'
 import 'font-awesome/css/font-awesome.min.css'
 
