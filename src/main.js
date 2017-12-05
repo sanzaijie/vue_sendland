@@ -9,6 +9,7 @@ import Vuex from 'vuex'
 import routes from './routes'
 import Axios from "axios";
 import change from './api/change'
+import moment from './api/moment'
 Vue.prototype.change = change
 // import Mock from './mock'
 import 'font-awesome/css/font-awesome.min.css'

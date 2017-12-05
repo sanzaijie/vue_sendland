@@ -28,11 +28,11 @@
 			</el-table-column>
 			<el-table-column prop="name" label="角色姓名" min-width="100" align="center">
 			</el-table-column>
-			<el-table-column prop="oper_name" label="创建人" width="80" align="center">
+			<el-table-column prop="creator_name" label="创建人" width="80" align="center">
 			</el-table-column>
-			<el-table-column prop="createtime" label="创建时间"  align="center">
+			<el-table-column prop="createtime" label="创建时间" :formatter="dateFormat" align="center">
 			</el-table-column>
-			<el-table-column prop="role_state" label="角色状态" width="100" align="center">
+			<el-table-column prop="status" label="角色状态" width="100" align="center">
 			</el-table-column>
 			<el-table-column label="操作" min-width="100" align="center">
 				<template slot-scope="scope">
@@ -155,6 +155,7 @@
 
 <script>
 import util from "../../common/js/util";
+import moment from '../../api/moment'
 //import NProgress from 'nprogress'
 import //   getUserListPage,
 //   removeUser,
@@ -381,7 +382,7 @@ export default {
         .catch(() => {});
     },
     //时间格式化
-    dateFormat(row, column) {
+    dateFormat: function(row, column) {
       var date = row[column.property];
       if (date == undefined) {
         return "";
