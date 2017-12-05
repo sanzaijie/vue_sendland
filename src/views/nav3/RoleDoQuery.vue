@@ -53,7 +53,13 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
 			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
-			<el-pagination layout="prev, pager, next, jumper" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+			<el-pagination layout="total, prev, pager, next, jumper"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            :total="total"
+            style="float:right;">
 			</el-pagination>
 		</el-col>
 
@@ -103,70 +109,48 @@
 
         <!-- 权限管理界面 -->
         <el-dialog title="权限设置" v-model="premFormVisible" :close-on-click-modal="false">
-            <el-form :model="permForm" label-width="80px;" ref="permForm">
-                <el-row class="tac">
-                    <el-col :span="5">
-                        <el-menu default-active="2"
-                            class="el-menu-vertical-demo"
-                            @open="handleOpen"
-                            @close="handleClose">
-                            <el-submenu index="1">
-                                <template slot="title">
-                                    <span>客户管理</span>
-                                </template>
-                                <el-menu-item-group>
-                                    <el-menu-item index="1-1">客户列表</el-menu-item>
-                                </el-menu-item-group>
-                            </el-submenu>
-                            <el-submenu index="2">
-                                <template slot="title">
-                                    <span>监控管理</span>
-                                </template>
-                                <el-menu-item-group>
-                                    <el-menu-item index="1-1">选项1</el-menu-item>
-                                    <el-menu-item index="1-2">选项2</el-menu-item>
-                                    <el-menu-item index="1-2">选项2</el-menu-item>
-                                </el-menu-item-group>
-                            </el-submenu>
-                            <el-submenu index="3">
-                                <template slot="title">
-                                    <span>系统管理</span>
-                                </template>
-                                <el-menu-item-group>
-                                    <el-menu-item index="1-1">选项1</el-menu-item>
-                                    <el-menu-item index="1-2">选项2</el-menu-item>
-                                    <el-menu-item index="1-2">选项2</el-menu-item>
-                                </el-menu-item-group>
-                            </el-submenu>
-                        </el-menu>
+            <el-form :model="{permForm}" label-width="80px;" ref="permForm">
+                <el-row>
+                    <el-col :span="24">
+                        <el-tree
+                        :data="premFormData"
+                        show-checkbox
+                        node-key="id"
+                        ref="tree"
+                        highlight-current
+                        :props="defaultProps">
+                        </el-tree>
                     </el-col>
-                  <el-col :span="20">
-
-                  </el-col>
+                  <!-- <el-col :span="20"></el-col> -->
                 </el-row>
             </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="premFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="premSubmit" :loading="addLoading">提交</el-button>
+            </div>
         </el-dialog>
-        <div slot="footer" class="dialog-footer">
-			<el-button @click.native="addFormVisible = false">取消</el-button>
-			<el-button type="primary" @click.native="premSubmit" :loading="addLoading">提交</el-button>
-		</div>
 	</section>
 </template>
 
 <script>
 import util from "../../common/js/util";
-import moment from '../../api/moment'
-//import NProgress from 'nprogress'
-import //   getUserListPage,
-//   removeUser,
-//   batchRemoveUser,
-//   editUser,
-//   addUser
-"../../api/api";
+// import moment from "../../api/moment";
+import dateFormat from "../../api/dateformat.js";
+// import //   getUserListPage,
+// //   removeUser,
+// //   batchRemoveUser,
+// //   editUser,
+// //   addUser
+// "../../api/api";
 
 export default {
   data() {
     return {
+      premFormData: [],
+      defaultProps: {
+        children: "sub",
+        label: "name"
+      },
       RoleDoQuery: {
         name: "",
         value: ""
@@ -174,8 +158,11 @@ export default {
       checkList: [],
       checkNames: [],
       users: [],
-      total: 0,
+      page_num: 1,
+      pageSize: 20,
       page: 1,
+      currentPage: 1,
+      total: 1,
       listLoading: false,
       sels: [], //列表选中列
 
@@ -203,25 +190,74 @@ export default {
         remark: ""
       },
 
-      premFormVisible: false, //新增界面是否显示
+      premFormVisible: false, //权限界面是否显示
       premLoading: false,
       premFormRules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       },
       //新增界面数据
-      premForm: {}
+      permForm: {},
+      myFormData: {},
+      data1: [
+        {
+          name: "",
+          children: [
+            {
+              name: ""
+            }
+          ]
+        }
+      ]
     };
   },
   methods: {
+    getCheckedKeys() {
+      console.log(this.$refs.tree.getCheckedKeys());
+    },
+    setCheckedKeys() {
+      this.$refs.tree.setCheckedKeys([3]);
+    },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+    //加载分页数据
+    loadData(pageNum, pageSize) {
+      this.$http({
+        method: "post", //方法
+        url: "cust/list", //地址
+        data: {
+          cst_type: 0,
+          page_num: pageNum,
+          page_size: pageSize
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.usersData = res.data.data.result;
+        this.total = res.data.data.total_count;
+        let usersG = this.usersData;
+        for (let i = 0; i < usersG.length; i++) {
+          usersG[i].gender = change.Gender(usersG[i].gender);
+          usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+          usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
+        }
+        this.users = usersG;
+        this.listLoading = false;
+      });
+    },
+    handleSizeChange: function(val) {
+      console.log(`每页 ${val} 条`);
+    },
     handleCurrentChange(val) {
-      this.page = val;
-      this.getUsers();
+      console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.loadData(this.currentPage, this.pageSize);
+      //this.page = val;
+      //this.getUsers();
     },
     //获取用户列表
     getUsers() {
@@ -268,12 +304,24 @@ export default {
     //显示新增角色界面
     handleAdd: function() {
       this.addFormVisible = true;
-      this.addForm = {};
     },
     //显示权限设置界面
-    handlePrem: function() {
+    handlePrem: function(index, row) {
       this.premFormVisible = true;
-      this.premForm = {};
+      this.permForm = Object.assign({}, row);
+      this.$http({
+        method: "post",
+        url: "role/permission/list",
+        data: {
+          id: this.permForm.id
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.premFormData = res.data.data.permission_list;
+        this.myFormData = res.data.data.my_permission;
+      });
     },
     //编辑
     editSubmit: function() {
@@ -380,18 +428,19 @@ export default {
           });
         })
         .catch(() => {});
-    },
-    //时间格式化
-    dateFormat: function(row, column) {
-      var date = row[column.property];
-      if (date == undefined) {
-        return "";
-      }
-      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
+    //时间格式化
+    // dateFormat: function() {
+    // //   var date = row[column.property];
+    //   if (date == undefined) {
+    //     return "";
+    //   }
+    //   return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    // }
   },
   mounted() {
-    this.getUsers();
+    // this.getUsers();
+    this.listLoading = true;
     this.$http({
       method: "post",
       url: "role/list",
@@ -401,6 +450,9 @@ export default {
       }
     }).then(res => {
       this.users = res.data.data.result;
+      this.total = res.data.data.total_count;
+      this.users = this.dateFormat(res.data.data.result);
+      console.log(this.users)
       this.listLoading = false;
     });
   }
@@ -408,6 +460,10 @@ export default {
 </script>
 
 <style scoped>
+.fr {
+  text-align: right;
+  margin-top: 20px;
+}
 .checkBoxs_name {
   width: 12%;
   display: inline-block;

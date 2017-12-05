@@ -29,7 +29,7 @@
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
                 <el-menu :default-active="'1'"
-                class="el-menu-vertical-demo" 
+                class="el-menu-vertical-demo overf" 
                 @open="handleopen" 
                 @close="handleclose" 
                 @select="handleselect"
@@ -181,6 +181,9 @@ export default {
 
 <style scoped lang="scss">
 @import "~scss_vars";
+.overf {
+  overflow: auto;
+}
 .link {
   text-decoration: none;
   display: block;

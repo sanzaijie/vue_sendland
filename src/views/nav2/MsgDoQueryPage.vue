@@ -2,14 +2,14 @@
 	<section>
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="msgDoQuery">
+			<el-form :inline="true" :model="MsgDoQuery">
 					<el-col class="toolbar" style="border-radius: 4px;">
 						<el-row :gutter="50">
 							<el-col :span="6" style="padding-bottom: 0px;">
-								<el-input v-model="msgDoQuery.message_type_name" placeholder="接口名称"></el-input>
+								<el-input v-model="MsgDoQuery.message_type_name" placeholder="接口名称"></el-input>
 							</el-col>
 							<el-col :span="6" style="padding-bottom: 0px;">   
-								<el-select v-model="msgDoQuery.status" placeholder="消息状态" style="width: 100%;">
+								<el-select v-model="MsgDoQuery.status" placeholder="消息状态" style="width: 100%;">
 							            <el-option value="全部">全部</el-option>
 									<el-option value="接收成功">接收成功</el-option>
 									<el-option value="已发送">已发送</el-option>
@@ -18,7 +18,7 @@
 								</el-select>
 							</el-col>  
 							<el-col :span="6" style="padding-bottom: 0px;">   
-								<el-select v-model="msgDoQuery.from_to" placeholder="消息来源" style="width: 100%;">
+								<el-select v-model="MsgDoQuery.from_to" placeholder="消息来源" style="width: 100%;">
 									<el-option value="全部">全部</el-option>
 									<el-option value="请求">请求</el-option>
 									<el-option value="修改">修改</el-option>
@@ -26,19 +26,19 @@
 								</el-select>
 							</el-col>
 							<el-col :span="6" style="padding-bottom: 0px;">
-								<el-input v-model="msgDoQuery.request_system" placeholder="请求系统"></el-input>
+								<el-input v-model="MsgDoQuery.request_system" placeholder="请求系统"></el-input>
 							</el-col>
 						</el-row>
 						<el-row :gutter="50">
 							<el-col :span="6" style="padding-bottom: 0px;">
-								<el-input v-model="msgDoQuery.request_content" placeholder="请求内容"></el-input>
+								<el-input v-model="MsgDoQuery.request_content" placeholder="请求内容"></el-input>
 							</el-col>
 							<el-col :span="6" style="padding-bottom: 0px;">   
-								<el-input v-model="msgDoQuery.message" placeholder="消息结果"></el-input>
+								<el-input v-model="MsgDoQuery.message" placeholder="消息结果"></el-input>
 							</el-col>  
 							<el-col :span="6" style="padding-bottom: 0px;">   
 								<el-date-picker
-									v-model="msgDoQuery.all_time"
+									v-model="MsgDoQuery.all_time"
 									type="daterange"
 									range-separator="至"
 									start-placeholder="开始日期"
@@ -48,15 +48,17 @@
 								</el-date-picker>
 							</el-col>
 							<el-col :span="6" style="padding-bottom: 0px;">
-								<el-button type="primary" @click="onSearchData">查询</el-button>
+								<el-button type="primary" @click="">查询</el-button>
 							</el-col>  
 						</el-row>
 					</el-col>
 				</el-form>
 			</el-col>
 			<!--列表-->
-			<el-table :data="system" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
-				<el-table-column type="index" label="序号" align="center" width="70" style="padding:0 10px;">
+			<el-table :data="system" highlight-current-row stripe style="width: 100%;">
+				<!-- <el-table-column type="selection" width="0">
+				</el-table-column> -->
+				<el-table-column type="id" label="序号" align="center" width="70" style="padding:0 10px;">
 				</el-table-column>
 				<el-table-column prop="message_type_name" label="接口名称" min-width="80" align="center">
 				</el-table-column>
@@ -75,15 +77,19 @@
                         <el-button size="small" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
                     </template>
 			    </el-table-column>
+				<!-- <el-table-column prop="cer_id" label="证件号码" min-width="100" align="center">
+				</el-table-column>
+				<el-table-column label="操作" width="200" align="center">
+					<template slot-scope="scope">
+						<el-button size="small" @click="handleEdit(scope.$index, scope.row)">详情</el-button>                    
+						<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+						<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					</template>
+				</el-table-column> -->
 			</el-table>
 			<el-col :span="24" class="toolbar">
-				<el-pagination layout="prev, pager, next, jumper" 
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="pageSize"
-                    :total="totalCount"
-                    style="float:right;">
+				<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
+				<el-pagination layout="prev, pager, next, jumper" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
 				</el-pagination>
 			</el-col>
 	</section>
@@ -91,7 +97,6 @@
 
 <script>
 import util from "../../common/js/util";
-import moment from "../../api/moment";
 //import NProgress from 'nprogress'
 import {
   getUserListPage,
@@ -105,19 +110,16 @@ export default {
   data() {
     return {
       system: [],
-      totalCount: 0,
-      pageSize: 20,
-      currentPage: 1,
-      msgDoQuery: {
-        message_type_name: null,
-        status: null,
-        from_to: null,
-        request_system: null,
-        request_content: null,
-        message: null,
-        all_time: null,
-        page_num: 1,
-        page_size: 20
+      total: 0,
+      page: 1,
+      MsgDoQuery: {
+        message_type_name: "",
+        status: "",
+        from_to: "",
+        request_system: "",
+        request_content: "",
+        message: "",
+        all_time: ""
       },
       pickerOptions0: {
         disabledDate(time) {
@@ -127,61 +129,12 @@ export default {
     };
   },
   methods: {
-    checkMessage() { //''处理
-      if(this.msgDoQuery.message_type_name == '') {
-          this.msgDoQuery.message_type_name = null;
-      }
-      if(this.msgDoQuery.status == '') {
-          this.msgDoQuery.status = null;
-      }
-      if(this.msgDoQuery.from_to == '') {
-          this.msgDoQuery.from_to = null;
-      }
-      if(this.msgDoQuery.request_system == '') {
-          this.msgDoQuery.request_system = null;
-      }
-      if(this.msgDoQuery.request_content == '') {
-          this.msgDoQuery.request_content = null;
-      }
-      if(this.msgDoQuery.message == '') {
-          this.msgDoQuery.message = null;
-      }
-      if(this.msgDoQuery.all_time == '') {
-          this.msgDoQuery.all_time = null;
-      }
-    },
-    //加载分页数据
-    loadData(pageNum, pageSize) {
-      this.listLoading = true;
-      this.checkMessage();
-      this.msgDoQuery.page_num = pageNum;
-      this.msgDoQuery.page_size = pageSize;
-      this.$http({
-        method: "post", //方法
-        url: "monitor/interface/list", //地址
-        data: this.msgDoQuery,
-        headers: {
-          sign: localStorage.getItem("sign")
-        }
-      }).then(response => {
-        let msgData = response.data.data;  
-        this.system = msgData.result;
-        this.totalCount = msgData.total_count;
-        this.listLoading = false;
-      }).catch(function (error) {
-        this.listLoading = false;
-      });
-    },  
     logTimeChange(val) {
       console.log(val);
     },
-    onSearchData() {  //查询数据
-       this.currentPage = 1;
-       this.loadData(this.currentPage, this.pageSize);
-    },
     handleCurrentChange(val) {
-      this.currentPage = val;
-      this.loadData(this.currentPage, this.pageSize);
+      this.page = val;
+      this.getUsers();
     },
     getUsers() {
       let para = {
@@ -204,8 +157,7 @@ export default {
     }
   },
   mounted() {
-     //首次加载页面
-    this.loadData(this.currentPage, this.pageSize);
+    // this.getUsers();
   }
 };
 </script>
