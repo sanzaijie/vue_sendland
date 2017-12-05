@@ -26,11 +26,11 @@
 		<el-table :data="users" highlight-current-row stripe v-loading="listLoading"  style="width: 100%;">
 			<el-table-column type="index" label="序号" align="center" width="70">
 			</el-table-column>
-			<el-table-column prop="role_name" label="角色姓名" min-width="100" align="center">
+			<el-table-column prop="name" label="角色姓名" min-width="100" align="center">
 			</el-table-column>
 			<el-table-column prop="oper_name" label="创建人" width="80" align="center">
 			</el-table-column>
-			<el-table-column prop="create_time" label="创建时间" align="center">
+			<el-table-column prop="createtime" label="创建时间"  align="center">
 			</el-table-column>
 			<el-table-column prop="role_state" label="角色状态" width="100" align="center">
 			</el-table-column>
@@ -156,13 +156,12 @@
 <script>
 import util from "../../common/js/util";
 //import NProgress from 'nprogress'
-import {
-  getUserListPage,
-  removeUser,
-  batchRemoveUser,
-  editUser,
-  addUser
-} from "../../api/api";
+import //   getUserListPage,
+//   removeUser,
+//   batchRemoveUser,
+//   editUser,
+//   addUser
+"../../api/api";
 
 export default {
   data() {
@@ -231,13 +230,13 @@ export default {
       };
       this.listLoading = true;
       //NProgress.start();
-      getUserListPage(para).then(res => {
-        this.total = res.data.total;
-        this.users = res.data.users;
-        this.addFormVisible = false;
-        this.listLoading = false;
-        //NProgress.done();
-      });
+      //   getUserListPage(para).then(res => {
+      //     this.total = res.data.total;
+      //     this.users = res.data.users;
+      //     this.addFormVisible = false;
+      //     this.listLoading = false;
+      //     //NProgress.done();
+      //   });
     },
     //删除
     handleDel: function(index, row) {
@@ -380,10 +379,29 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    //时间格式化
+    dateFormat(row, column) {
+      var date = row[column.property];
+      if (date == undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
   },
   mounted() {
     this.getUsers();
+    this.$http({
+      method: "post",
+      url: "role/list",
+      data: {},
+      headers: {
+        sign: localStorage.getItem("sign")
+      }
+    }).then(res => {
+      this.users = res.data.data.result;
+      this.listLoading = false;
+    });
   }
 };
 </script>
@@ -398,16 +416,16 @@ export default {
   margin-right: 5px;
 }
 .el-submenu .el-menu-item {
-    height: 50px;
-    line-height: 50px;
-    padding: 0 45px;
-    min-width: 0;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 45px;
+  min-width: 0;
 }
 .el-menu-item-group__title {
-    padding-top: 0;
-    line-height: normal;
-    font-size: 14px;
-    padding-left: 20px;
-    color: #97a8be;
+  padding-top: 0;
+  line-height: normal;
+  font-size: 14px;
+  padding-left: 20px;
+  color: #97a8be;
 }
 </style>

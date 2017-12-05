@@ -36,11 +36,11 @@
                 <el-row :gutter="50"> 
                     <el-col :span="6" style="padding-bottom: 0px;">   
                         <el-select v-model="addUser.card_type" placeholder="证件类型" style="width: 100%;">
-                            <el-option value="身份证">身份证</el-option>
-                            <el-option value="护照">护照</el-option>
-                            <el-option value="军官证">军官证</el-option>
-                            <el-option value="港澳身份证">港澳身份证</el-option>
-                            <el-option value="台胞证">台胞证</el-option>
+                            <el-option value="0">身份证</el-option>
+                            <el-option value="1">护照</el-option>
+                            <el-option value="2">军官证</el-option>
+                            <el-option value="3">港澳身份证</el-option>
+                            <el-option value="4">台胞证</el-option>
                         </el-select>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
@@ -48,8 +48,8 @@
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">   
                         <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
-                            <el-option value="个人客户">个人客户</el-option>
-                            <el-option value="企业客户">企业客户</el-option>
+                            <el-option value="0">个人客户</el-option>
+                            <el-option value="1">企业客户</el-option>
                         </el-select>
                     </el-col>
                 </el-row>
@@ -66,9 +66,9 @@
                 <el-row :gutter="50">
                     <el-col :span="4" style="padding-bottom: 0px;">
                        <el-select v-model="bank.bank_delegate" placeholder="卡类型">
-                        <el-option value="储蓄卡">储蓄卡</el-option>
-                        <el-option value="信用卡">信用卡</el-option>
-                        <el-option value="准贷记卡">准贷记卡</el-option>
+                        <el-option value="1">储蓄卡</el-option>
+                        <el-option value="2">信用卡</el-option>
+                        <el-option value="3">准贷记卡</el-option>
                     </el-select>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
@@ -123,7 +123,10 @@
 		</el-col>
     </section>
 </template>
+
 <script>
+import * as change from "../../api/change.js";
+
 export default {
   data() {
     var validatePhone = (rule, value, callback) => {

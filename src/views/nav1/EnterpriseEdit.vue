@@ -11,17 +11,17 @@
                     <el-col :span="6">
                         <el-form-item label="客户类型" prop="addUser.cst_type">   
                             <el-select v-model="addUser.cst_type" placeholder="客户类型">
-                                <el-option value="个人客户">个人客户</el-option>
-                                <el-option value="企业客户">企业客户</el-option>
+                                <el-option value="0">个人客户</el-option>
+                                <el-option value="1">企业客户</el-option>
                             </el-select>
                         </el-form-item>  
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="性别" prop="addUser.gender">   
                             <el-select v-model="addUser.gender" placeholder="性别">
-                                <el-option value="未知">未知</el-option>
-                                <el-option value="男">男</el-option>
-                                <el-option value="女">女</el-option>
+                                <el-option value="2">未知</el-option>
+                                <el-option value="0">男</el-option>
+                                <el-option value="1">女</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -33,11 +33,11 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="证件类型" prop="addUser.card_type">                          
                             <el-select v-model="addUser.card_type" placeholder="证件类型">
-                                <el-option value="身份证">身份证</el-option>
-                                <el-option value="护照">护照</el-option>
-                                <el-option value="军官证">军官证</el-option>
-                                <el-option value="港澳身份证">港澳身份证</el-option>
-                                <el-option value="台胞证">台胞证</el-option>
+                                <el-option value="0">身份证</el-option>
+                                <el-option value="1">护照</el-option>
+                                <el-option value="2">军官证</el-option>
+                                <el-option value="3">港澳身份证</el-option>
+                                <el-option value="4">台胞证</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -55,9 +55,9 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="客户类别" prop="cst_sort">  
                             <el-select v-model="addUser.cst_sort" placeholder="客户类别">
-                                <el-option value="业主">业主</el-option>
-                                <el-option value="租户">租户</el-option>
-                                <el-option value="其他">其他</el-option>
+                                <el-option value="0">业主</el-option>
+                                <el-option value="1">租户</el-option>
+                                <el-option value="2">其他</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -78,8 +78,8 @@
                     <el-col :span="6">  
                         <el-form-item :span="6" label="VIP客户国籍" prop="viptag">  
                             <el-select v-model="addUser.viptag" placeholder="VIP客户">
-                                <el-option value="是">是</el-option>
-                                <el-option value="否">否</el-option>
+                                <el-option value="1">是</el-option>
+                                <el-option value="0">否</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -111,9 +111,9 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="居住业态" prop="resided_state">  
                             <el-select v-model="addUser.resided_state" placeholder="居住业态">
-                                <el-option value="高层住宅是">高层住宅</el-option>
-                                <el-option value="商业">商业</el-option>
-                                <el-option value="别墅">别墅</el-option>
+                                <el-option value="1">高层住宅</el-option>
+                                <el-option value="2">商业</el-option>
+                                <el-option value="3">别墅</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -135,10 +135,10 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="来自区域" prop="comefrom">    
                             <el-select v-model="addUser.comefrom" placeholder="来自区域">
-                                <el-option value="中国大陆">中国大陆</el-option>
-                                <el-option value="港/澳">港/澳</el-option>
-                                <el-option value="台湾">台湾</el-option>
-                                <el-option value="海外">海外</el-option>
+                                <el-option value="1">中国大陆</el-option>
+                                <el-option value="2">港/澳</el-option>
+                                <el-option value="3">台湾</el-option>
+                                <el-option value="4">海外</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -160,20 +160,19 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="职业身份" prop="work_type">   
                             <el-select v-model="addUser.work_type" placeholder="职业身份">
-                                <el-option value="公务员">公务员</el-option>
-                                <el-option value="教师">教师</el-option>
-                                <el-option value="医生">医生</el-option>
-                                <el-option value="普通员工">普通员工</el-option>
-                                <el-option value="高级白领">高级白领</el-option>
-                                <el-option value="事业单位">事业单位</el-option>
-                                <el-option value="党政军干部">党政军干部</el-option>
-                                <el-option value="企事业中高层管理人员">企事业中高层管理人员</el-option>
-                                <el-option value="企事业基层管理/职员/公务员">企事业基层管理/职员/公务员</el-option>
-                                <el-option value="职员/公务员">职员/公务员</el-option>
-                                <el-option value="私企员工">私企员工</el-option>
-                                <el-option value="私企老板">私企老板</el-option>
-                                <el-option value="自雇">自雇</el-option>
-                                <el-option value="个体户">个体户</el-option>
+                                <el-option value="108">公务员</el-option>
+                                <el-option value="109">教师</el-option>
+                                <el-option value="110">医生</el-option>
+                                <el-option value="111">普通员工</el-option>
+                                <el-option value="112">高级白领</el-option>
+                                <el-option value="113">事业单位</el-option>
+                                <el-option value="1">党政军干部</el-option>
+                                <el-option value="102">企事业中高层管理人员</el-option>
+                                <el-option value="103">企事业基层管理/职员/公务员</el-option>
+                                <el-option value="104">私企员工</el-option>
+                                <el-option value="105">私企老板</el-option>
+                                <el-option value="106">自雇</el-option>
+                                <el-option value="107">个体户</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -190,12 +189,12 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="家庭结构" prop="family"> 
                             <el-select v-model="addUser.family" placeholder="家庭结构">
-                                <el-option value="单身贵族">单身贵族</el-option>
-                                <el-option value="二人世界">二人世界</el-option>
-                                <el-option value="单亲家庭">单亲家庭</el-option>
-                                <el-option value="二代之家">二代之家</el-option>
-                                <el-option value="三代同堂">三代同堂</el-option>
-                                <el-option value="未知">未知</el-option>
+                                <el-option value="1">单身贵族</el-option>
+                                <el-option value="2">二人世界</el-option>
+                                <el-option value="3">单亲家庭</el-option>
+                                <el-option value="4">二代之家</el-option>
+                                <el-option value="5">三代同堂</el-option>
+                                <el-option value="0">未知</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -207,40 +206,40 @@
                     <el-col :span="6">
                         <el-form-item :span="6" label="教育程度" prop="edu_level"> 
                             <el-select v-model="addUser.edu_level" placeholder="教育程度">
-                                <el-option value="未选择">未选择</el-option>
-                                <el-option value="未知">未知</el-option>
-                                <el-option value="高职/技校">高职/技校</el-option>
-                                <el-option value="大专">大专</el-option>
-                                <el-option value="大学">大学</el-option>
-                                <el-option value="研究生以上">研究生以上</el-option>
-                                <el-option value="其他">其他</el-option>
+                                <el-option value="0">未选择</el-option>
+                                <el-option value="6">未知</el-option>
+                                <el-option value="1">高职/技校</el-option>
+                                <el-option value="2">大专</el-option>
+                                <el-option value="3">大学</el-option>
+                                <el-option value="4">研究生以上</el-option>
+                                <el-option value="5">其他</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item :span="6" label="有无保姆" prop="have_bm"> 
                             <el-select v-model="addUser.have_bm" placeholder="有无保姆同住">
-                                <el-option value="有">有</el-option>
-                                <el-option value="无">无</el-option>
-                                <el-option value="未知">未知</el-option>
+                                <el-option value="1">有</el-option>
+                                <el-option value="0">无</el-option>
+                                <el-option value="2">未知</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item :span="6" label="主要决策者" prop="ismain_jcz"> 
                             <el-select v-model="addUser.ismain_jcz" placeholder="是否为主要决策者">
-                                <el-option value="是">是</el-option>
-                                <el-option value="否">否</el-option>
-                                <el-option value="不确定">不确定</el-option>
+                                <el-option value="1">是</el-option>
+                                <el-option value="0">否</el-option>
+                                <el-option value="2">不确定</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item :span="6" label="是否养犬" prop="pet_stag"> 
                             <el-select v-model="addUser.pet_stag" placeholder="是否养犬">
-                                <el-option value="是">是</el-option>
-                                <el-option value="否">否</el-option>
-                                <el-option value="不确定">不确定</el-option>
+                                <el-option value="1">是</el-option>
+                                <el-option value="0">否</el-option>
+                                <el-option value="2">不确定</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -267,9 +266,9 @@
                 <el-row :gutter="20">
                     <el-col :span="4" style="padding-bottom: 0px;">
                        <el-select v-model="bank.bank_delegate" placeholder="卡类型">
-                        <el-option value="储蓄卡">储蓄卡</el-option>
-                        <el-option value="信用卡">信用卡</el-option>
-                        <el-option value="准贷记卡">准贷记卡</el-option>
+                        <el-option value="1">储蓄卡</el-option>
+                        <el-option value="2">信用卡</el-option>
+                        <el-option value="3">准贷记卡</el-option>
                     </el-select>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
@@ -301,9 +300,9 @@
                     </el-col>
                     <el-col :span="4" style="padding-bottom: 0px;">
                     <el-select v-model="relaCust.gender" placeholder="性别">
-                        <el-option value="未知">未知</el-option>
-                        <el-option value="男">男</el-option>
-                        <el-option value="女">女</el-option>
+                        <el-option value="2">未知</el-option>
+                        <el-option value="0">男</el-option>
+                        <el-option value="1">女</el-option>
                     </el-select>
                     </el-col>
                     <el-col :span="4" style="padding-bottom: 0px;">
@@ -339,7 +338,10 @@
 		<!-- </el-form-item> -->
     </section>
 </template>
+
 <script>
+import * as change from "../../api/change.js";
+
 export default {
   data() {
     return {

@@ -10,7 +10,7 @@
 					<el-input v-model="filters.cst_phone" placeholder="手机号码"></el-input>
 				</el-form-item>
 				<el-form-item v-for="item in listId" v-if="item.name==='查询'">
-					<el-button type="primary" v-on:click="getUsers" >查询</el-button>
+					<el-button type="primary" @click="getSelect(filters)" >查询</el-button>
 				</el-form-item>
 				<el-form-item v-for="item in listId" v-if="item.name==='更多查询'">
 					<el-button type="primary" @click="handleAdd">更多查询</el-button>
@@ -22,7 +22,7 @@
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
+		<el-table :data="usersData" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
 			<!-- <el-table-column type="selection" width="0">
 			</el-table-column> -->
 			<el-table-column type="index" label="序号" align="center" width="70">
@@ -54,7 +54,7 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
 			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
-			<el-pagination layout="prev, pager, next, jumper"
+			<el-pagination layout="total, prev, pager, next, jumper"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"
@@ -84,7 +84,7 @@
 
 <script>
 import util from "../../common/js/util";
-import change from "../../api/change.js";
+import * as change from "../../api/change.js";
 import //   getUserListPage,
 //   removeUser,
 //   batchRemoveUser,
@@ -119,7 +119,7 @@ export default {
       pageSize: 20,
       page: 1,
       currentPage: 1,
-      total: 1000,
+      total: 1,
       listLoading: true,
       sels: [], //列表选中列
       editFormVisible: false, //编辑界面是否显示
@@ -164,17 +164,14 @@ export default {
         headers: {
           sign: localStorage.getItem("sign")
         }
-      }).then(response => {
-        //this.users = res.data.data;
-        let usersG = response.data.data.result;
+      }).then(res => {
+        this.usersData = res.data.data.result;
+        this.total = res.data.data.total_count;
+        let usersG = this.usersData;
         for (let i = 0; i < usersG.length; i++) {
-          if (usersG[i].gender == 2) {
-            usersG[i].gender = "未知";
-          } else if (usersG[i].gender == 1) {
-            usersG[i].gender = "女";
-          } else {
-            usersG[i].gender = "男";
-          }
+          usersG[i].gender = change.Gender(usersG[i].gender);
+          usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+          usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
         }
         this.users = usersG;
         this.listLoading = false;
@@ -190,7 +187,34 @@ export default {
       //this.page = val;
       //this.getUsers();
     },
-    //获取用户列表
+    // 获取查询客用户列表
+    getSelect(filters) {
+      this.listLoading = true;
+      this.$http({
+        method: "post",
+        url: "cust/list",
+        data: {
+          cst_type: 0,
+          cst_name: filters.cst_name,
+          cst_phone: filters.cst_phone
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.usersData = res.data.data.result;
+        this.total = res.data.data.total_count;
+        let usersG = this.usersData;
+        for (let i = 0; i < usersG.length; i++) {
+          usersG[i].gender = change.Gender(usersG[i].gender);
+          usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+          usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
+        }
+        this.usersData = usersG;
+        this.listLoading = false;
+      });
+    },
+    //获取更多查询用户列表
     getUsers(checkList) {
       //   let self = this;
       this.addFormVisible = false;
@@ -286,15 +310,12 @@ export default {
       }
     }).then(res => {
       this.usersData = res.data.data.result;
+      this.total = res.data.data.total_count;
       let usersG = this.usersData;
       for (let i = 0; i < usersG.length; i++) {
-        if (usersG[i].gender == 2) {
-          usersG[i].gender = "未知";
-        } else if (usersG[i].gender == 1) {
-          usersG[i].gender = "女";
-        } else {
-          usersG[i].gender = "男";
-        }
+        usersG[i].gender = change.Gender(usersG[i].gender);
+        usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+        usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
       }
       this.users = usersG;
       this.listLoading = false;

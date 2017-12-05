@@ -301,54 +301,9 @@
         </el-form>
     </section>
 </template>
-<style scoped>
-.fr {
-  float: right;
-  margin: 10px 0;
-}
-.rulesinput {
-  width: 100%;
-}
-.rulesinput .el-input {
-  width: 125%;
-}
-.title {
-  display: block;
-  margin-bottom: 10px;
-  border-left: 4px solid #0a8ddf;
-  padding-left: 5px;
-}
-.toolbar {
-  background: #f2f2f2;
-  padding: 10px 30px 15px 30px;
-  margin: 10px 0px;
-}
-.el-row {
-  margin-bottom: 15px;
-}
-.bg-purple-dark {
-  background: #99a9bf;
-}
-.bg-purple {
-  background: #d3dce6;
-}
-.bg-purple-light {
-  background: #e5e9f2;
-}
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-.row-bg {
-  padding: 10px 0;
-  background-color: #f9fafc;
-}
-.el-date-editor.el-input {
-  width: 100%;
-}
-</style>
 
 <script>
+import * as change from "../../api/change.js";
 export default {
   data() {
     var validatePhone = (rule, value, callback) => {
@@ -530,3 +485,49 @@ export default {
 };
 </script>
 
+<style scoped>
+.fr {
+  float: right;
+  margin: 10px 0;
+}
+.rulesinput {
+  width: 100%;
+}
+.rulesinput .el-input {
+  width: 125%;
+}
+.title {
+  display: block;
+  margin-bottom: 10px;
+  border-left: 4px solid #0a8ddf;
+  padding-left: 5px;
+}
+.toolbar {
+  background: #f2f2f2;
+  padding: 10px 30px 15px 30px;
+  margin: 10px 0px;
+}
+.el-row {
+  margin-bottom: 15px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
+.el-date-editor.el-input {
+  width: 100%;
+}
+</style>

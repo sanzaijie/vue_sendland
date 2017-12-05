@@ -309,9 +309,10 @@
     </section>
 </template>
 <script>
-model: {
-  type: [String, Object];
-}
+import * as change from "../../api/change.js";
+// model: {
+//   type: [String, Object];
+// }
 export default {
   data() {
     return {
@@ -334,7 +335,7 @@ export default {
       });
     }
   },
-  created() {
+  mounted() {
     // 查看个人客户详情
     this.$http({
       method: "post",
@@ -348,6 +349,23 @@ export default {
     }).then(res => {
       //   console.log(res);
       this.detailUser = res.data.data;
+      let usersG = this.detailUser;
+      usersG.gender = change.Gender(usersG.gender);
+      usersG.cst_type = change._cstType(usersG.cst_type);
+      usersG.card_type = change._cardTcard_typeype(usersG.card_type);
+      usersG.cst_status = change._cstStatus(usersG.cst_status);
+      usersG.work_type = change._workType(usersG.work_type);
+      usersG.children_cnt = change._childrenCnt(usersG.children_cnt);
+      usersG.family = change._family(usersG.family);
+      usersG.edu_level = change._eduLevel(usersG.edu_level);
+      usersG.cst_sort = change._cstSort(usersG.cst_sort);
+      usersG.viptag = change._viptag(usersG.viptag);
+      usersG.resided_state = change._residedState(usersG.resided_state);
+      usersG.comefrom = change._comefrom(usersG.comefrom);
+      usersG.have_bm = change._haveBm(usersG.have_bm);
+      usersG.ismain_jcz = change._ismainJcz(usersG.ismain_jcz);
+      usersG.pet_stag = change._petStag(usersG.pet_stag);
+      this.detailUser = usersG;
     });
     // 查看个人客户银行卡
     this.$http({

@@ -124,7 +124,7 @@ let routes = [
     },
     {
         path: '/home/encust_list/enterprisedetail',
-        component: PersonalDetail,
+        component: EnterpriseDetail,
         name: '企业客户详情',
         meta: {
             // 添加该字段，表示进入这个路由是需要登录的
@@ -134,7 +134,7 @@ let routes = [
     },
     {
         path: '/home/encust_list/enterpriseedit',
-        component: PersonalEdit,
+        component: EnterpriseEdit,
         name: '企业客户编辑',
         meta: {
             // 添加该字段，表示进入这个路由是需要登录的

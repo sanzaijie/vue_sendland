@@ -14,20 +14,38 @@
                 </el-row>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>客户姓名:</label>
+                        <label>公司名称:</label>
                         <span>{{detailUser.cst_name}}</span>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>客户类型:</label>
-                        <span>{{detailUser.cst_type}}</span>
+                        <label>传真:</label>
+                        <span>{{detailUser.fax}}</span>
                     </el-col>  
                     <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>性别:</label>
-                        <span>{{detailUser.gender}}</span>
+                        <label>法人代表:</label>
+                        <span>{{detailUser.corporation}}</span>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>客户姓名:</label>
-                        <span>{{detailUser.cst_phone}}</span>
+                        <label>资金类别:</label>
+                        <span>{{detailUser.func_type}}</span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="50">
+                    <el-col :span="6" style="padding-bottom: 0px;">   
+                        <label>公司类别:</label>
+                        <span>{{detailUser.enter_nature}}</span>
+                    </el-col>
+                    <el-col :span="6" style="padding-bottom: 0px;">
+                        <label>所属行业:</label>
+                        <span>{{detailUser.by_sector}}</span>
+                    </el-col> 
+                    <el-col :span="6" style="padding-bottom: 0px;">
+                        <label>营业执照:</label>
+                        <span>{{detailUser.lic_no}}</span>
+                    </el-col>
+                    <el-col :span="6" style="padding-bottom: 0px;">   
+                        <label>主营业务:</label>
+                        <span>{{detailUser.orientation}}</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="50">
@@ -40,136 +58,8 @@
                         <span>{{detailUser.cer_no}}</span>
                     </el-col> 
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>出生日期:</label>
-                        <span>{{detailUser.birthday}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>客户类别:</label>
-                        <span>{{detailUser.cst_sort}}</span>
-                    </el-col>
-                </el-row>
-            </el-col>
-            <el-col class="toolbar">
-                <strong class="title">客户基础信息</strong>
-                <el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>国籍:</label>
-                        <span>{{detailUser.nationality}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>民族:</label>
-                        <span>{{detailUser.nation}}</span>
-                    </el-col>  
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>VIP客户:</label>
-                        <span>{{detailUser.viptag}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>手机号码1:</label>
-                        <span>{{detailUser.contact1}}</span>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>手机号码2:</label>
-                        <span>{{detailUser.contact2}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>手机号码3:</label>
-                        <span>{{detailUser.contact3}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>家庭电话:</label>
-                        <span>{{detailUser.residential_phones}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>公司电话:</label>
-                        <span>{{detailUser.office_phone}}</span>
-                    </el-col>
-                </el-row><el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>居住状态:</label>
-                        <span>{{detailUser.resided_state}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>身高:</label>
-                        <span>{{detailUser.height}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>体重:</label>
-                        <span>{{detailUser.weight}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>来自区域:</label>
-                        <span>{{detailUser.comefrom}}</span>
-                    </el-col>
-                </el-row>
-                </el-row><el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>居住区域:</label>
-                        <span>{{detailUser.home_area}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>工作区域:</label>
-                        <span>{{detailUser.work_area}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>详细地址:</label>
-                        <span>{{detailUser.address}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>职业身份:</label>
-                        <span>{{detailUser.work_type}}</span>
-                    </el-col>
-                </el-row>
-                </el-row>
-                <el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>电子邮箱:</label>
-                        <span>{{detailUser.email}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>邮政编码:</label>
-                        <span>{{detailUser.post_code}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>家庭结构:</label>
-                        <span>{{detailUser.family}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>子女人数:</label>
-                        <span>{{detailUser.children_cnt}}</span>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>教育程度:</label>
-                        <span>{{detailUser.edu_level}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>有无保姆同住:</label>
-                        <span>{{detailUser.have_bm}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>是否为主要决策者:</label>
-                        <span>{{detailUser.ismain_jcz}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>是否养犬:</label>
-                        <span>{{detailUser.pet_stag}}</span>
-                    </el-col>
-                </el-row><el-row :gutter="50">
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <label>兴趣爱好:</label>
-                        <span>{{detailUser.hobby}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>传真:</label>
-                        <span>{{detailUser.fax}}</span>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">
-                        <label>置业次数:</label>
-                        <span>{{detailUser.pro_pertycnt}}</span>
+                        <label>客户类型:</label>
+                        <span>{{detailUser.cst_type}}</span>
                     </el-col>
                 </el-row>
             </el-col>
@@ -186,6 +76,37 @@
                 </el-row>
             </el-col>
             <el-col class="toolbar">
+                <strong class="title">联系人</strong>
+                <el-row :gutter="50">
+                    <el-col :span="6" style="padding-bottom: 0px;">
+                        <label>联系人姓名:</label>
+                        <span>{{detailUser.link_man}}</span>
+                    </el-col>
+                    <el-col :span="6" style="padding-bottom: 0px;">   
+                        <label>身份识别手机号:</label>
+                        <span>{{detailUser.cst_phone}}</span>
+                    </el-col>  
+                    <el-col :span="6" style="padding-bottom: 0px;">   
+                        <label>手机号码1:</label>
+                        <span>{{detailUser.contact1}}</span>
+                    </el-col>
+                    <el-col :span="6" style="padding-bottom: 0px;">
+                        <label>手机号码2:</label>
+                        <span>{{detailUser.contact2}}</span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="50">
+                    <el-col :span="6" style="padding-bottom: 0px;">   
+                        <label>手机号码3:</label>
+                        <span>{{detailUser.contact3}}</span>
+                    </el-col>
+                    <el-col :span="6" style="padding-bottom: 0px;">
+                        <label>电子邮箱:</label>
+                        <span>{{detailUser.email}}</span>
+                    </el-col>
+                </el-row>
+            </el-col>
+            <el-col class="toolbar">
                 <strong class="title">所属项目</strong>
                 <el-row>
                     <el-table :data="projectData" style="width: 100%">
@@ -195,20 +116,6 @@
                         <el-table-column prop="house_name" label="入住房间号"> </el-table-column>
                         <el-table-column prop="join_status" label="客户状态"> </el-table-column>
                         <el-table-column prop="modifytime" label="交易时间"> </el-table-column>
-                    </el-table>
-                </el-row>
-            </el-col>
-            <el-col class="toolbar">
-                <strong class="title">关联客户</strong>
-                <el-row>
-                    <el-table :data="relationData" style="width: 100%">
-                        <el-table-column type="index" label="序号" width="80px"></el-table-column>
-                        <el-table-column prop="cst_name" label="姓名" width="180"></el-table-column>
-                        <el-table-column prop="gender" label="性别" width="180"></el-table-column>
-                        <el-table-column prop="cst_phone" label="手机号码"> </el-table-column>
-                        <el-table-column prop="rela_type" label="客户关系"> </el-table-column>
-                        <el-table-column prop="rela_type2" label="客户二级关系"> </el-table-column>
-                        <el-table-column  label="操作"> </el-table-column>
                     </el-table>
                 </el-row>
             </el-col>
@@ -314,7 +221,10 @@
         </el-form>
     </section>
 </template>
+
 <script>
+import * as change from "../../api/change.js";
+
 model: {
   type: [String, Object];
 }
@@ -326,7 +236,9 @@ export default {
       projectData: [],
       relationData: [],
       needUser: [],
-      followUser: []
+      followUser: [],
+      intention_id: "",
+      proj_id: ""
     };
   },
   methods: {
@@ -352,8 +264,24 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
-      //   console.log(res);
       this.detailUser = res.data.data;
+      let usersG = this.detailUser;
+      usersG.gender = change.Gender(usersG.gender);
+      usersG.cst_type = change._cstType(usersG.cst_type);
+      usersG.card_type = change._cardTcard_typeype(usersG.card_type);
+      usersG.cst_status = change._cstStatus(usersG.cst_status);
+      usersG.work_type = change._workType(usersG.work_type);
+      usersG.children_cnt = change._childrenCnt(usersG.children_cnt);
+      usersG.family = change._family(usersG.family);
+      usersG.edu_level = change._eduLevel(usersG.edu_level);
+      usersG.cst_sort = change._cstSort(usersG.cst_sort);
+      usersG.viptag = change._viptag(usersG.viptag);
+      usersG.resided_state = change._residedState(usersG.resided_state);
+      usersG.comefrom = change._comefrom(usersG.comefrom);
+      usersG.have_bm = change._haveBm(usersG.have_bm);
+      usersG.ismain_jcz = change._ismainJcz(usersG.ismain_jcz);
+      usersG.pet_stag = change._petStag(usersG.pet_stag);
+      this.detailUser = usersG;
     });
     // 查看企业客户银行卡
     this.$http({
@@ -393,25 +321,32 @@ export default {
       headers: {
         sign: localStorage.getItem("sign")
       }
-    }).then(res => {
-      this.needUser = res.data.data;
-      console.log(this.needUser);
-    });
-    // 查看企业客户跟进信息
-    this.$http({
-      method: "post",
-      url: "cust/company/follow/detail",
-      data: {
-        cust_id: this.$route.query.cust_id,
-        intention_id: this.needUser.intention_id
-      },
-      headers: {
-        sign: localStorage.getItem("sign")
-      }
-    }).then(res => {
-      //   console.log(res);
-      this.followUser = res.data.data;
-    });
+    })
+      .then(res => {
+        this.needUser = res.data.data;
+        for (let item of this.needUser) {
+          this.intention_id = item.intention_id;
+          this.proj_id = item.proj_id;
+        }
+      })
+      .then(res => {
+        // 查看企业客户跟进信息
+        this.$http({
+          method: "post",
+          url: "cust/company/follow/detail",
+          data: {
+            cust_id: this.$route.query.cust_id,
+            intention_id: this.intention_id,
+            proj_id: this.proj_id
+          },
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        }).promise.then(res => {
+          //   console.log(res);
+          this.followUser = res.data.data;
+        });
+      });
   }
 };
 </script>
