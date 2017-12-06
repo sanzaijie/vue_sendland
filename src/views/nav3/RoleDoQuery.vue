@@ -41,13 +41,6 @@
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
-            <!-- <el-table-column label="操作" width="200" align="center">
-				<template slot-scope="scope">
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">详情</el-button>                    
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-				</template>
-			</el-table-column> -->
 		</el-table>
 
 		<!--工具条-->
@@ -121,7 +114,6 @@
                         :props="defaultProps">
                         </el-tree>
                     </el-col>
-                  <!-- <el-col :span="20"></el-col> -->
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -135,13 +127,13 @@
 <script>
 import util from "../../common/js/util";
 import moment from "../../api/moment";
-//import dateFormat from "../../api/dateformat.js";
-// import //   getUserListPage,
-// //   removeUser,
-// //   batchRemoveUser,
-// //   editUser,
-// //   addUser
-// "../../api/api";
+// import {
+//   getUserListPage,
+//   removeUser,
+//   batchRemoveUser,
+//   editUser,
+//   addUser
+// } from "../../api/api";
 
 export default {
   data() {
@@ -197,7 +189,7 @@ export default {
       },
       //新增界面数据
       permForm: {},
-      myFormData: {},
+      myFormData: [],
       data1: [
         {
           name: "",
@@ -212,10 +204,10 @@ export default {
   },
   methods: {
     getCheckedKeys() {
-      console.log(this.$refs.tree.getCheckedKeys());
+      this.$refs.tree.getCheckedKeys();
     },
     setCheckedKeys() {
-      this.$refs.tree.setCheckedKeys([3]);
+      this.$refs.tree.setCheckedKeys();
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -307,6 +299,8 @@ export default {
     },
     //显示权限设置界面
     handlePrem: function(index, row) {
+      this.checkList = [];
+      this.checkNames = [];
       this.premFormVisible = true;
       this.permForm = Object.assign({}, row);
       this.$http({
@@ -321,6 +315,7 @@ export default {
       }).then(res => {
         this.premFormData = res.data.data.permission_list;
         this.myFormData = res.data.data.my_permission;
+        this.setCheckedKeys(1);
       });
     },
     //编辑
@@ -362,7 +357,10 @@ export default {
               !para.birth || para.birth == ""
                 ? ""
                 : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            addUser(para).then(res => {
+            this.$http({
+              method: "post",
+              url: ""
+            }).then(res => {
               this.addLoading = false;
               //NProgress.done();
               this.$message({
@@ -377,31 +375,32 @@ export default {
         }
       });
     },
-    //权限设置
+    //权限设置提交
     premSubmit: function() {
-      this.$refs.premForm.validate(valid => {
-        if (valid) {
-          this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.premLoading = true;
-            //NProgress.start();
-            let para = Object.assign({}, this.premForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            addUser(para).then(res => {
-              this.premLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["premForm"].resetFields();
-              this.premVisible = false;
-              this.getUsers();
-            });
-          });
+      var roleIds = "";
+      for (let item of this.$refs.tree.getCheckedKeys()) {
+        roleIds += "," + item;
+      }
+      if (roleIds != "") {
+        roleIds = roleIds.substring(1, roleIds.length);
+      }
+      this.permForm.role_ids = roleIds;
+      this.$http({
+        method: "post",
+        url: "role/permission",
+        data: {
+          id: this.permForm.id,
+          permission_ids: this.permForm.role_ids
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
         }
+      }).then(res => {
+        this.premLoading = false;
+        this.$message({
+          message: "提交成功",
+          type: "success"
+        });
       });
     },
     selsChange: function(sels) {
@@ -431,7 +430,7 @@ export default {
     },
     //时间格式化
     dateFormat: function(row, column) {
-       var date = row[column.property];
+      var date = row[column.property];
       if (date == undefined) {
         return "";
       }
@@ -451,8 +450,6 @@ export default {
     }).then(res => {
       this.users = res.data.data.result;
       this.total = res.data.data.total_count;
-      //this.users = this.dateFormat(res.data.data.result);
-      console.log(this.users)
       this.listLoading = false;
     });
   }
