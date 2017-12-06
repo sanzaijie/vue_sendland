@@ -186,6 +186,9 @@ export default {
     logTimeChange(val) {
       console.log(val);
     },
+    handleSizeChange: function(val) {
+      console.log(`每页 ${val} 条`);
+    },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.loadData(this.currentPage, this.pageSize);

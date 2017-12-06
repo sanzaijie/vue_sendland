@@ -430,7 +430,7 @@ export default {
         .catch(() => {});
     },
     //时间格式化
-    dateFormat: function() {
+    dateFormat: function(row, column) {
        var date = row[column.property];
       if (date == undefined) {
         return "";

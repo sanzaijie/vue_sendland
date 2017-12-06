@@ -179,6 +179,9 @@ export default {
        this.currentPage = 1;
        this.loadData(this.currentPage, this.pageSize);
     },
+    handleSizeChange: function(val) {
+      console.log(`每页 ${val} 条`);
+    },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.loadData(this.currentPage, this.pageSize);
