@@ -315,7 +315,7 @@ export default {
       }).then(res => {
         this.premFormData = res.data.data.permission_list;
         this.myFormData = res.data.data.my_permission;
-        this.setCheckedKeys(1);
+        this.setCheckedKeys();
       });
     },
     //编辑
