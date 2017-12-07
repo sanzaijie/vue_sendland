@@ -13,7 +13,7 @@
                         </el-col>  
                         <el-col :span="6" style="padding-bottom: 0px;">   
                             <el-select v-model="custChange.change_type" placeholder="操作类型" style="width: 100%;">
-                                <el-option value="全部">全部</el-option>
+                                <el-option value="">全部</el-option>
                                 <el-option value="新增">新增</el-option>
                                 <el-option value="修改">修改</el-option>
                                 <el-option value="删除">删除</el-option>
@@ -28,17 +28,18 @@
                             <el-date-picker
                                 v-model="custChange.begin_time"
                                 type="date"
+                                :editable=false
                                 placeholder="开始日期"
-                                :picker-options="pickerOptions0"
-                                @change="logTimeChange">
+                                :picker-options="pickerBeginDateBefore">
                             </el-date-picker>
                         </el-col>
                         <el-col :span="6" style="padding-bottom: 0px;">
                             <el-date-picker
                                 v-model="custChange.end_time"
                                 type="date"
+                                :editable=false
                                 placeholder="结束日期"
-                                :picker-options="pickerOptions0"
+                                :picker-options="pickerBeginDateAfter"
                                 @change="logTimeChange">
                             </el-date-picker>
                         </el-col>
@@ -69,7 +70,7 @@
 			</el-table-column>
 			<el-table-column prop="change_user" label="操作人" min-width="80" align="center">
 			</el-table-column>
-            <el-table-column prop="changetime" label="操作时间" :formatter="dateFormat" min-width="100" align="center">
+            <el-table-column prop="changetime" label="操作时间" :formatter="hangleDateFormat" min-width="100" align="center">
 			</el-table-column>
 			<el-table-column prop="from_sys" label="操作系统" min-width="90" align="center">
 			</el-table-column>
@@ -89,8 +90,8 @@
 
 <script>
 import util from "../../common/js/util";
-import moment from '../../api/moment'
-//import {dateFormat} from "../../api/dateutil";
+//import moment from '../../api/moment'
+import {dateFormat1, formatDate} from "../../api/dateutil";
 
 //import NProgress from 'nprogress'
 import {
@@ -120,21 +121,31 @@ export default {
         page_num: 1,
         page_size: 20
       },
-      pickerOptions0: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
+      pickerBeginDateBefore: {
+          disabledDate(time) {
+              return time.getTime() > Date.now();
+          }
+      },
+      pickerBeginDateAfter: {
+          disabledDate: (time) => {
+            let beginDateVal = this.custChange.begin_time;
+            if (beginDateVal) {
+                return time.getTime() < beginDateVal || time.getTime() > Date.now();
+            }else{
+                return time.getTime() > Date.now();
+            }  
+         }
       }
     };
   },
   methods: {
      //时间格式化
-    dateFormat: function(row, column) {
+    hangleDateFormat: function(row, column) {
       var date = row[column.property];
       if (date == undefined) {
         return "";
       }
-      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+      return dateFormat1(row, column);
     },
     checkCustChange() { //''处理
       if(this.custChange.cust_name == '') {
@@ -149,15 +160,16 @@ export default {
       if(this.custChange.change_user == '') {
           this.custChange.change_user = null;
       }
-      if(this.custChange.begin_time == '') {
-          this.custChange.begin_time = null;
+      if(this.custChange.begin_time) {
+          this.custChange.begin_time = formatDate(this.custChange.begin_time, 'YYYY/MM/DD');
       }
-      if(this.custChange.end_time == '') {
-          this.custChange.end_time = null;
+      if(this.custChange.end_time) {
+          this.custChange.end_time = formatDate(this.custChange.end_time, 'YYYY/MM/DD');
       }
     },
     //加载分页数据
     loadData(pageNum, pageSize) {
+      this.custLog = null;
       this.listLoading = true;
       this.checkCustChange();
       this.custChange.page_num = pageNum;
@@ -184,10 +196,15 @@ export default {
        this.loadData(this.currentPage, this.pageSize);
     },
     logTimeChange(val) {
-      console.log(val);
+      if(!this.custChange.begin_time){
+        this.$message({message: "请先选择开始时间",type: "warning"});
+        this.custChange.end_time = null;
+        return;
+      }
     },
     handleSizeChange: function(val) {
-      console.log(`每页 ${val} 条`);
+      //console.log(`每页 ${val} 条`);
+      handleCurrentChange(val);
     },
     handleCurrentChange(val) {
       this.currentPage = val;

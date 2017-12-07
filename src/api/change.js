@@ -250,3 +250,58 @@ export function _petStag(pet_stag) {
     return pet_stag
 }
 
+export function fromTo(fromTo1) {
+    let fromTo = fromTo1;
+    if (fromTo1 == "from") {
+        fromTo = "请求";
+    } else if (fromTo1 == "to") {
+        fromTo ="应答";
+    } else if (fromTo1 == "sync") {
+        fromTo = "反向同步";
+    } 
+    return fromTo;
+}
+
+export function _fromTo(fromTo1) {
+    let fromTo = null;
+    if (fromTo1 == "全部") {
+        fromTo = null;
+    } else if (fromTo1 == "请求") {
+        fromTo = "from";
+    } else if (fromTo1 == "应答") {
+        fromTo ="to";
+    } else if (fromTo1 == "反向同步") {
+        fromTo = "sync";
+    } 
+    return fromTo;
+}
+
+export function PubMsgLogStatus(status1) {
+    let status = status1;
+    if (status1 == 1) {
+        status = "接收成功";
+    } else if (status1 == 2) {
+        status = "已发送";
+    } else if (status1 == 3) {
+        status = "对方已接收";
+    } else if (status1 == -1) {
+        status = "失败";
+    } 
+    return status;
+}
+
+export function _PubMsgLogStatus(status1) {
+    let status = null;
+    if (status1 == "全部") {
+        status = null;
+    } else if (status1 == "接收成功") {
+        status = 1;
+    } else if (status1 == "已发送") {
+        status = 2;
+    } else if (status1 == "对方已接收") {
+        status = 3;
+    } else if (status1 == "失败") {
+        status = -1;
+    } 
+    return status;
+}
