@@ -119,17 +119,16 @@
 		
         <!--用户权限界面-->
 		<el-dialog title="用户权限" v-model="permFormVisible" :close-on-click-modal="false">
-			<el-form :model="permForm" label-width="80px" ref="permForm">
-				<!-- <el-row> -->
-                <el-checkbox-group v-model="permForm.checkList" style="margin-bottom:10px;" v-for="checkName in checkNames" :key="checkName.id" :value="checkName.id" :label="checkName.label">
+			<!-- <el-form :model="permForm" label-width="80px" ref="permForm"> -->
+                <el-checkbox-group v-model="checkList" style="margin-bottom:10px;">
                     <el-col :span="6">
-                        <el-checkbox :label="checkName.id" name="permForm.checkList" class="checkWidth">{{checkName.name}}</el-checkbox>
+                        <el-checkbox v-for="checkName in checkNames" :label="checkName.id"  >{{checkName.name}}</el-checkbox> 
                     </el-col>
                 </el-checkbox-group>
-                <!-- </el-row>		 -->
-			</el-form>
+            <!-- <el-checkbox v-for="checkName in checkNames" :key="checkName.id" v-model="permForm.checkList">{{checkName.name}}</el-checkbox> -->
+			<!-- </el-form> -->
 			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="permFormVisible = false">取消</el-button>
+				<el-button @click.native="closePermWindow">取消</el-button>
 				<el-button type="primary" @click.native="permSubmit" :loading="permLoading">提交</el-button>
 			</div>
 		</el-dialog>
@@ -149,14 +148,14 @@ import util from "../../common/js/util";
 
 export default {
   data() {
-  var validatePassword = (rule, value, callback) => {
-        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
-         if (!reg.test(value)) {
-          callback(new Error("密码格式不正确(长度6-16位,密码组合必须包含英文字母、数字，区分大小写"));
-        } else {
-          callback();
-        }
-      };
+    var validatePassword = (rule, value, callback) => {
+      var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
+      if (!reg.test(value)) {
+        callback(new Error("密码格式不正确(长度6-16位,密码组合必须包含英文字母、数字，区分大小写"));
+      } else {
+        callback();
+      }
+    };
 
     return {
       UserDoQuery: {
@@ -166,7 +165,7 @@ export default {
         page_num: 1,
         page_size: 20
       },
-      findQuery:{},
+      findQuery: {},
       checkNames: [],
       users: [],
       page_num: 1,
@@ -182,7 +181,7 @@ export default {
       editFormRules: {
         name: [{ required: true, message: "请输入用户姓名", trigger: "blur" }],
         oper_id: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
-        oper_pwd: [{validator: validatePassword, trigger: "blur" }]
+        oper_pwd: [{ validator: validatePassword, trigger: "blur" }]
       },
       //编辑界面数据
       editForm: {
@@ -197,7 +196,7 @@ export default {
       addFormRules: {
         oper_id: [{ required: true, message: "请输入登陆账号", trigger: "blur" }],
         name: [{ required: true, message: "请输入用户姓名", trigger: "blur" }],
-        oper_pwd: [{validator: validatePassword, trigger: "blur" }]
+        oper_pwd: [{ validator: validatePassword, trigger: "blur" }]
       },
       //新增界面数据
       addForm: {
@@ -207,38 +206,17 @@ export default {
         state: "有效"
       },
       permFormVisible: false, //权限界面是否显示
-      permLoading:false,
+      permLoading: false,
       //   editFormRules: {
       //     name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       //   },
       //权限界面数据
       permForm: {
         id: "",
-        checkList:[],
         role_ids: ""
       },
-      checkNames: [
-        // {
-        //   id: 1,
-        //   name: "root",
-        // },
-        // {
-        //   id: 2,
-        //   name: "admin",
-        // },
-        // {
-        //   id: 4,
-        //   name: "系统管理员",
-        // },
-        // {
-        //   id: 5,
-        //   name: "集团管理员",
-        // },
-        // {
-        //   id: 6,
-        //   name: "测试人员",
-        // }
-      ]
+      checkList: [], //选中的
+      checkNames: [] //所有的
     };
   },
   methods: {
@@ -252,60 +230,61 @@ export default {
     //获取用户列表
     getUsers(pageNum, pageSize) {
       this.$http({
-      // 字典列表
-      method: "post", //方法
-      url: "user/list", //地址
-      data: {
-        page_num: pageNum,
-        page_size: pageSize
-      },
-      headers: {
-        sign: localStorage.getItem("sign")
-      }
-    }).then(res => {
-      this.users = res.data.data.result;
-      this.totalCount = res.data.data.total_count;
-      this.listLoading = false;
-    });
+        // 字典列表
+        method: "post", //方法
+        url: "user/list", //地址
+        data: {
+          page_num: pageNum,
+          page_size: pageSize
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.users = res.data.data.result;
+        this.totalCount = res.data.data.total_count;
+        this.listLoading = false;
+      });
     },
     getUsersByQuery() {
       this.$http({
-      // 字典列表
-      method: "post", //方法
-      url: "user/list", //地址
-      data: this.UserDoQuery,
-      headers: {
-        sign: localStorage.getItem("sign")
-      }
-    }).then(res => {
-      this.users = res.data.data.result;
-      this.totalCount = res.data.data.total_count;
-      this.listLoading = false;
-    });
+        // 字典列表
+        method: "post", //方法
+        url: "user/list", //地址
+        data: this.UserDoQuery,
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.users = res.data.data.result;
+        this.totalCount = res.data.data.total_count;
+        this.listLoading = false;
+      });
     },
     //删除
     handleDel: function(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
         type: "warning"
-      }).then(() => {
+      })
+        .then(() => {
           this.$http({
-                method: "post",
-                url: "user/delete",
-                data: { id: row.id },
-                headers: {
-                  sign: localStorage.getItem("sign")
-                }
-              }).then(res => {
-                if(res.data.error_code === 0){
-                this.$message({
-                    message: "删除成功！",
-                    type: "success"
-                  });
-                  this.getUsers(1, 20);
-              }else{
-                this.$message.error(res.data.error_message);
-              }
+            method: "post",
+            url: "user/delete",
+            data: { id: row.id },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "删除成功！",
+                type: "success"
               });
+              this.getUsers(1, 20);
+            } else {
+              this.$message.error(res.data.error_message);
+            }
+          });
 
           // this.listLoading = true;
           // let para = { id: row.id };
@@ -339,11 +318,13 @@ export default {
     },
     // 显示权限界面
     handlePerm: function(index, row) {
-      this.permForm={
-        id: "",
-        checkList:[],
-        role_ids: ""
-      };
+      this.permFormVisible = true;
+      // this.permForm={
+      //   id: "",
+      //   checkList:[],
+      //   role_ids: ""
+      // };
+      this.checkList = [];
       let self = this;
       self
         .$http({
@@ -357,51 +338,60 @@ export default {
         .then(res => {
           self.checkNames = res.data.data.role_list;
           let retChenkList = res.data.data.my_role;
-          var i=0;
-          for(let item of retChenkList){
-              this.permForm.checkList[i]= item.id;
-              i+=1;
-           }
-
+          var i = 0;
+          for (let item of retChenkList) {
+            this.checkList.push(item.id);
+            i += 1;
+          }
         });
       this.permForm.id = row.id;
-      this.permFormVisible = true;
-    
+    },
+    closePermWindow: function() {
+      this.permFormVisible = false;
+      this.checkList = [];
+      // this.permForm={
+      //   id: "",
+      //   checkList:[],
+      //   role_ids: ""
+      // };
     },
     //提交权限设置
     permSubmit: function() {
-     this.$confirm("确认提交吗？", "提示", {}).then(() => {
-       var roleIds="";
-       for(let item of this.permForm.checkList){
-         roleIds +=","+item;
-       }
-       if(roleIds!=""){
-        roleIds=roleIds.substring(1,roleIds.length);
-       }
-       this.permForm.role_ids=roleIds;
-       this.$http({
-                method: "post",
-                url: "user/permission",
-                data: this.permForm,
-                headers: {
-                  sign: localStorage.getItem("sign")
-                }
-              }).then(res => {
-                   this.permLoading = false;
-                  //NProgress.done();
-                  if(res.data.error_code === 0){
-                    this.$message({
-                        message: "授权成功!",
-                        type: "success"
-                      });
-                      this.$refs["permForm"].resetFields();
-                      this.permFormVisible = false;
-                      this.getUsers(1, 20);
-                  }else{
-                    this.$message.error(res.data.error_message);
-                      this.permFormVisible = true;
-                  }
-              });
+      // for(let item of this.checkList){
+      //     console.log("选中项"+item);
+      //   }
+
+      this.$confirm("确认提交吗？", "提示", {}).then(() => {
+        var roleIds = "";
+        for (let item of this.checkList) {
+          roleIds += "," + item;
+        }
+        if (roleIds != "") {
+          roleIds = roleIds.substring(1, roleIds.length);
+        }
+        this.permForm.role_ids = roleIds;
+        this.$http({
+          method: "post",
+          url: "user/permission",
+          data: this.permForm,
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        }).then(res => {
+          this.permLoading = false;
+          if (res.data.error_code === 0) {
+            this.$message({
+              message: "授权成功!",
+              type: "success"
+            });
+            // this.$refs["permForm"].resetFields();
+            this.permFormVisible = false;
+            this.getUsers(1, 20);
+          } else {
+            this.$message.error(res.data.error_message);
+            this.permFormVisible = true;
+          }
+        });
       });
     },
     //编辑
@@ -410,31 +400,29 @@ export default {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             //this.editLoading = true;
-              this.$http({
-                method: "post",
-                url: "user/save-update",
-                data: this.editForm,
-                headers: {
-                  sign: localStorage.getItem("sign")
-                }
-              }).then(res => {
+            this.$http({
+              method: "post",
+              url: "user/save-update",
+              data: this.editForm,
+              headers: {
+                sign: localStorage.getItem("sign")
+              }
+            }).then(res => {
               this.editLoading = false;
               //NProgress.done();
-              if(res.data.error_code === 0){
+              if (res.data.error_code === 0) {
                 this.$message({
-                    message: res.data.error_message,
-                    type: "success"
-                  });
-                  this.$refs["editForm"].resetFields();
-                  this.editFormVisible = false;
-                  this.getUsers(1, 20);
-              }else{
+                  message: res.data.error_message,
+                  type: "success"
+                });
+                this.$refs["editForm"].resetFields();
+                this.editFormVisible = false;
+                this.getUsers(1, 20);
+              } else {
                 this.$message.error(res.data.error_message);
-                  this.editFormVisible = true;
+                this.editFormVisible = true;
               }
-              
             });
-
           });
         }
       });
@@ -444,61 +432,60 @@ export default {
       this.$refs.addForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
-      this.$http({
-                method: "post",
-                url: "user/save-update",
-                data: this.addForm,
-                headers: {
-                  sign: localStorage.getItem("sign")
-                }
-              }).then(res => {
+            this.$http({
+              method: "post",
+              url: "user/save-update",
+              data: this.addForm,
+              headers: {
+                sign: localStorage.getItem("sign")
+              }
+            }).then(res => {
               this.addLoading = false;
               //NProgress.done();
-              if(res.data.error_code === 0){
+              if (res.data.error_code === 0) {
                 this.$message({
-                    message: res.data.error_message,
-                    type: "success"
-                  });
-                  this.$refs["addForm"].resetFields();
-                  this.addFormVisible = false;
-                  this.getUsers(1, 20);
-              }else{
+                  message: res.data.error_message,
+                  type: "success"
+                });
+                this.$refs["addForm"].resetFields();
+                this.addFormVisible = false;
+                this.getUsers(1, 20);
+              } else {
                 this.$message.error(res.data.error_message);
-                  this.addFormVisible = true;
+                this.addFormVisible = true;
               }
             });
-
           });
         }
       });
     },
     //权限
-    addSubmit: function() {
-      this.$refs.permForm.validate(valid => {
-        if (valid) {
-          this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.addLoading = true;
-            //NProgress.start();
-            let para = Object.assign({}, this.permForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            addUser(para).then(res => {
-              this.addLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.permForm.resetFields();
-              this.permFormVisible = false;
-              this.getUsers();
-            });
-          });
-        }
-      });
-    },
+    // addSubmit: function() {
+    //   this.$refs.permForm.validate(valid => {
+    //     if (valid) {
+    //       this.$confirm("确认提交吗？", "提示", {}).then(() => {
+    //         this.addLoading = true;
+    //         //NProgress.start();
+    //         let para = Object.assign({}, this.permForm);
+    //         para.birth =
+    //           !para.birth || para.birth == ""
+    //             ? ""
+    //             : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
+    //         addUser(para).then(res => {
+    //           this.addLoading = false;
+    //           //NProgress.done();
+    //           this.$message({
+    //             message: "提交成功",
+    //             type: "success"
+    //           });
+    //           this.permForm.resetFields();
+    //           this.permFormVisible = false;
+    //           this.getUsers();
+    //         });
+    //       });
+    //     }
+    //   });
+    // },
     selsChange: function(sels) {
       this.sels = sels;
     }
