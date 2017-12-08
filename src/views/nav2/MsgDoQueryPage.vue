@@ -83,7 +83,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
-                        <el-button size="small" @click="handleEdit(scope.$index, scope.row, system.message_body)">详情</el-button>
+                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
                     </template>
 			    </el-table-column>
 			</el-table>
@@ -99,14 +99,7 @@
 			</el-col>
             <!--详细-->
             <el-dialog title="消息内容" v-model="detailFormVisible" :close-on-click-modal="false">
-                <!-- message_body -->
-                <el-row>
-                    <el-col :span="24" >
-                        <!-- {{editForm|jsonData}} -->
-                        {{editForm|formateJson}}
-                    </el-col>
-                </el-row>
-                    
+                <el-input type="textarea"  readonly="true" resize="none" cols="25" rows="20" v-model="editForm"></el-input>
                 <div slot="footer" class="dialog-footer">
                     <el-button type="primary" @click.native="detailFormVisible = false">关闭</el-button>
                 </div>
@@ -125,7 +118,7 @@ export default {
     return {
       system: [],
       totalCount: 0,
-      pageSize: 20,
+      pageSize: 10,
       currentPage: 1,
       listLoading: false,
       requestStatus: null,
@@ -160,13 +153,6 @@ export default {
          }
       }
     };
-  },
-  filters: {
-  formateJson: function (value) {
-      //JSON.stringify(value[, replacer[, space]])
-    let jsonData = JSON.stringify(value, ',', 4)
-    return jsonData;
-  }
   },
   methods: {
     //时间格式化
@@ -249,11 +235,13 @@ export default {
       this.currentPage = val;
       this.loadData(this.currentPage, this.pageSize);
     },
-    handleEdit: function(index, row, messageBody) {
+    handleEdit: function(index, row) {
       this.detailFormVisible = true;
-      //let jsonData = JSON.stringify(messageBody);
-      let jsonData = JSON.stringify(messageBody, null, 4)
-      this.editForm = Object.assign({}, row, jsonData);
+      let jsonTmp = JSON.parse(row["message_body"]);
+      let messageBody = JSON.stringify(jsonTmp, null, 4)
+      //let jsonData = JSON.stringify(messageBody, null, '\t')
+      //this.editForm = Object.assign({},  jsonData); //row,
+      this.editForm = messageBody; //row
     }
   },
   mounted() {
@@ -308,4 +296,12 @@ export default {
 .align-r{
     text-align: right;
 }
+
+.textareaColor {
+    background-color: #eef1f6;
+    border-color: #d1dbe5;
+    color: #211f1f;
+    cursor: not-allowed;
+}
 </style>
+
