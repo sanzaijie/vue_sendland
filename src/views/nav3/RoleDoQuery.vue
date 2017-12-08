@@ -7,14 +7,14 @@
 					<el-input v-model="RoleDoQuery.name" placeholder="角色名称"></el-input>
 				</el-form-item>
                 <el-form-item>
-					<el-select v-model="RoleDoQuery.value" placeholder="角色状态">
+					<el-select v-model="RoleDoQuery.status" placeholder="角色状态">
                         <el-option value="全部">全部</el-option>
                         <el-option value="有效">有效</el-option>
                         <el-option value="无效">无效</el-option>
                     </el-select>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers">查询</el-button>
+					<el-button type="primary" v-on:click="getUsersByQuery">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增角色</el-button>
@@ -26,9 +26,9 @@
 		<el-table :data="users" highlight-current-row stripe v-loading="listLoading"  style="width: 100%;">
 			<el-table-column type="index" label="序号" align="center" width="70">
 			</el-table-column>
-			<el-table-column prop="name" label="角色姓名" min-width="100" align="center">
+			<el-table-column prop="name" label="角色姓名" width="100" align="center">
 			</el-table-column>
-			<el-table-column prop="creator_name" label="创建人" width="80" align="center">
+			<el-table-column prop="creator_name" label="创建人" min-width="100" align="center">
 			</el-table-column>
 			<el-table-column prop="createtime" label="创建时间" :formatter="dateFormat" align="center">
 			</el-table-column>
@@ -45,7 +45,6 @@
 
 		<!--工具条-->
 		<el-col :span="24" class="toolbar">
-			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
 			<el-pagination layout="total, prev, pager, next, jumper"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -60,16 +59,16 @@
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
 			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
 				<el-form-item label="角色名称" prop="name">
-					<el-input v-model="editForm.name" auto-complete="off"></el-input>
+					<el-input v-model="editForm.name" :disabled="true"></el-input>
 				</el-form-item>
-                <el-form-item label="角色状态" prop="name">
-					<el-select v-model="editForm.value" placeholder="请选择">
+                <el-form-item label="角色状态" prop="status">
+					<el-select v-model="editForm.status" placeholder="请选择">
                         <el-option value="有效">有效</el-option>
                         <el-option value="无效">无效</el-option>
                     </el-select>
 				</el-form-item>
                 <el-form-item label="角色描述">
-					<el-input type="textarea" :rows="5" v-model="editForm.name" auto-complete="off"></el-input>
+					<el-input type="textarea" :rows="5" v-model="editForm.remark" auto-complete="off"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -80,12 +79,12 @@
 
 		<!--新增界面-->
 		<el-dialog title="新增角色" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm" class="demo-ruleForm">
                 <el-form-item label="角色名称" prop="name">
-					<el-input v-model="addForm.role_name" auto-complete="off"></el-input>
+					<el-input v-model="addForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-                <el-form-item label="角色状态" prop="name">
-					<el-select v-model="addForm.value" placeholder="请选择">
+                <el-form-item label="角色状态" prop="status">
+					<el-select v-model="addForm.status" placeholder="请选择">
                         <el-option value="有效">有效</el-option>
                         <el-option value="无效">无效</el-option>
                     </el-select>
@@ -96,17 +95,19 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+				<el-button type="primary" @click="addSubmit('addForm')" :loading="addLoading">提交</el-button>
 			</div>
 		</el-dialog>
 
         <!-- 权限管理界面 -->
-        <el-dialog title="权限设置" v-model="premFormVisible" :close-on-click-modal="false">
-            <el-form :model="{permForm}" label-width="80px;" ref="permForm">
+        <el-dialog title="权限设置" v-model="premFormVisible" v-loading="permLoading" :close-on-click-modal="false">
+            <el-form :model="permForm" label-width="80px;" ref="permForm">
                 <el-row>
                     <el-col :span="24">
                         <el-tree
                         :data="premFormData"
+                        :default-checked-keys="arrayId"
+                        :default-expanded-keys="arrayId"
                         show-checkbox
                         node-key="id"
                         ref="tree"
@@ -117,7 +118,7 @@
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click.native="premFormVisible = false">取消</el-button>
+                <el-button @click.native="closePermWindow">取消</el-button>
                 <el-button type="primary" @click.native="premSubmit" :loading="addLoading">提交</el-button>
             </div>
         </el-dialog>
@@ -145,10 +146,8 @@ export default {
       },
       RoleDoQuery: {
         name: "",
-        value: ""
+        status: ""
       },
-      checkList: [],
-      checkNames: [],
       users: [],
       page_num: 1,
       pageSize: 20,
@@ -156,29 +155,29 @@ export default {
       currentPage: 1,
       total: 1,
       listLoading: false,
-      sels: [], //列表选中列
-
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
       editFormRules: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        status: [{ required: true, message: "请选择角色状态", trigger: "change" }]
       },
       //编辑界面数据
       editForm: {
-        role_name: "",
-        role_state: "",
+        name: "",
+        status: "",
         remark: ""
       },
 
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       addFormRules: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        status: [{ required: true, message: "请选择角色状态", trigger: "change" }]
       },
       //新增界面数据
       addForm: {
-        role_name: "",
-        role_state: "",
+        name: "",
+        status: "",
         remark: ""
       },
 
@@ -187,27 +186,22 @@ export default {
       premFormRules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
       },
-      //新增界面数据
       permForm: {},
       myFormData: [],
-      data1: [
-        {
-          name: "",
-          children: [
-            {
-              name: ""
-            }
-          ]
-        }
-      ]
+      arrayId: [],
+      permLoading: false
     };
   },
   methods: {
+    // 截取字符串中的数字
+    getNum(text) {
+      var number = text.replace(/[^0-9]/gi, "");
+    },
     getCheckedKeys() {
       this.$refs.tree.getCheckedKeys();
     },
-    setCheckedKeys() {
-      this.$refs.tree.setCheckedKeys();
+    setCheckedKeys(arr) {
+      this.$refs.tree.setCheckedKeys(arr);
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -248,24 +242,41 @@ export default {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
       this.loadData(this.currentPage, this.pageSize);
-      //this.page = val;
-      //this.getUsers();
     },
     //获取用户列表
-    getUsers() {
-      let para = {
-        page: this.page,
-        name: this.RoleDoQuery.name
-      };
+    getUsers(pageNum, pageSize) {
       this.listLoading = true;
-      //NProgress.start();
-      //   getUserListPage(para).then(res => {
-      //     this.total = res.data.total;
-      //     this.users = res.data.users;
-      //     this.addFormVisible = false;
-      //     this.listLoading = false;
-      //     //NProgress.done();
-      //   });
+      this.$http({
+        // 字典列表
+        method: "post", //方法
+        url: "role/list", //地址
+        data: {
+          page_num: pageNum,
+          page_size: pageSize
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.users = res.data.data.result;
+        this.totalCount = res.data.data.total_count;
+        this.listLoading = false;
+      });
+    },
+    getUsersByQuery() {
+      this.$http({
+        // 字典列表
+        method: "post", //方法
+        url: "role/list", //地址
+        data: this.RoleDoQuery,
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        this.users = res.data.data.result;
+        this.totalCount = res.data.data.total_count;
+        this.listLoading = false;
+      });
     },
     //删除
     handleDel: function(index, row) {
@@ -273,17 +284,23 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          let para = { id: row.id };
-          removeUser(para).then(res => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getUsers();
+          this.$http({
+            method: "post",
+            url: "role/delete",
+            data: { id: row.id },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "删除成功！",
+                type: "success"
+              });
+              this.getUsers(1, 20);
+            } else {
+              this.$message.error(res.data.error_message);
+            }
           });
         })
         .catch(() => {});
@@ -299,47 +316,69 @@ export default {
     },
     //显示权限设置界面
     handlePrem: function(index, row) {
-      this.checkList = [];
-      this.checkNames = [];
-      this.premFormVisible = true;
+      this.arrayId = [];
+      this.permLoading = true;
       this.permForm = Object.assign({}, row);
-      this.$http({
-        method: "post",
-        url: "role/permission/list",
-        data: {
-          id: this.permForm.id
-        },
-        headers: {
-          sign: localStorage.getItem("sign")
-        }
-      }).then(res => {
-        this.premFormData = res.data.data.permission_list;
-        this.myFormData = res.data.data.my_permission;
-        this.setCheckedKeys();
-      });
+      let self = this;
+      self
+        .$http({
+          method: "post",
+          url: "role/permission/list",
+          data: {
+            id: this.permForm.id
+          },
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        })
+        .then(res => {
+          this.premFormData = res.data.data.permission_list;
+          this.myFormData = res.data.data.my_permission;
+          if (this.myFormData) {
+            for (let i = 0; i < this.myFormData.length; i++) {
+              this.arrayId.push(this.myFormData[i].id);
+              for (let j = 0; j < this.myFormData[i]; j++) {
+                this.arrayId.push(this.myFormData[j].id);
+              }
+              this.setCheckedKeys(this.arrayId);
+            }
+          }
+        });
+      this.premFormVisible = true;
+      this.permLoading = false;
+    },
+    closePermWindow() {
+      this.premFormVisible = false;
+      this.arrayId = [];
     },
     //编辑
     editSubmit: function() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+          this.$confirm("确定提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
-            //NProgress.start();
             let para = Object.assign({}, this.editForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            editUser(para).then(res => {
+            this.$http({
+              method: "post",
+              url: "role/save-update",
+              data: this.editForm,
+              headers: {
+                sign: localStorage.getItem("sign")
+              }
+            }).then(res => {
               this.editLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["editForm"].resetFields();
-              this.editFormVisible = false;
-              this.getUsers();
+              if (res.data.error_code === 0) {
+                this.$message({
+                  message: res.data.error_message,
+                  type: "success"
+                });
+                this.$refs["editForm"].resetFields();
+                this.editFormVisible = false;
+                this.getUsers(1, 20);
+              } else {
+                this.$message.error(res.data.error_message);
+                this.editFormVisible = true;
+              }
             });
           });
         }
@@ -351,25 +390,28 @@ export default {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
-            //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
             this.$http({
               method: "post",
-              url: ""
+              url: "role/save-update",
+              data: this.addForm,
+              headers: {
+                sign: localStorage.getItem("sign")
+              }
             }).then(res => {
               this.addLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["addForm"].resetFields();
-              this.addFormVisible = false;
-              this.getUsers();
+              if (res.data.error_code === 0) {
+                this.$message({
+                  message: res.data.error_message,
+                  type: "success"
+                });
+                this.$refs["addForm"].resetFields();
+                this.addFormVisible = false;
+                this.getUsers(1, 20);
+              } else {
+                this.$message.error(res.data.error_message);
+                this.addFormVisible = true;
+              }
             });
           });
         }
@@ -377,56 +419,40 @@ export default {
     },
     //权限设置提交
     premSubmit: function() {
-      var roleIds = "";
-      for (let item of this.$refs.tree.getCheckedKeys()) {
-        roleIds += "," + item;
-      }
-      if (roleIds != "") {
-        roleIds = roleIds.substring(1, roleIds.length);
-      }
-      this.permForm.role_ids = roleIds;
-      this.$http({
-        method: "post",
-        url: "role/permission",
-        data: {
-          id: this.permForm.id,
-          permission_ids: this.permForm.role_ids
-        },
-        headers: {
-          sign: localStorage.getItem("sign")
+      this.$confirm("确认提交吗？", "提示", {}).then(() => {
+        var roleIds = "";
+        for (let item of this.$refs.tree.getCheckedKeys()) {
+          roleIds += "," + item;
         }
-      }).then(res => {
-        this.premLoading = false;
-        this.$message({
-          message: "提交成功",
-          type: "success"
-        });
-      });
-    },
-    selsChange: function(sels) {
-      this.sels = sels;
-    },
-    //批量删除
-    batchRemove: function() {
-      var ids = this.sels.map(item => item.id).toString();
-      this.$confirm("确认删除选中记录吗？", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          let para = { ids: ids };
-          batchRemoveUser(para).then(res => {
-            this.listLoading = false;
-            //NProgress.done();
+        if (roleIds != "") {
+          roleIds = roleIds.substring(1, roleIds.length);
+        }
+        this.permForm.role_ids = roleIds;
+        this.$http({
+          method: "post",
+          url: "role/permission",
+          data: {
+            id: this.permForm.id,
+            permission_ids: this.permForm.role_ids
+          },
+          headers: {
+            sign: localStorage.getItem("sign")
+          }
+        }).then(res => {
+          this.premLoading = false;
+          if (res.data.error_code === 0) {
             this.$message({
-              message: "删除成功",
+              message: "提交成功",
               type: "success"
             });
-            this.getUsers();
-          });
-        })
-        .catch(() => {});
+            this.getUsers(1, 20);
+            this.premFormVisible = false;
+          } else {
+            this.$message.error(res.data.error_message);
+            this.premFormVisible = true;
+          }
+        });
+      });
     },
     //时间格式化
     dateFormat: function(row, column) {
