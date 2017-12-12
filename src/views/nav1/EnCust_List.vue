@@ -81,9 +81,9 @@
 		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="{checkList}" label-width="80px" ref="addForm">
                 <el-col style="margin-bottom:10px;">
-                    <el-checkbox-group v-model="checkList.type" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" :value="name.remark">
+                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" >
                         <span class="checkBoxs_name">{{name.remark + "："}}</span>
-                        <el-checkbox :label="valueName.name" class="checkWidth" v-for="valueName in name.value" :key="valueName.name" :name="valueName.type"></el-checkbox>
+                        <el-checkbox :label="valueName.type + ':' + valueName.code" class="checkWidth" v-for="valueName in name.value" :key="valueName.code">{{valueName.name}}</el-checkbox>
                         <hr>
                     </el-checkbox-group>
                 </el-col>
@@ -117,8 +117,9 @@ export default {
         cst_type: "",
         value: ""
       },
-      checkList: {
-        type: []
+      queryParams: {},
+      checkList: [
+        // type: []
         //   gender: [],
         //   cst_sort: [],
         //   edu_level: [],
@@ -126,7 +127,7 @@ export default {
         //   children_cnt: [],
         //   work_type: [],
         //   cst_status: []
-      },
+      ],
       usersData: [],
       users: [],
       btn: [],
@@ -234,15 +235,32 @@ export default {
     //获取更多查询用户列表
     getUsers(checkList) {
       //   let self = this;
+      var json = {"cst_type" : 1};
+      for (var i = 0; i < this.checkList.length; i++) {
+        var item = this.checkList[i].split(":");
+        if (hasKey(json, item[0])) {
+          json[item[0]] = item[1];
+        } else {
+          var key = eval("json." + item[0]);
+          key = json[item[0]] + "," + item[1];
+          json[item[0]] = key;
+        }
+      }
+      this.queryParams = json;
+      function hasKey(json, key) {
+        var hasKey = eval("json." + key);
+        if (hasKey !== undefined && hasKey !== null) {
+          return false;
+        }
+        return true;
+      }
+
       this.addFormVisible = false;
       this.$http({
         // 客户列表
         method: "post", //方法
         url: "cust/list", //地址
-        data: {
-          cst_type: 1,
-          checkList: {}
-        },
+        data: this.queryParams,
         headers: {
           sign: localStorage.getItem("sign")
         }

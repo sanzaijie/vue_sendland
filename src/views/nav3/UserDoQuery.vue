@@ -182,7 +182,7 @@ export default {
       editFormRules: {
         name: [{ required: true, message: "请输入用户姓名", trigger: "blur" }],
         oper_id: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
-        oper_pwd: [{ validator: validatePassword, trigger: "blur" }]
+        oper_pwd: [{ required: true, validator: validatePassword, trigger: "blur" }]
       },
       //编辑界面数据
       editForm: {
