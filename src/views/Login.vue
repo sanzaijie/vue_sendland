@@ -70,6 +70,16 @@ export default {
                 ) {
                   self.sign = res.data.data.sign;
                   self.logining = false;
+                  var has_permission = res.data.data.permission_list !== undefined //
+                                && res.data.data.permission_list !== null //
+                                && res.data.data.permission_list.length > 0;
+                  if(!has_permission) {
+                    self.$message.error({
+                      message: "您没有权限登录系统,请联系管理员",
+                      type: "warning"
+                    });
+                    return false;
+                  }
                   self.$message({
                     message: "登陆成功!",
                     type: "success"

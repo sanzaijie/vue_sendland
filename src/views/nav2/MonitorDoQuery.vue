@@ -63,8 +63,8 @@ export default {
       codeSystem: [],
       listLoading: false,
       dateForm: {
-        begin_date: null,
-        end_date: null,
+        begin_date: new Date().toLocaleDateString(),
+        end_date: new Date().toLocaleDateString(),
         from_sys: null
       },
       listData: []

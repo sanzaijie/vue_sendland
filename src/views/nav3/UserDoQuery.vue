@@ -197,14 +197,14 @@ export default {
       addFormRules: {
         oper_id: [{ required: true, message: "请输入登陆账号", trigger: "blur" }],
         name: [{ required: true, message: "请输入用户姓名", trigger: "blur" }],
-        oper_pwd: [{ validator: validatePassword, trigger: "blur" }]
+        oper_pwd: [{ required: true, validator: validatePassword, trigger: "blur" }]
       },
       //新增界面数据
       addForm: {
         oper_id: "",
         name: "",
         oper_pwd: "",
-        state: "有效"
+        status: "有效"
       },
       permFormVisible: false, //权限界面是否显示
       permLoading: false,
