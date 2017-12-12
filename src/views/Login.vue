@@ -8,7 +8,10 @@
             <el-form-item prop="oper_pwd">
             <el-input type="password" v-model="ruleForm2.oper_pwd" auto-complete="off" placeholder="密码"></el-input>
             </el-form-item>
-            <el-checkbox v-model="checked" class="remember" @click="rmPwd">记住密码</el-checkbox>
+            <!-- <el-checkbox v-model="checked" class="remember">记住密码</el-checkbox> -->
+            <span @click="rmPwd" class="remember">
+              <el-checkbox v-model="checked" class="rm-box">记住密码</el-checkbox>
+            </span>
             <el-button type="text" @click="forget" class="fr">忘记密码</el-button>
             <el-form-item class="wid">
             <el-button type="primary" class="wid" @click.native.prevent="handleSubmit2(ruleForm2)" :loading="logining">登录</el-button>
@@ -42,6 +45,15 @@ export default {
       },
       checked: false
     };
+  },
+  created: function() {
+    var user = sessionStorage.getItem("user");
+    user = user !== null && user !== undefined ? JSON.parse(user) : {
+      oper_id : "",
+      oper_pwd : ""
+    };
+    this._data.ruleForm2.oper_id = user.oper_id;
+    this._data.ruleForm2.oper_pwd = user.oper_pwd;
   },
   methods: {
     forget() {
@@ -97,6 +109,7 @@ export default {
                     "listId",
                     JSON.stringify(res.data.data.permission_list)
                   );
+                  
                   self.$router.push({ path: "/custList" });
                 } else {
                   self.logining = false;
@@ -114,10 +127,13 @@ export default {
     },
     rmPwd() {
       this.checked = !this.checked;
-      localStorage.setItem(
-        ruleForm2.oper_pwd,
-        JSON.stringify(ruleForm2.oper_pwd)
-      );
+      // localStorage.setItem(
+      //   ruleForm2.oper_pwd,
+      //   JSON.stringify(ruleForm2.oper_pwd)
+      // );
+      if(this.checked) {
+        sessionStorage.setItem("user", JSON.stringify(this._data.ruleForm2));
+      }
     }
   }
 };
@@ -155,6 +171,9 @@ export default {
   }
   .remember {
     margin: 0px 0px 35px 0px;
+  }
+  .remember .rm-box {
+    color: #1d90e6;
   }
   .fr {
     float: right;
