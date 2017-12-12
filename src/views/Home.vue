@@ -19,7 +19,7 @@
                         {{sysUserName}}
                     </span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
+						<el-dropdown-item @click.native="handleEdit">修改密码</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -28,18 +28,21 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
-                <el-menu :default-active="'1'"
+                <el-menu
+                :default-openeds="[$route.name]"
                 class="el-menu-vertical-demo overf" 
                 @open="handleopen" 
                 @close="handleclose" 
                 @select="handleselect"
                 router 
                 v-if="!collapsed">
-                     <template v-for="(item,index) in navbars" v-if="!item.hidden">
-                        <el-submenu :index="item.name" v-if="item.name">
-                            <template slot="title"><i :class="$router.options.routes"></i>{{item.name}}</template>
+                    <template v-for="(item,index) in navbars" v-if="!item.hidden">
+                        <el-submenu :index="$route.name" v-if="item.name">
+                            <template slot="title">{{item.name}}</template>
                                 <router-link v-for="subs in item.sub" :key="subs.id" :name="subs.name"
-                                :to="{name: subs.name}" tag="li" class="routerLink el-menu-item is-active">
+                                :to="{name: subs.name}" tag="li"
+                                :index="subs.id"
+                                class="routerLink el-menu-item is-active">
                                     <a class="link">{{subs.name}}</a>
                                 </router-link>
                         </el-submenu>
@@ -86,12 +89,40 @@
 				</div>
 			</section>
 		</el-col>
+        <!-- <transition mode="out-in"> -->
+    <!--修改密码界面-->
+		<el-dialog title="修改密码" v-model="editFormVisible" :close-on-click-modal="false" fullscreen="true">
+			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+				<el-form-item label="原密码" prop="old_pwd">
+					<el-input v-model="editForm.old_pwd" type="password" auto-complete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="新密码" prop="new_pwd">
+					<el-input v-model="editForm.new_pwd" type="password" auto-complete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="重复密码" prop="confirm_pwd">
+					<el-input type="password" v-model="editForm.confirm_pwd" auto-complete="off"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click.native="editFormVisible = false">取消</el-button>
+				<el-button type="primary" @click="editUserSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+<!-- </transition> -->
 	</el-row>
 </template>
 
 <script>
 export default {
   data() {
+    var validatePassword = (rule, value, callback) => {
+      if (this.editForm.new_pwd === this.editForm.confirm_pwd) {
+        callback();
+      } else {
+        callback(new Error("两次输入得新密码不一致"));
+      }
+    };
+
     return {
       sysName: "实地地产集团",
       collapsed: false,
@@ -107,10 +138,41 @@ export default {
         type: [],
         resource: "",
         desc: ""
+      },
+      editFormVisible: false,
+      editLoading: false,
+      editForm: {
+        old_pwd: "",
+        new_pwd: "",
+        confirm_pwd: ""
+      },
+      editFormRules: {
+        old_pwd: [
+          { required: true, message: "请输入原密码", trigger: "blur" },
+          {
+            pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
+            message: "密码格式不正确(长度6-16位,密码组合必须包含英文字母、数字，区分大小写)"
+          }
+        ],
+        new_pwd: [
+          { required: true, message: "请输入新密码", trigger: "blur" },
+          {
+            pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
+            message: "密码格式不正确(长度6-16位,密码组合必须包含英文字母、数字，区分大小写)"
+          }
+        ],
+        confirm_pwd: [
+          { required: true, message: "请再次输入新密码", trigger: "blur" },
+          {
+            pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
+            message: "密码格式不正确(长度6-16位,密码组合必须包含英文字母、数字，区分大小写)"
+          },
+          { validator: validatePassword, trigger: "blur" }
+        ]
       }
     };
   },
-  created() {
+  beforeCreate() {
     this.$http({
       method: "post", //方法
       url: "login", //地址
@@ -131,6 +193,39 @@ export default {
     );
   },
   methods: {
+    editUserSubmit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$http({
+            method: "post",
+            url: "password/update",
+            data: this.editForm,
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: res.data.error_message,
+                type: "success"
+              });
+              this.$refs["editForm"].resetFields();
+              this.editFormVisible = false;
+              this.getUsers(1, 20);
+            } else {
+              this.$message.error(res.data.error_message);
+              this.editFormVisible = true;
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    handleEdit: function() {
+      this.editFormVisible = true;
+    },
     onSubmit() {
       console.log("submit!");
     },
@@ -163,7 +258,7 @@ export default {
       )[0].style.display = status ? "block" : "none";
     }
   },
-  mounted() {
+  created() {
     this.sysUserName = JSON.parse(localStorage.getItem("userName"));
     // 获取导航栏ID
     this.listId = JSON.parse(localStorage.getItem("listId"));

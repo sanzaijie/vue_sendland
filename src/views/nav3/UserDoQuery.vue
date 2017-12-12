@@ -121,7 +121,7 @@
 		<el-dialog title="用户权限" v-model="permFormVisible" :close-on-click-modal="false">
 			<!-- <el-form :model="permForm" label-width="80px" ref="permForm"> -->
                 <el-checkbox-group v-model="checkList" style="margin-bottom:10px;">
-                    <el-col :span="6">
+                    <el-col :span="24">
                         <el-checkbox v-for="checkName in checkNames" :label="checkName.id"  >{{checkName.name}}</el-checkbox> 
                     </el-col>
                 </el-checkbox-group>
@@ -148,6 +148,7 @@ import util from "../../common/js/util";
 
 export default {
   data() {
+
     var validatePassword = (rule, value, callback) => {
       var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
       if (!reg.test(value)) {
@@ -458,36 +459,6 @@ export default {
           });
         }
       });
-    },
-    //权限
-    // addSubmit: function() {
-    //   this.$refs.permForm.validate(valid => {
-    //     if (valid) {
-    //       this.$confirm("确认提交吗？", "提示", {}).then(() => {
-    //         this.addLoading = true;
-    //         //NProgress.start();
-    //         let para = Object.assign({}, this.permForm);
-    //         para.birth =
-    //           !para.birth || para.birth == ""
-    //             ? ""
-    //             : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-    //         addUser(para).then(res => {
-    //           this.addLoading = false;
-    //           //NProgress.done();
-    //           this.$message({
-    //             message: "提交成功",
-    //             type: "success"
-    //           });
-    //           this.permForm.resetFields();
-    //           this.permFormVisible = false;
-    //           this.getUsers();
-    //         });
-    //       });
-    //     }
-    //   });
-    // },
-    selsChange: function(sels) {
-      this.sels = sels;
     }
   },
   mounted() {

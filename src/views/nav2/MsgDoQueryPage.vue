@@ -88,7 +88,7 @@
 			    </el-table-column>
 			</el-table>
 			<el-col :span="24" class="toolbar">
-				<el-pagination layout="prev, pager, next, jumper" 
+				<el-pagination layout="total, prev, pager, next, jumper" 
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page.sync="currentPage"
@@ -99,7 +99,7 @@
 			</el-col>
             <!--详细-->
             <el-dialog title="消息内容" v-model="detailFormVisible" :close-on-click-modal="false">
-                <el-input type="textarea"  readonly="true" resize="none" cols="25" rows="20" v-model="editForm"></el-input>
+                <el-input type="textarea"  readonly resize="none" cols="25" rows=20 v-model="editForm"></el-input>
                 <div slot="footer" class="dialog-footer">
                     <el-button type="primary" @click.native="detailFormVisible = false">关闭</el-button>
                 </div>

@@ -9,19 +9,19 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="客户类型" prop="addUser.cst_type">   
+                    <el-form-item label="客户类型" prop="cst_type">   
                         <el-select v-model="addUser.cst_type" placeholder="客户类型">
-                            <el-option value="0">个人客户</el-option>
-                            <el-option value="1">企业客户</el-option>
+                            <el-option value="0" label="个人客户">个人客户</el-option>
+                            <el-option value="1" label="企业客户">企业客户</el-option>
                         </el-select>
                     </el-form-item>  
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="性别" prop="addUser.gender">   
+                    <el-form-item label="性别" prop="gender">   
                         <el-select v-model="addUser.gender" placeholder="性别">
-                            <el-option value="2">未知</el-option>
-                            <el-option value="0">男</el-option>
-                            <el-option value="1">女</el-option>
+                            <el-option value="2" label="未知">未知</el-option>
+                            <el-option value="0" label="男">男</el-option>
+                            <el-option value="1" label="女">女</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -31,13 +31,14 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="证件类型" prop="addUser.card_type">                          
+                    <el-form-item :span="6" label="证件类型" prop="card_type">                          
                         <el-select v-model="addUser.card_type" placeholder="证件类型">
-                            <el-option value="0">身份证</el-option>
-                            <el-option value="1">护照</el-option>
-                            <el-option value="2">军官证</el-option>
-                            <el-option value="3">港澳身份证</el-option>
-                            <el-option value="4">台胞证</el-option>
+                            <el-option value="-1" label="未知">未知</el-option>
+                            <el-option value="0" label="身份证">身份证</el-option>
+                            <el-option value="1" label="护照">护照</el-option>
+                            <el-option value="2" label="军官证">军官证</el-option>
+                            <el-option value="3" label="港澳身份证">港澳身份证</el-option>
+                            <el-option value="4" label="台胞证">台胞证</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -47,17 +48,17 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6"> 
-                    <el-form-item :span="6" label="出生日期" prop="birthday">
-                        <el-date-picker v-model="addUser.birthday" type="date" placeholder="出生日期">
+                    <el-form-item :span="6" label="出生日期">
+                        <el-date-picker v-model="addUser.birthday" type="date" format="yyyy/MM/dd" value-format="yyyy/MM/dd" placeholder="出生日期">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item :span="6" label="客户类别" prop="cst_sort">  
                         <el-select v-model="addUser.cst_sort" placeholder="客户类别">
-                            <el-option value="0">业主</el-option>
-                            <el-option value="1">租户</el-option>
-                            <el-option value="2">其他</el-option>
+                            <el-option value="0" label="业主">业主</el-option>
+                            <el-option value="1" label="租户">租户</el-option>
+                            <el-option value="2" label="其他">其他</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -78,8 +79,8 @@
                 <el-col :span="6">  
                     <el-form-item :span="6" label="VIP客户国籍" prop="viptag">  
                         <el-select v-model="addUser.viptag" placeholder="VIP客户">
-                            <el-option value="1">是</el-option>
-                            <el-option value="0">否</el-option>
+                            <el-option value="1" label="是">是</el-option>
+                            <el-option value="0" label="否">否</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -111,9 +112,10 @@
                 <el-col :span="6">
                     <el-form-item :span="6" label="居住业态" prop="resided_state">  
                         <el-select v-model="addUser.resided_state" placeholder="居住业态">
-                            <el-option value="1">高层住宅</el-option>
-                            <el-option value="2">商业</el-option>
-                            <el-option value="3">别墅</el-option>
+                            <el-option value="1" label="高层住宅">高层住宅</el-option>
+                            <el-option value="2" label="商业">商业</el-option>
+                            <el-option value="3" label="别墅">别墅</el-option>
+                            <el-option value="4" label="未知">未知</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -135,10 +137,14 @@
                 <el-col :span="6">
                     <el-form-item :span="6" label="来自区域" prop="comefrom">    
                         <el-select v-model="addUser.comefrom" placeholder="来自区域">
-                            <el-option value="1">中国大陆</el-option>
-                            <el-option value="2">港/澳</el-option>
-                            <el-option value="3">台湾</el-option>
-                            <el-option value="4">海外</el-option>
+                            <el-option value="1" label="中国大陆"></el-option>
+                            <el-option  value="2" label="港/澳"></el-option>
+                            <el-option  value="3" label="台湾"></el-option>
+                            <el-option  value="4" label="海外"></el-option>
+                            <!-- <el-option key="1" value="1" label="中国大陆">中国大陆</el-option>
+                            <el-option key="2" value="2" label="港/澳">港/澳</el-option>
+                            <el-option key="3" value="3" label="台湾">台湾</el-option>
+                            <el-option key="4" value="4" label="海外">海外</el-option> -->
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -160,19 +166,20 @@
                 <el-col :span="6">
                     <el-form-item :span="6" label="职业身份" prop="work_type">   
                         <el-select v-model="addUser.work_type" placeholder="职业身份">
-                            <el-option value="108">公务员</el-option>
-                            <el-option value="109">教师</el-option>
-                            <el-option value="110">医生</el-option>
-                            <el-option value="111">普通员工</el-option>
-                            <el-option value="112">高级白领</el-option>
-                            <el-option value="113">事业单位</el-option>
-                            <el-option value="1">党政军干部</el-option>
-                            <el-option value="102">企事业中高层管理人员</el-option>
-                            <el-option value="103">企事业基层管理/职员/公务员</el-option>
-                            <el-option value="104">私企员工</el-option>
-                            <el-option value="105">私企老板</el-option>
-                            <el-option value="106">自雇</el-option>
-                            <el-option value="107">个体户</el-option>
+                            <el-option value="108" label="公务员">公务员</el-option>
+                            <el-option value="109" label="教师">教师</el-option>
+                            <el-option value="110" label="医生">医生</el-option>
+                            <el-option value="111" label="普通员工">普通员工</el-option>
+                            <el-option value="112" label="高级白领">高级白领</el-option>
+                            <el-option value="113" label="事业单位">事业单位</el-option>
+                            <el-option value="101" label="党政军干部">党政军干部</el-option>
+                            <el-option value="102" label="企事业中高层管理人员">企事业中高层管理人员</el-option>
+                            <el-option value="103" label="企事业基层管理/职员/公务员">企事业基层管理/职员/公务员</el-option>
+                            <el-option value="104" label="私企员工">私企员工</el-option>
+                            <el-option value="105" label="私企老板">私企老板</el-option>
+                            <el-option value="106" label="自雇">自雇</el-option>
+                            <el-option value="107" label="个体户">个体户</el-option>
+                            <el-option value="-1" label="未知"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -189,12 +196,12 @@
                 <el-col :span="6">
                     <el-form-item :span="6" label="家庭结构" prop="family"> 
                         <el-select v-model="addUser.family" placeholder="家庭结构">
-                            <el-option value="1">单身贵族</el-option>
-                            <el-option value="2">二人世界</el-option>
-                            <el-option value="3">单亲家庭</el-option>
-                            <el-option value="4">二代之家</el-option>
-                            <el-option value="5">三代同堂</el-option>
-                            <el-option value="0">未知</el-option>
+                            <el-option value="1" label="单身贵族">单身贵族</el-option>
+                            <el-option value="2" label="二人世界">二人世界</el-option>
+                            <el-option value="3" label="单亲家庭">单亲家庭</el-option>
+                            <el-option value="4" label="二代之家">二代之家</el-option>
+                            <el-option value="5" label="三代同堂">三代同堂</el-option>
+                            <el-option value="6" label="未知">未知</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -206,40 +213,40 @@
                 <el-col :span="6">
                     <el-form-item :span="6" label="教育程度" prop="edu_level"> 
                         <el-select v-model="addUser.edu_level" placeholder="教育程度">
-                            <el-option value="0">未选择</el-option>
-                            <el-option value="6">未知</el-option>
-                            <el-option value="1">高职/技校</el-option>
-                            <el-option value="2">大专</el-option>
-                            <el-option value="3">大学</el-option>
-                            <el-option value="4">研究生以上</el-option>
-                            <el-option value="5">其他</el-option>
+                            <el-option value="7" label="未选择">未选择</el-option>
+                            <el-option value="6" label="未知">未知</el-option>
+                            <el-option value="1" label="高职/技校">高职/技校</el-option>
+                            <el-option value="2" label="大专">大专</el-option>
+                            <el-option value="3" label="大学">大学</el-option>
+                            <el-option value="4" label="研究生以上">研究生以上</el-option>
+                            <el-option value="5" label="其他">其他</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item :span="6" label="有无保姆" prop="have_bm"> 
                         <el-select v-model="addUser.have_bm" placeholder="有无保姆同住">
-                            <el-option value="1">有</el-option>
-                            <el-option value="0">无</el-option>
-                            <el-option value="2">未知</el-option>
+                            <el-option value="1" label="有">有</el-option>
+                            <el-option value="0" label="无">无</el-option>
+                            <el-option value="2" label="未知">未知</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item :span="6" label="主要决策者" prop="ismain_jcz"> 
                         <el-select v-model="addUser.ismain_jcz" placeholder="是否为主要决策者">
-                            <el-option value="1">是</el-option>
-                            <el-option value="0">否</el-option>
-                            <el-option value="2">不确定</el-option>
+                            <el-option value="0" label="是">是</el-option>
+                            <el-option value="1" label="否">否</el-option>
+                            <el-option value="2" label="不确定">不确定</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item :span="6" label="是否养犬" prop="pet_stag"> 
                         <el-select v-model="addUser.pet_stag" placeholder="是否养犬">
-                            <el-option value="1">是</el-option>
-                            <el-option value="0">否</el-option>
-                            <el-option value="2">不确定</el-option>
+                            <el-option value="1" label="是">是</el-option>
+                            <el-option value="0" label="否">否</el-option>
+                            <el-option value="-1" label="不确定">不确定</el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -256,7 +263,7 @@
                 <el-col>
                     <div class="fr">
                         <el-button @click="goback">取消</el-button>
-                        <el-button type="primary" @click="sendRela">提交</el-button>
+                        <el-button type="primary" @click="send">提交</el-button>
                     </div>
                 </el-col>
             </el-row>
@@ -271,6 +278,7 @@
             <!-- 新增银行 -->
                 <el-form-item v-for="(bank, index) in banks">
                     <el-row :gutter="50">
+                        <el-input v-model="bank.aid" v-show="false"></el-input>
                         <el-col :span="4" style="padding-bottom: 0px;">
                             <el-select v-model="bank.bank_delegate" placeholder="卡类型">
                                 <el-option value="1" label="储蓄卡">储蓄卡</el-option>
@@ -298,6 +306,7 @@
                 </div>
             </el-col>
         </el-form>
+        <hr />
         <el-form :inline="true" :model="{relaCusts}"  status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">关联客户</strong>
@@ -307,28 +316,30 @@
               <!-- 新增关联客户 -->
                 <el-form-item v-for="(relaCust, index) in relaCusts" >
                     <el-row :gutter="50">
+                        <el-input v-model="relaCust.cust_id_rela" v-show="false"></el-input>
                         <el-col :span="4" style="padding-bottom: 0px;">
                             <el-input v-model="relaCust.cst_name" placeholder="客户姓名"></el-input>
                         </el-col>
                         <el-col :span="3" style="padding-bottom: 0px;">
                             <el-select v-model="relaCust.gender" placeholder="性别">
-                                <el-option value="未知">未知</el-option>
-                                <el-option value="男">男</el-option>
-                                <el-option value="女">女</el-option>
+                                <el-option value="2" label="未知">未知</el-option>
+                                <el-option value="0" label="男">男</el-option>
+                                <el-option value="1" label="女">女</el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="4" style="padding-bottom: 0px;">
-                            <el-select v-model="relaCust.rela_type1" placeholder="关系类型1">
-                                <el-option value="家人">家人</el-option>
-                                <el-option value="保姆">保姆</el-option>
-                                <el-option value="租户">租户</el-option>
+                            <el-select v-model="relaCust.rela_type" placeholder="关系类型1">
+                                <el-option value="1" label="家人">家人</el-option>
+                                <el-option value="3" label="保姆">保姆</el-option>
+                                <el-option value="2" label="租户">租户</el-option>
+                                <el-option value="4" label="暂住">暂住</el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="4" style="padding-bottom: 0px;">
                             <el-select v-model="relaCust.rela_type2" placeholder="关系类型2">
-                                <el-option value="家人">家人</el-option>
-                                <el-option value="保姆">保姆</el-option>
-                                <el-option value="租户">租户</el-option>
+                                <el-option value="28001" label="夫妻">夫妻</el-option>
+                                <el-option value="28002" label="子女">子女</el-option>
+                                <el-option value="28003" label="亲戚">亲戚</el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="4" style="padding-bottom: 0px;">
@@ -350,6 +361,7 @@
 
 <script>
 import * as change from "../../api/change.js";
+import moment from "../../api/moment";
 
 export default {
   data() {
@@ -366,17 +378,19 @@ export default {
     return {
       banks: [
         {
+          aid: 0,
           bank_name: "",
           bank_delegate: "",
           bank_account_name: "",
-          bank_account_cod: ""
+          bank_account_code: ""
         }
       ],
       relaCusts: [
         {
+          cust_id_rela: "",
           cst_name: "",
           gender: "",
-          rela_type1: "",
+          rela_type: "",
           rela_type2: "",
           cst_phone: ""
         }
@@ -419,10 +433,7 @@ export default {
         hobby: "",
         fax: "",
         pro_pertycnt: "",
-        gender: "",
-        rela_type: "",
-        rela_type2: "",
-        bank_delegate: ""
+        gender: ""
       },
       rulesPerson: {
         cst_phone: [{ validator: validatePhone, trigger: "blur" }]
@@ -435,6 +446,43 @@ export default {
     };
   },
   methods: {
+    // 获取个人客户银行卡详细信息
+    getBanks() {
+      this.$http({
+        method: "post",
+        url: "cust/person/bank/detail",
+        data: {
+          cust_id: this.$route.query.cust_id
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        if (res.data.data) {
+          this.banks = res.data.data;
+        }
+      });
+    },
+    // 获取个人客户关联客户详细信息
+    getRecust() {
+      this.$http({
+        method: "post",
+        url: "cust/person/relation/detail",
+        data: {
+          cust_id: this.$route.query.cust_id
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      }).then(res => {
+        if (res.data.data) {
+          this.relaCusts = res.data.data;
+          for (let item of this.relaCusts) {
+            item.gender = String(item.gender);
+          }
+        }
+      });
+    },
     goback() {
       window.opener = null;
       window.close();
@@ -447,6 +495,25 @@ export default {
       //     cust_id: this.$router.query.cust_id
       //   };
       let reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}@[0-9]{1,3}$/;
+      addUser.gender = Number(addUser.gender);
+      addUser.cst_type = Number(addUser.cst_type);
+      addUser.card_type = Number(addUser.card_type);
+      addUser.cst_status = Number(addUser.cst_status);
+      addUser.work_type = Number(addUser.work_type);
+      addUser.children_cnt = Number(addUser.children_cnt);
+      addUser.family = Number(addUser.family);
+      addUser.edu_level = Number(addUser.edu_level);
+      addUser.cst_sort = Number(addUser.cst_sort);
+      addUser.viptag = Number(addUser.viptag);
+      addUser.resided_state = Number(addUser.resided_state);
+      addUser.comefrom = Number(addUser.comefrom);
+      addUser.have_bm = Number(addUser.have_bm);
+      addUser.ismain_jcz = Number(addUser.ismain_jcz);
+      addUser.pet_stag = Number(addUser.pet_stag);
+      addUser.birthday = moment(addUser.birthday).format(
+        "YYYY/MM/DD"
+      );
+
       if (addUser.cst_phone == "") {
         alert("请输入手机号码");
       } else if (!reg.test(addUser.cst_phone)) {
@@ -459,14 +526,17 @@ export default {
           headers: {
             sign: localStorage.getItem("sign")
           }
-        }).then(
-          res => {
-            console.log(res);
-          },
-          err => {
-            console.log(err);
+        }).then(res => {
+          if (res.data.error_code === 0) {
+            this.$message({
+              message: "更新成功!",
+              type: "success"
+            });
+            setTimeout("window.opener = null;window.close();", 2000);
+          } else {
+            this.$message.error(res.data.error_message);
           }
-        );
+        });
       }
     },
     removeBank(item) {
@@ -484,14 +554,130 @@ export default {
     removeRelaCust(item) {
       var index = this.relaCusts.indexOf(item);
       if (index !== -1) {
-        this.addUser.splice(index, 1);
+        this.relaCusts.splice(index, 1);
       }
     },
     addRelaCust() {
-      this.addUser.push({
+      this.relaCusts.push({
         value: "",
         key: Date.now()
       });
+    },
+    sendBank() {
+      // 新增个人客户银行卡
+      for (let item of this.banks) {
+        if (item.aid != null && item.aid != 0 && item.aid != "") {
+          item.aid = parseInt(item.aid);
+          this.$http({
+            // 更新银行卡
+            method: "post",
+            url: "cust/person/bank/update",
+            data: {
+              cust_id: this.$route.query.cust_id,
+              bank_list: [item]
+            },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "银行卡更新成功!",
+                type: "success"
+              });
+              this.getBanks();
+              // banks = res.data.data.bank_list;
+            } else {
+              this.$message.error(res.data.error_message);
+            }
+          });
+        } else {
+          item.aid = null;
+          this.$http({
+            // 新增银行卡
+            method: "post",
+            url: "cust/person/bank/add",
+            data: {
+              cust_id: this.$route.query.cust_id,
+              bank_list: [item]
+            },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "银行卡更新成功!",
+                type: "success"
+              });
+              this.getBanks();
+              //   banks = res.data.data.bank_list;
+            } else {
+              this.$message.error(res.data.error_message);
+            }
+          });
+        }
+      }
+    },
+    sendRela() {
+      // 新增个人客户银行卡
+      for (let item of this.relaCusts) {
+        if (
+          item.cust_id_rela != undefined &&
+          item.cust_id_rela != 0 &&
+          item.cust_id_rela != ""
+        ) {
+          item.gender = parseInt(item.gender);
+          this.$http({
+            // 更新银行卡
+            method: "post",
+            url: "cust/person/relation/update",
+            data: {
+              cust_id: this.$route.query.cust_id,
+              rela_list: [item]
+            },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "关联客户更新成功!",
+                type: "success"
+              });
+              this.getRecust();
+              // banks = res.data.data.bank_list;
+            } else {
+              this.$message.error(res.data.error_message);
+            }
+          });
+        } else {
+          item.cust_id_rela = "";
+          this.$http({
+            // 新增银行卡
+            method: "post",
+            url: "cust/person/relation/add",
+            data: {
+              cust_id: this.$route.query.cust_id,
+              rela_list: [item]
+            },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "关联客户新增成功!",
+                type: "success"
+              });
+              this.getRecust();
+              //   banks = res.data.data.bank_list;
+            } else {
+              this.$message.error(res.data.error_message);
+            }
+          });
+        }
+      }
     }
   },
   mounted() {
@@ -508,22 +694,55 @@ export default {
     }).then(res => {
       this.addUser = res.data.data;
       let usersG = this.addUser;
-      usersG.gender = change.Gender(usersG.gender);
-      usersG.cst_type = change._cstType(usersG.cst_type);
-      usersG.card_type = change._cardTcard_typeype(usersG.card_type);
-      usersG.cst_status = change._cstStatus(usersG.cst_status);
-      usersG.work_type = change._workType(usersG.work_type);
-      usersG.children_cnt = change._childrenCnt(usersG.children_cnt);
-      usersG.family = change._family(usersG.family);
-      usersG.edu_level = change._eduLevel(usersG.edu_level);
-      usersG.cst_sort = change._cstSort(usersG.cst_sort);
-      usersG.viptag = change._viptag(usersG.viptag);
-      usersG.resided_state = change._residedState(usersG.resided_state);
-      usersG.comefrom = change._comefrom(usersG.comefrom);
-      usersG.have_bm = change._haveBm(usersG.have_bm);
-      usersG.ismain_jcz = change._ismainJcz(usersG.ismain_jcz);
-      usersG.pet_stag = change._petStag(usersG.pet_stag);
+      usersG.gender = String(usersG.gender);
+      usersG.cst_type = String(usersG.cst_type);
+      usersG.card_type = String(usersG.card_type);
+      usersG.cst_status = String(usersG.cst_status);
+      usersG.work_type = String(usersG.work_type);
+      usersG.children_cnt = String(usersG.children_cnt);
+      usersG.family = String(usersG.family);
+      usersG.edu_level = String(usersG.edu_level);
+      usersG.cst_sort = String(usersG.cst_sort);
+    //   usersG.viptag = String(usersG.viptag);
+    //   usersG.resided_state = String(usersG.resided_state);
+      usersG.comefrom = String(usersG.comefrom);
+      usersG.have_bm = String(usersG.have_bm);
+      usersG.ismain_jcz = String(usersG.ismain_jcz);
+      usersG.pet_stag = String(usersG.pet_stag);
       this.addUser = usersG;
+    });
+    // 获取个人客户银行卡详细信息
+    this.$http({
+      method: "post",
+      url: "cust/person/bank/detail",
+      data: {
+        cust_id: this.$route.query.cust_id
+      },
+      headers: {
+        sign: localStorage.getItem("sign")
+      }
+    }).then(res => {
+      if (res.data.data) {
+        this.banks = res.data.data;
+      }
+    });
+    // 获取个人客户关联客户详细信息
+    this.$http({
+      method: "post",
+      url: "cust/person/relation/detail",
+      data: {
+        cust_id: this.$route.query.cust_id
+      },
+      headers: {
+        sign: localStorage.getItem("sign")
+      }
+    }).then(res => {
+      if (res.data.data) {
+        this.relaCusts = res.data.data;
+        for (let item of this.relaCusts) {
+          item.gender = String(item.gender);
+        }
+      }
     });
   }
 };

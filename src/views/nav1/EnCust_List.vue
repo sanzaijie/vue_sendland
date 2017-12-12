@@ -25,13 +25,16 @@
 					<el-button type="primary" @click="$router.push('/personal')">新增个人客户</el-button>
 				</el-form-item> -->
                 <el-form-item v-for="item in listId" v-if="item.name==='新增'">
-					<el-button type="primary" @click="$router.push('/encust_list/enterprise')">新增企业客户</el-button>
+					<el-button type="primary" @click="$router.push('/encustlist/enterprise')">新增企业客户</el-button>
+				</el-form-item>
+                <el-form-item v-for="item in listId" v-if="item.name==='导出'">
+					<el-button type="primary" @click="exportList">导出</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row stripe :loading="listLoading" style="width: 100%;">
+		<el-table :data="users" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
 			<!-- <el-table-column type="selection" width="0">
 			</el-table-column> -->
 			<el-table-column type="index" label="序号" align="center" width="70">
@@ -44,19 +47,19 @@
 			</el-table-column>
 			<el-table-column prop="cst_type" label="客户类型" width="100" align="center">
 			</el-table-column>
-			<el-table-column prop="certificates" label="证件类型" width="100" align="center">
+			<el-table-column prop="card_type" label="证件类型" width="100" align="center">
 			</el-table-column>
             <el-table-column prop="cer_no" label="证件号码" min-width="100" align="center">
 			</el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
-                        <router-link class="routerBtn" :to="{path: `/home/encust_list/enterprisedetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/encustlist/enterprisedetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
                     </el-button>                                                          
 					<el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
-                        <router-link class="routerBtn" :to="{path: `/home/encust_list/enterpriseedit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/encustlist/enterpriseedit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
                     </el-button>
-					<el-button type="danger" size="small" @click.native.prevent="deleteRow(scope.$index, users)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
+					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -161,6 +164,8 @@ export default {
     });
   },
   methods: {
+    // 导出列表
+    exportList() {},
     //加载分页数据
     loadData(pageNum, pageSize) {
       this.$http({
@@ -251,17 +256,6 @@ export default {
         this.users = usersG;
         this.listLoading = false;
       });
-      //   let para = {
-      //     page: this.page,
-      //     name: this.filters.cst_name
-      //   };
-      //   this.listLoading = true;
-      //   //   getUserListPage(para).then(res => {
-      //   //     this.total = res.data.total;
-      //   //     this.users = res.data.users;
-      //   //     this.addFormVisible = false;
-      //   //     this.listLoading = false;
-      //   //   });
     },
     handleAdd: function() {
       let self = this;
@@ -279,24 +273,29 @@ export default {
       //   console.log(self.addForm);
       this.addFormVisible = true;
     },
-    //删除
-    deleteRow(index, rows) {
-      rows.splice(index, 1);
-    },
+    // 删除
     handleDel: function(index, row) {
       this.$confirm("确认删除该记录吗?", "提示", {
         type: "warning"
       })
         .then(() => {
-          this.listLoading = true;
-          let para = { id: row.id };
-          removeUser(para).then(res => {
-            this.listLoading = false;
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getUsers();
+          this.$http({
+            method: "post",
+            url: "cust/delete",
+            data: { cust_id: row.cust_id },
+            headers: {
+              sign: localStorage.getItem("sign")
+            }
+          }).then(res => {
+            if (res.data.error_code === 0) {
+              this.$message({
+                message: "删除成功！",
+                type: "success"
+              });
+              this.loadData();
+            } else {
+              this.$message.error(res.data.error_message);
+            }
           });
         })
         .catch(() => {});
@@ -306,53 +305,8 @@ export default {
     }
   },
   mounted() {
-    // this.$http({
-    //   method: "post",
-    //   url: "btn/permission",
-    //   data
-    // });
-    // this.getUsers();
-    // 合并请求
-    // function getMsg(res1, res2) {
-    //   confirm.log(res1);
-    //   confirm.log(res2);
-    // }
-    // this.$http
-    //   .all([
-    //     this.$http.post("cust/list", { cst_type: 1 }),
-    //     this.$http.post("cust/admin", { page_num: 1 })
-    //   ])
-    //   // 分发响应
-    //   .then(this.$http.spread(getMsg))
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-    this.$http({
-      // 客户列表
-      method: "post", //方法
-      url: "cust/list", //地址
-      data: {
-        cst_type: 1,
-        page_num: 1,
-        page_size: 20
-      },
-      headers: {
-        sign: localStorage.getItem("sign")
-      }
-    }).then(res => {
-      this.usersData = res.data.data.result;
-      this.total = res.data.data.total_count;
-      let usersG = this.usersData;
-      for (let i = 0; i < usersG.length; i++) {
-        usersG[i].gender = change.Gender(usersG[i].gender);
-        usersG[i].cst_type = change._cstType(usersG[i].cst_type);
-        usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
-      }
-      this.users = usersG;
-      this.listLoading = false;
-    });
-  },
-  created() {}
+    this.loadData();
+  }
 };
 </script>
 

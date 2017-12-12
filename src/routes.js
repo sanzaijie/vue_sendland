@@ -34,21 +34,25 @@ let routes = [
         name: '',
         hidden: true
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '首页',
-    //     meta: {
-    //         // 添加该字段，表示进入这个路由是需要登录的
-    //         requireAuth: true,
-    //     },
-    //     hidden: false,
-    //     iconCls: 'el-icon-location-outline',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/main', component: Main, name: '首页' }
-    //     ]
-    // },
+    {
+        path: '/',
+        component: Home,
+        name: '',
+        meta: {
+            // 添加该字段，表示进入这个路由是需要登录的
+            requireAuth: true,
+        },
+        hidden: false,
+        iconCls: 'el-icon-menu',
+        leaf: true,//只有一个节点
+        children: [
+            { 
+                path: '/main',
+                component: Main,
+                name: '首页'
+            }
+        ]
+    },
     {
         path: '/',
         component: Home,
@@ -57,7 +61,7 @@ let routes = [
             // 添加该字段，表示进入这个路由是需要登录的
             requireAuth: true,
         },
-        iconCls: 'el-icon-search',//图标样式class
+        iconCls: 'el-icon-message',//图标样式class
         hidden: false,
         children: [
             {
@@ -71,7 +75,7 @@ let routes = [
                 hidden: false
             },
             {
-                path: '/encust_list',
+                path: '/encustlist',
                 component: EnCust_List,
                 name: '企业客户列表',
                 meta: {
@@ -81,7 +85,7 @@ let routes = [
                 hidden: false
             },
             {
-                path: '/encust_list/enterprise',
+                path: '/encustlist/enterprise',
                 component: Enterprise,
                 name: '新增企业客户',
                 meta: {
@@ -123,7 +127,7 @@ let routes = [
         hidden: true
     },
     {
-        path: '/home/encust_list/enterprisedetail',
+        path: '/home/encustlist/enterprisedetail',
         component: EnterpriseDetail,
         name: '企业客户详情',
         meta: {
@@ -133,7 +137,7 @@ let routes = [
         hidden: true
     },
     {
-        path: '/home/encust_list/enterpriseedit',
+        path: '/home/encustlist/enterpriseedit',
         component: EnterpriseEdit,
         name: '企业客户编辑',
         meta: {

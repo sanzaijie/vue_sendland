@@ -63,12 +63,17 @@ export default {
             })
             .then(
               res => {
-                self.sign = res.data.data.sign;
-                self.logining = false;
-                let { error_code } = res;
-                if (res.error_code == 30004) {
-                  alert(res.error_message);
-                } else {
+                //   let { error_code } = res;
+                if (
+                  res.data.error_code == 0 &&
+                  res.data.error_code != undefined
+                ) {
+                  self.sign = res.data.data.sign;
+                  self.logining = false;
+                  self.$message({
+                    message: "登陆成功!",
+                    type: "success"
+                  });
                   localStorage.setItem(
                     "userPwd",
                     JSON.stringify(ruleForm2.oper_pwd)
@@ -83,16 +88,17 @@ export default {
                     JSON.stringify(res.data.data.permission_list)
                   );
                   self.$router.push({ path: "/custList" });
+                } else {
+                  self.logining = false;
+                  self.$message.error(res.data.error_message);
                 }
               },
               err => {
-                console.log(err);
-                // source.cancel("Operation canceled by the user.");
+                self.$message.error(res.data.error_message);
               }
             );
         } else {
-          console.log("error submit!!");
-          return false;
+          self.$message.error(res.data.error_message);
         }
       });
     },
@@ -119,6 +125,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  overflow: auto;
 }
 .login-container {
   -webkit-border-radius: 5px;

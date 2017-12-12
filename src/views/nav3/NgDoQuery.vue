@@ -29,13 +29,13 @@
 			</el-table-column>
 			<el-table-column prop="sq_code" label="售前字典值" min-width="100" align="center">
 			</el-table-column>
-            <el-table-column prop="sz_code" label="销售系统字典值" min-width="100" align="center">
+            <el-table-column prop="sz_code" label="销售字典值" min-width="100" align="center">
 			</el-table-column>
-            <el-table-column prop="sh_code" label="物业系统字典值" min-width="100" align="center">
+            <el-table-column prop="sh_code" label="物业字典值" min-width="100" align="center">
 			</el-table-column>
             <el-table-column prop="status" label="状态" width="100" align="center">
 			</el-table-column>
-            <el-table-column prop="createtime" label="创建时间" width="100" align="center">
+            <el-table-column prop="createtime" label="创建时间" :formatter="dateFormat" min-width="150" align="center">
 			</el-table-column>
 			<el-table-column label="操作" width="80" align="center">
 				<template slot-scope="scope">                    
@@ -97,6 +97,7 @@
 
 <script>
 import util from "../../common/js/util";
+import moment from "../../api/moment";
 // import {
 //   getUserListPage,
 //   removeUser,
@@ -112,24 +113,41 @@ export default {
         type: "",
         value: ""
       },
-      options: [{
-          value: 'cst_type',label: 'cst_type'
-        }, {
-          value: 'family',label: 'family'
-        }, {
-          value: 'edu_level',label: 'edu_level'
-        }, {
-          value: 'age_group',label: 'age_group'
-        }, {
-          value: 'resided_state',label: 'resided_state'
-        }, {
-          value: 'gender',label: 'gender'
-        }, {
-          value: 'comefrom',label: 'comefrom'
-        }, {
-          value: 'work_type',label: 'work_type'
-        }],
-      searchType: '',
+      options: [
+        {
+          value: "cst_type",
+          label: "cst_type"
+        },
+        {
+          value: "family",
+          label: "family"
+        },
+        {
+          value: "edu_level",
+          label: "edu_level"
+        },
+        {
+          value: "age_group",
+          label: "age_group"
+        },
+        {
+          value: "resided_state",
+          label: "resided_state"
+        },
+        {
+          value: "gender",
+          label: "gender"
+        },
+        {
+          value: "comefrom",
+          label: "comefrom"
+        },
+        {
+          value: "work_type",
+          label: "work_type"
+        }
+      ],
+      searchType: "",
       checkList: [],
       checkNames: [],
       users: [],
@@ -138,7 +156,7 @@ export default {
       page: 1,
       currentPage: 1,
       totalCount: 100,
-      listLoading: false,
+      listLoading: true,
       sels: [], //列表选中列
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
@@ -160,6 +178,7 @@ export default {
   },
   methods: {
     loadData(pageNum, pageSize) {
+      this.listLoading = true;
       this.$http({
         method: "post", //方法
         url: "dict/list", //地址
@@ -186,8 +205,8 @@ export default {
       //this.getUsers();
     },
     //获取用户列表
-     getCodeList() {
-       this.$http({
+    getCodeList() {
+      this.$http({
         method: "post", //方法
         url: "dict/list", //地址
         data: {
@@ -203,11 +222,12 @@ export default {
         this.totalCount = res.data.data.total_count;
         this.listLoading = false;
       });
-     },
+    },
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
+      if (row.status) this.editForm.status = String(row.status);
     },
     //编辑
     editSubmit: function() {
@@ -215,14 +235,14 @@ export default {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             //this.editLoading = true;
-      this.$http({
-                method: "post",
-                url: "dict/update",
-                data: this.editForm,
-                headers: {
-                  sign: localStorage.getItem("sign")
-                }
-              }).then(res => {
+            this.$http({
+              method: "post",
+              url: "dict/update",
+              data: this.editForm,
+              headers: {
+                sign: localStorage.getItem("sign")
+              }
+            }).then(res => {
               this.editLoading = false;
               //NProgress.done();
               this.$message({
@@ -233,7 +253,6 @@ export default {
               this.editFormVisible = false;
               this.loadData(1, 20);
             });
-
           });
         }
       });
@@ -241,6 +260,14 @@ export default {
     selsChange: function(sels) {
       this.sels = sels;
     },
+    //时间格式化
+    dateFormat: function(row, column) {
+      var date = row[column.property];
+      if (date == undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    }
   },
   mounted() {
     //this.getUsers();

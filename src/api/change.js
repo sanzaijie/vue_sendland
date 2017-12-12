@@ -88,6 +88,8 @@ export function _workType(work_type) {
         work_type = "私企老板"
     } else if (work_type == 106) {
         work_type = "自雇"
+    } else if (work_type == -1) {
+        work_type = "未知"
     } else {
         work_type = "个体户"
     }

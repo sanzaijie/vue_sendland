@@ -14,15 +14,17 @@
 				</el-form-item>
 			</el-form>
 		</el-col>
-        <el-card v-for="(o, index) in codeSystem" :key="index" class="box-card">
-            <div  class="text item">
-                {{o.name }}
-            </div>
-            <div class="text item">
-                新增客户: {{o.addNum }}
-            </div>
-            <div class="text item">
-                修改客户: {{o.modifyNum }}
+        <el-card v-for="(o, index) in codeSystem" :key="index"  class="box-card">
+            <div @click="onClickSystem(o.name)">
+                <div  class="text item">
+                    {{o.name}}
+                </div>
+                <div class="text item">
+                    新增客户: {{o.addNum}}
+                </div>
+                <div class="text item">
+                    修改客户: {{o.modifyNum}}
+                </div>
             </div>
         </el-card>
 
@@ -34,15 +36,9 @@
 			</el-table-column>
 			<el-table-column prop="totalCount" label="消息数量" width="100" align="center">
 			</el-table-column>
-			<el-table-column prop="request_system" label="调用系统" width="150" align="center">
+			<el-table-column prop="requestSystem" label="调用系统" width="150" align="center">
 			</el-table-column>
-			<el-table-column prop="{请求成功数: successCount}" sortable label="消息结果" min-width="100" align="center" >
-                 <!-- <div v-for="(o,index) in listData" :key=index>
-                    请求成功数: {{o.successCount}}, 请求失败数: {{o.failCount}}
-                </div> -->
-                
-			</el-table-column>
-            <el-table-column prop="failCount" sortable label="数值 3">
+			<el-table-column prop="count_result" sortable label="消息结果" min-width="100" align="center" >
             </el-table-column>
 		</el-table>
 	</section>
@@ -50,6 +46,8 @@
 
 <script>
 import util from "../../common/js/util";
+import { formatDate } from "../../api/dateutil";
+
 //import NProgress from 'nprogress'
 import {
   getUserListPage,
@@ -65,120 +63,185 @@ export default {
       codeSystem: [],
       listLoading: false,
       dateForm: {
-        begin_date: "",
-        end_date: ""
+        begin_date: null,
+        end_date: null,
+        from_sys: null
       },
       listData: []
     };
   },
   methods: {
-    checkDateForm() { //''处理
-      if(this.dateForm.begin_date == '') {
-          this.dateForm.begin_date = null;
+    checkDateForm() {
+      //''处理
+      if (this.dateForm.begin_date == "" || this.dateForm.begin_date == null) {
+        this.dateForm.begin_date = null;
+      } else {
+        this.dateForm.begin_date = formatDate(
+          this.dateForm.begin_date,
+          "YYYY/MM/DD"
+        );
       }
-      if(this.dateForm.end_date == '') {
-          this.dateForm.end_date = null;
+      if (this.dateForm.end_date == "" || this.dateForm.end_date == null) {
+        this.dateForm.end_date = null;
+      } else {
+        this.dateForm.end_date = formatDate(
+          this.dateForm.end_date,
+          "YYYY/MM/DD"
+        );
+      }
+      if (this.dateForm.from_sys == "") {
+        this.dateForm.from_sys = null;
       }
     },
-    //显示每个系统新增，修改数量
-    handleTopBody(systemArray,topBody){
-        if(systemArray) {
-            for(let i = 0; i < systemArray.length; i++) {
-                let systemTmp = {};
-                systemTmp.name = systemArray[i].name;
-                systemTmp.addNum = 0;
-                systemTmp.modifyNum = 0;
-                this.$set(this.codeSystem, i, systemTmp);
-            }
-        }
-        if(topBody){
-            for( let i = 0; i < topBody.length; i++){
-                for( let j = 0; j < this.codeSystem.length; j++){
-                    if(topBody[i].from_sys == this.codeSystem[j].name) {
-                        if(topBody[i].change_type == "新增") {
-                            this.codeSystem[j].addNum += topBody[i].c;
-                        }else if(topBody[i].change_type == "修改") {
-                            this.codeSystem[j].modifyNum += topBody[i].c;
-                        }
-                    }
-
-                }
-            }
-        }
+    onClickSystem(system) {
+      if (system) {
+        this.dateForm.from_sys = system;
+        this.doLoadDataBody(); //加载数据
+      }
     },
-    //显示每个接口请求成功数，失败数
-    handleListData(bottomBody){
-        //debugger
-        if(bottomBody){
-            let index1 = 0;
-            for( let i = 0; i < bottomBody.length; i++){
-               let dataArray = this.listData;
-               let isFind = false;
-               for( let j = 0; j < dataArray.length; j++) {
-                   if(dataArray[j]) {
-                       if(dataArray[j].request_system == bottomBody[i].request_system
-                           && dataArray[j].name == bottomBody[i].name) {
-                            isFind = true;
-                            if(bottomBody[i].status == 1) {        //成功数
-                                dataArray[j].successCount = bottomBody[i].c;
-                                dataArray[j].totalCount += bottomBody[i].c;
-                            }else if(bottomBody[i].status == -1) {  //失败数
-                                dataArray[j].failCount = bottomBody[i].c;
-                                dataArray[j].totalCount += bottomBody[i].c;
-                            }
-                       }
-                   }
-               }
-               if(!isFind) {
-                    //let dataTmp = {};
-                    let _dataTmp = {
-                        request_system: null,
-                        name: null,
-                        successCount: 0,
-                        failCount: 0,
-                        totalCount: 0,
-                    };
-                   _dataTmp.request_system = bottomBody[i].request_system;
-                   _dataTmp.name = bottomBody[i].name;
-                   if(bottomBody[i].status == 1) {        //成功数
-                        _dataTmp.successCount = bottomBody[i].c;
-                        _dataTmp.totalCount += bottomBody[i].c;
-                    }else if(bottomBody[i].status == -1) {  //失败数
-                        _dataTmp.failCount = bottomBody[i].c;
-                        _dataTmp.totalCount += bottomBody[i].c;
-                    }
-                    this.$set(this.listData, index1, _dataTmp);
-                    index1 += 1;
-                    console.log("index1=" + index1);
-               }
-            }
-            console.log(this.listData);
-        }
-    },
-    //加载分页数据
-    loadData(pageNum, pageSize) {
+    doLoadDataBody() {
+      //加载列表body数据
       this.listLoading = true;
+      this.listData = []; //列表清空
       this.checkDateForm();
       this.$http({
-        method: "post",           //方法
+        method: "post", //方法
         url: "monitor/sys/list", //URL地址
         data: this.dateForm,
         headers: {
           sign: localStorage.getItem("sign")
         }
-      }).then(response => {
-        let data = response.data.data;  
-        this.handleTopBody(data.code_system, data.top_body);  //显示每个系统新增，修改数量
-        this.handleListData(data.bottom_body); //显示每个接口请求成功数，失败数
-        //this.listData = data.bottom_body;
-        this.listLoading = false;
-      }).catch(error => {  //function (error) {
-        //console.log(error);
-        this.listLoading = false;
-      });
+      })
+        .then(response => {
+          let data = response.data.data;
+          this.handleListData(data.bottom_body); //显示每个接口请求成功数，失败数
+          this.listLoading = false;
+        })
+        .catch(error => {
+          //function (error) {
+          this.listLoading = false;
+        });
     },
-    onSearchData() {  //查询数据
-       this.loadData();
+    //显示每个系统新增，修改数量
+    handleTopBody(systemArray, topBody) {
+      if (systemArray) {
+        for (let i = 0; i < systemArray.length; i++) {
+          let systemTmp = {};
+          systemTmp.name = systemArray[i].name;
+          systemTmp.addNum = 0;
+          systemTmp.modifyNum = 0;
+          this.$set(this.codeSystem, i, systemTmp);
+        }
+      }
+      if (topBody) {
+        for (let i = 0; i < topBody.length; i++) {
+          for (let j = 0; j < this.codeSystem.length; j++) {
+            if (topBody[i].from_sys == this.codeSystem[j].name) {
+              if (topBody[i].change_type == "新增") {
+                this.codeSystem[j].addNum += topBody[i].c;
+              } else if (topBody[i].change_type == "修改") {
+                this.codeSystem[j].modifyNum += topBody[i].c;
+              }
+            }
+          }
+        }
+      }
+    },
+    //显示每个接口请求成功数，失败数
+    handleListData(bottomBody) {
+      //debugger
+      if (bottomBody) {
+        let index1 = 0;
+        for (let i = 0; i < bottomBody.length; i++) {
+          let dataArray = this.listData;
+          let isFind = false;
+          for (let j = 0; j < dataArray.length; j++) {
+            if (dataArray[j]) {
+              if (
+                dataArray[j].requestSystem == bottomBody[i].requestSystem &&
+                dataArray[j].name == bottomBody[i].name
+              ) {
+                isFind = true;
+                if (bottomBody[i].status == 1) {
+                  //成功数
+                  dataArray[j].successCount += bottomBody[i].c;
+                  dataArray[j].totalCount += bottomBody[i].c;
+                  dataArray[j].count_result =
+                    "成功数:" +
+                    dataArray[j].successCount +
+                    ",失败数:" +
+                    dataArray[j].failCount;
+                } else if (bottomBody[i].status == -1) {
+                  //失败数
+                  dataArray[j].failCount += bottomBody[i].c;
+                  dataArray[j].totalCount += bottomBody[i].c;
+                  dataArray[j].count_result =
+                    "成功数:" +
+                    dataArray[j].successCount +
+                    ",失败数:" +
+                    dataArray[j].failCount;
+                }
+              }
+            }
+          }
+          if (!isFind) {
+            let _dataTmp = {
+              requestSystem: "",
+              name: null,
+              successCount: 0,
+              failCount: 0,
+              totalCount: 0,
+              count_result: null
+            };
+            _dataTmp.requestSystem = bottomBody[i].requestSystem;
+            _dataTmp.name = bottomBody[i].name;
+            if (bottomBody[i].status == 1) {
+              //成功数
+              _dataTmp.successCount = bottomBody[i].c;
+              _dataTmp.totalCount += bottomBody[i].c;
+              _dataTmp.count_result =
+                "成功数:" + _dataTmp.totalCount + ",失败数:" + _dataTmp.failCount;
+            } else if (bottomBody[i].status == -1) {
+              //失败数
+              _dataTmp.failCount = bottomBody[i].c;
+              _dataTmp.totalCount += bottomBody[i].c;
+              _dataTmp.count_result =
+                "成功数:" + _dataTmp.totalCount + ",失败数:" + _dataTmp.failCount;
+            }
+            this.$set(this.listData, index1, _dataTmp);
+            index1 += 1;
+          }
+        }
+      }
+    },
+    //加载分页数据
+    loadData() {
+      this.listLoading = true;
+      this.listData = []; //列表清空
+      this.checkDateForm();
+      this.$http({
+        method: "post", //方法
+        url: "monitor/sys/list", //URL地址
+        data: this.dateForm,
+        headers: {
+          sign: localStorage.getItem("sign")
+        }
+      })
+        .then(response => {
+          let data = response.data.data;
+          this.handleTopBody(data.code_system, data.top_body); //显示每个系统新增，修改数量
+          this.handleListData(data.bottom_body); //显示每个接口请求成功数，失败数
+          this.listLoading = false;
+        })
+        .catch(error => {
+          //function (error) {
+          //console.log(error);
+          this.listLoading = false;
+        });
+    },
+    onSearchData() {
+      //查询数据
+      this.loadData();
     },
     logTimeChange(val) {
       console.log(val);
@@ -201,7 +264,7 @@ export default {
   margin-right: 5px;
 }
 
-  /* .text {
+/* .text {
     font-size: 14px;
   }
 
@@ -209,16 +272,16 @@ export default {
     padding: 18px 0;
   } */
 .box-card {
-    width: 20%;
-    display: inline-block;
-    margin: 15px 15px;
-    text-align: center;
+  width: 20%;
+  display: inline-block;
+  margin: 15px 15px;
+  text-align: center;
 }
 .box-card:active {
-    width: 20%;
-    display: inline-block;
-    margin: 15px 15px;
-    color: red;
-    text-align: center;
+  width: 20%;
+  display: inline-block;
+  margin: 15px 15px;
+  color: red;
+  text-align: center;
 }
 </style>

@@ -77,7 +77,7 @@
 		</el-table>
         <!--工具条, 分页-->
         <el-col :span="24" class="toolbar">
-			<el-pagination layout="prev, pager, next, jumper" 
+			<el-pagination layout="total, prev, pager, next, jumper" 
             @current-change="handleCurrentChange" 
             :current-page.sync="currentPage"
             :page-size="pageSize"
