@@ -28,7 +28,9 @@
 					<el-button type="primary" @click="$router.push('/encustlist/enterprise')">新增企业客户</el-button>
 				</el-form-item>
                 <el-form-item v-for="item in listId" v-if="item.name==='导出'">
-					<el-button type="primary" @click="exportList">导出</el-button>
+					<el-button type="primary" @click="exportList">
+                        <a href="" download class="fontc">导出</a>
+                    </el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -311,6 +313,10 @@ export default {
 </script>
 
 <style scoped>
+.fontc {
+  color: #ffffff;
+  text-decoration: none;
+}
 .routerBtn {
   text-decoration: none;
   color: #1f2d3d;

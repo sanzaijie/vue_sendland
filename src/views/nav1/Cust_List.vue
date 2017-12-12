@@ -19,7 +19,9 @@
 					<el-button type="primary" @click="$router.push('/custList/personal')">新增个人客户</el-button>
 				</el-form-item>
                 <el-form-item v-for="item in listId" v-if="item.name==='导出'">
-					<el-button type="primary" @click="exportList">导出</el-button>
+					<el-button type="primary" @click="export2Excel">导出
+                        <!-- <a href="http://10.3.30.149:9091/api/rest/1.0/cust/export" download  class="fontc">导出</a> -->
+                    </el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -48,7 +50,7 @@
                         <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
                     </el-button>                                                          
 					<el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
-                        <router-link class="routerBtn" :to="{path: `/home/custList/personaledit?cust_id=${scope.row.cust_id}`}" target="_blank" @click="listen">编辑</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/custList/personaledit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
                     </el-button>
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
 				</template>
@@ -70,17 +72,18 @@
 		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="{checkList}" label-width="80px" ref="addForm">
                 <el-col style="margin-bottom:10px;">
-                    <el-checkbox-group v-model="checkList.type" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" :value="name.remark">
+                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" >
                         <span class="checkBoxs_name">{{name.remark + "："}}</span>
-                        <el-checkbox :label="valueName.name" class="checkWidth" v-for="valueName in name.value" :key="valueName.name" :name="valueName.type"></el-checkbox>
+                        <el-checkbox :label="valueName.type + ':' + valueName.code" class="checkWidth" v-for="valueName in name.value" :key="valueName.code">{{valueName.name}}</el-checkbox>
                         <hr>
                     </el-checkbox-group>
                 </el-col>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click="getUsers(checkList)" :loading="addLoading">查询</el-button>
+				<el-button type="primary" @click="getUsers" :loading="addLoading">查询</el-button>
 			</div>
+            {{checkList}}
 		</el-dialog>
 	</section>
 </template>
@@ -105,16 +108,7 @@ export default {
         cst_type: "",
         value: ""
       },
-      checkList: {
-        type: []
-        //   gender: [],
-        //   cst_sort: [],
-        //   edu_level: [],
-        //   family: [],
-        //   children_cnt: [],
-        //   work_type: [],
-        //   cst_status: []
-      },
+      checkList: [],
       usersData: [],
       users: [],
       btn: [],
@@ -139,7 +133,34 @@ export default {
   beforeCreate() {},
   methods: {
     // 导出列表
-    exportList() {},
+    export2Excel() {
+      // const form = this.getSearchForm(); // 要发送到后台的数据
+      this.$http({
+        // 用axios发送post请求
+        method: "post",
+        url: "cust/export", // 请求地址
+        data: {
+          // 参数
+          cst_type: 0,
+          cst_name: "张三"
+        },
+        headers: {
+          sign: localStorage.getItem("sign")
+        },
+        responseType: "blob" // 表明返回服务器返回的数据类型
+      }).then(res => {
+        // 处理返回的文件流
+        const content = res.data;
+        const elink = document.createElement("a"); // 创建a标签
+        elink.download = "测试表格123.xls"; // 文件名
+        elink.style.display = "none";
+        const blob = new Blob([content]);
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click(); // 触发点击a标签事件
+        document.body.removeChild(elink);
+      });
+    },
     //加载分页数据
     loadData(pageNum, pageSize) {
       this.$http({
@@ -203,8 +224,36 @@ export default {
         this.listLoading = false;
       });
     },
+
     //获取更多查询用户列表
-    getUsers(checkList) {
+    getUsers() {
+      console.log(this.checkList);
+      var json = {};
+      for (var i=0; i<this.checkList.length;i++) {
+           debugger;
+        var item = this.checkList[i].split(":");
+        // item = JSON.parse("{" + item + "}");
+        if (hasKey(json, item[0])) {
+           //json.push({item[0]: item[1]});
+           
+          json[item[0]] = item[1];
+          console.log(json);
+        } else {
+           
+          json[item[0]] = json[item[1]] + "," + item[1];
+        }
+      }
+function hasKey(json, key){
+    for (var i=0;i<json.length;i++) {
+        debugger;
+        var eleStr = JSON.stringify(json[i]);
+        if(eleStr.indexOf(key) > -1) {
+            return true;
+        }
+    } 
+return false;
+}
+
       //   let self = this;
       this.addFormVisible = false;
       this.$http({
@@ -213,22 +262,19 @@ export default {
         url: "cust/list", //地址
         data: {
           cst_type: 0,
-          checkList: {}
+          checkList: this.checkList
         },
         headers: {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
         this.users = res.data.data.result;
-        let usersG = this.users;
+        this.total = res.data.data.total_count;
+        let usersG = this.usersData;
         for (let i = 0; i < usersG.length; i++) {
-          if (usersG[i].gender == 2) {
-            usersG[i].gender = "未知";
-          } else if (usersG[i].gender == 1) {
-            usersG[i].gender = "女";
-          } else {
-            usersG[i].gender = "男";
-          }
+          usersG[i].gender = change.Gender(usersG[i].gender);
+          usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+          usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
         }
         this.users = usersG;
         this.listLoading = false;
@@ -317,6 +363,10 @@ export default {
 </script>
 
 <style scoped>
+.fontc {
+  color: #ffffff;
+  text-decoration: none;
+}
 .routerBtn {
   text-decoration: none;
   color: #1f2d3d;
