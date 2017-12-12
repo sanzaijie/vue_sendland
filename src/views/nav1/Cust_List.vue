@@ -108,6 +108,7 @@ export default {
         cst_type: "",
         value: ""
       },
+      queryParams: {},
       checkList: [],
       usersData: [],
       users: [],
@@ -227,32 +228,26 @@ export default {
 
     //获取更多查询用户列表
     getUsers() {
-      console.log(this.checkList);
-      var json = {};
-      for (var i=0; i<this.checkList.length;i++) {
-           debugger;
+      // console.log(this.checkList);
+      var json = {"cst_type" : 0};
+      for (var i = 0; i < this.checkList.length; i++) {
         var item = this.checkList[i].split(":");
-        // item = JSON.parse("{" + item + "}");
         if (hasKey(json, item[0])) {
-           //json.push({item[0]: item[1]});
-           
           json[item[0]] = item[1];
-          console.log(json);
         } else {
-           
-          json[item[0]] = json[item[1]] + "," + item[1];
+          var key = eval("json." + item[0]);
+          key = json[item[0]] + "," + item[1];
+          json[item[0]] = key;
         }
       }
-function hasKey(json, key){
-    for (var i=0;i<json.length;i++) {
-        debugger;
-        var eleStr = JSON.stringify(json[i]);
-        if(eleStr.indexOf(key) > -1) {
-            return true;
+      this.queryParams = json;
+      function hasKey(json, key) {
+        var hasKey = eval("json." + key);
+        if (hasKey !== undefined && hasKey !== null) {
+          return false;
         }
-    } 
-return false;
-}
+        return true;
+      }
 
       //   let self = this;
       this.addFormVisible = false;
@@ -260,10 +255,7 @@ return false;
         // 客户列表
         method: "post", //方法
         url: "cust/list", //地址
-        data: {
-          cst_type: 0,
-          checkList: this.checkList
-        },
+        data: this.queryParams,
         headers: {
           sign: localStorage.getItem("sign")
         }
