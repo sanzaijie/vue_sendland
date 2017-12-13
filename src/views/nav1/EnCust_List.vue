@@ -117,7 +117,7 @@ export default {
         cst_type: "",
         value: ""
       },
-      queryParams: {},
+      queryParams: {"cst_type" : 1},
       checkList: [
         // type: []
         //   gender: [],
@@ -235,7 +235,7 @@ export default {
     //获取更多查询用户列表
     getUsers(checkList) {
       //   let self = this;
-      var json = {"cst_type" : 1};
+      var json = {};
       for (var i = 0; i < this.checkList.length; i++) {
         var item = this.checkList[i].split(":");
         if (hasKey(json, item[0])) {
@@ -246,7 +246,18 @@ export default {
           json[item[0]] = key;
         }
       }
-      this.queryParams = json;
+      for (var key in json) {
+        var valueArrs = [];
+        if (json[key].toString().indexOf(",") > 0) {
+          var strArrs = json[key].toString().split(",");
+          for(var i=0;i<strArrs.length;i++){
+            valueArrs.push(parseInt(strArrs[i]));
+          }
+        } else {
+          valueArrs.push(parseInt(json[key]));
+        }
+        this.queryParams[key] = valueArrs;
+      }
       function hasKey(json, key) {
         var hasKey = eval("json." + key);
         if (hasKey !== undefined && hasKey !== null) {
