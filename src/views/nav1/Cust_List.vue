@@ -69,7 +69,7 @@
 			</el-pagination>
 		</el-col>
 		<!--更多查询界面-->
-		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="false">
+		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="true">
 			<el-form :model="{checkList}" label-width="80px" ref="addForm">
                 <el-col style="margin-bottom:10px;">
                     <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" >
@@ -201,14 +201,13 @@ export default {
     // 获取查询客用户列表
     getSelect(filters) {
       this.listLoading = true;
+      this.queryParams.cst_name = filters.cst_name;
+      this.queryParams.cst_phone = filters.cst_phone
+
       this.$http({
         method: "post",
         url: "cust/list",
-        data: {
-          cst_type: 0,
-          cst_name: filters.cst_name,
-          cst_phone: filters.cst_phone
-        },
+        data: this.queryParams,
         headers: {
           sign: localStorage.getItem("sign")
         }
