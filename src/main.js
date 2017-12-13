@@ -23,8 +23,32 @@ Vue.use(Vuex)
 Axios.defaults.baseURL = 'http://10.3.30.149:9091/api/rest/1.0/'
 // Axios.defaults.baseURL = 'http://localhost:9092/api/rest/1.0/'
 // Axios.defaults.baseURL = 'http://172.16.3.215:9091/api/rest/1.0/'
-Axios.defaults.headers = { "Content-Type": "application/json;charset=UTF-8" }
+Axios.defaults.headers = {
+    "Content-Type": "application/json;charset=UTF-8"
+}
 Axios.defaults.timeout = 5000;
+
+// http response 拦截器
+
+Axios.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => {
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    router.replace({
+                        path: '/login',
+                        query: {
+                            redirect: router.currentRoute.fullPath
+                        }
+                    })
+            }
+        }
+        return Promise.reject(error.response.data) // 返回接口返回的错误信息
+    }
+);
 Vue.prototype.$http = Axios
 const router = new VueRouter({
     routes
@@ -36,7 +60,9 @@ router.beforeEach((to, from, next) => {
     }
     let user = JSON.parse(localStorage.getItem('sign'));
     if (!user && to.path != '/login') {
-        next({ path: '/login' })
+        next({
+            path: '/login'
+        })
     } else {
         next()
     }
