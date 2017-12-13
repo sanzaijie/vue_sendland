@@ -19,9 +19,7 @@
 					<el-button type="primary" @click="$router.push('/custList/personal')">新增个人客户</el-button>
 				</el-form-item>
                 <el-form-item v-for="item in listId" v-if="item.name==='导出'">
-					<el-button type="primary" @click="export2Excel">导出
-                        <!-- <a href="http://10.3.30.149:9091/api/rest/1.0/cust/export" download  class="fontc">导出</a> -->
-                    </el-button>
+					<el-button type="primary" @click="export2Excel">导出</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -83,7 +81,6 @@
 				<el-button @click.native="addFormVisible = false">取消</el-button>
 				<el-button type="primary" @click="getUsers" :loading="addLoading">查询</el-button>
 			</div>
-            {{checkList}}
 		</el-dialog>
 	</section>
 </template>
@@ -103,9 +100,9 @@ export default {
     return {
       listId: [], // 按钮权限ID
       filters: {
-        cst_name: "",
-        cst_phone: "",
-        cst_type: "",
+        cst_name: null,
+        cst_phone: null,
+        cst_type: 0,
         value: ""
       },
       queryParams: {},
@@ -140,11 +137,7 @@ export default {
         // 用axios发送post请求
         method: "post",
         url: "cust/export", // 请求地址
-        data: {
-          // 参数
-          cst_type: 0,
-          cst_name: "张三"
-        },
+        data: this.queryParams,
         headers: {
           sign: localStorage.getItem("sign")
         },
@@ -153,7 +146,7 @@ export default {
         // 处理返回的文件流
         const content = res.data;
         const elink = document.createElement("a"); // 创建a标签
-        elink.download = "测试表格123.xls"; // 文件名
+        elink.download = "客户列表.xls"; // 文件名
         elink.style.display = "none";
         const blob = new Blob([content]);
         elink.href = URL.createObjectURL(blob);
@@ -223,13 +216,17 @@ export default {
         }
         this.usersData = usersG;
         this.listLoading = false;
+        // this.filters = {};
       });
     },
 
     //获取更多查询用户列表
     getUsers() {
-      // console.log(this.checkList);
-      var json = {"cst_type" : 0};
+      var json = {
+        cst_type: 0,
+        cst_name: this.filters.cst_name,
+        cst_phone: this.filters.cst_phone
+      };
       for (var i = 0; i < this.checkList.length; i++) {
         var item = this.checkList[i].split(":");
         if (hasKey(json, item[0])) {
@@ -248,9 +245,9 @@ export default {
         }
         return true;
       }
-
       //   let self = this;
       this.addFormVisible = false;
+      this.listLoading = true;
       this.$http({
         // 客户列表
         method: "post", //方法
@@ -260,16 +257,26 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
-        this.users = res.data.data.result;
-        this.total = res.data.data.total_count;
-        let usersG = this.usersData;
-        for (let i = 0; i < usersG.length; i++) {
-          usersG[i].gender = change.Gender(usersG[i].gender);
-          usersG[i].cst_type = change._cstType(usersG[i].cst_type);
-          usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
+        if (res.data.error_code == 0 && res.data.error_code != undefined) {
+          this.usersData = res.data.data.result;
+          this.total = res.data.data.total_count;
+          let usersG = this.usersData;
+          for (let i = 0; i < usersG.length; i++) {
+            usersG[i].gender = change.Gender(usersG[i].gender);
+            usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+            usersG[i].card_type = change._cardTcard_typeype(
+              usersG[i].card_type
+            );
+          }
+          this.usersData = usersG;
+          this.listLoading = false;
+          this.checkList = [];
+        } else {
+          this.$message.error(res.data.error_message);
+          this.listLoading = false;
         }
-        this.users = usersG;
-        this.listLoading = false;
+
+        // this.filters = {};
       });
       //   let para = {
       //     page: this.page,

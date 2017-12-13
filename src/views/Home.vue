@@ -29,7 +29,7 @@
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
                 <el-menu
-                :default-openeds="[$route.name]"
+                :default-openeds="['$index']"
                 class="el-menu-vertical-demo overf" 
                 @open="handleopen" 
                 @close="handleclose" 
@@ -37,7 +37,7 @@
                 router 
                 v-if="!collapsed">
                     <template v-for="(item,index) in navbars" v-if="!item.hidden">
-                        <el-submenu :index="$route.name" v-if="item.name">
+                        <el-submenu :index="'$index'" v-if="item.name">
                             <template slot="title">{{item.name}}</template>
                                 <router-link v-for="subs in item.sub" :key="subs.id" :name="subs.name"
                                 :to="{name: subs.name}" tag="li"

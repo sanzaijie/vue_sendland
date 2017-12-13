@@ -28,15 +28,13 @@
 					<el-button type="primary" @click="$router.push('/encustlist/enterprise')">新增企业客户</el-button>
 				</el-form-item>
                 <el-form-item v-for="item in listId" v-if="item.name==='导出'">
-					<el-button type="primary" @click="exportList">
-                        <a href="" download class="fontc">导出</a>
-                    </el-button>
+					<el-button type="primary" @click="export2Excel">导出</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
+		<el-table :data="usersData" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
 			<!-- <el-table-column type="selection" width="0">
 			</el-table-column> -->
 			<el-table-column type="index" label="序号" align="center" width="70">
@@ -112,9 +110,9 @@ export default {
     return {
       listId: [], // 按钮权限ID
       filters: {
-        cst_name: "",
-        cst_phone: "",
-        cst_type: "",
+        cst_name: null,
+        cst_phone: null,
+        cst_type: 1,
         value: ""
       },
       queryParams: {},
@@ -168,7 +166,30 @@ export default {
   },
   methods: {
     // 导出列表
-    exportList() {},
+    export2Excel() {
+      // const form = this.getSearchForm(); // 要发送到后台的数据
+      this.$http({
+        // 用axios发送post请求
+        method: "post",
+        url: "cust/export", // 请求地址
+        data: this.queryParams,
+        headers: {
+          sign: localStorage.getItem("sign")
+        },
+        responseType: "blob" // 表明返回服务器返回的数据类型
+      }).then(res => {
+        // 处理返回的文件流
+        const content = res.data;
+        const elink = document.createElement("a"); // 创建a标签
+        elink.download = "客户列表.xls"; // 文件名
+        elink.style.display = "none";
+        const blob = new Blob([content]);
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click(); // 触发点击a标签事件
+        document.body.removeChild(elink);
+      });
+    },
     //加载分页数据
     loadData(pageNum, pageSize) {
       this.$http({
@@ -191,7 +212,7 @@ export default {
           usersG[i].cst_type = change._cstType(usersG[i].cst_type);
           usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
         }
-        this.users = usersG;
+        this.usersData = usersG;
         this.listLoading = false;
       });
     },
@@ -228,14 +249,18 @@ export default {
           usersG[i].cst_type = change._cstType(usersG[i].cst_type);
           usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
         }
-        this.users = usersG;
+        this.usersData = usersG;
         this.listLoading = false;
       });
     },
     //获取更多查询用户列表
     getUsers(checkList) {
       //   let self = this;
-      var json = {"cst_type" : 1};
+      var json = {
+        cst_type: 1,
+        cst_name: this.filters.cst_name,
+        cst_phone: this.filters.cst_phone
+      };
       for (var i = 0; i < this.checkList.length; i++) {
         var item = this.checkList[i].split(":");
         if (hasKey(json, item[0])) {
@@ -256,6 +281,8 @@ export default {
       }
 
       this.addFormVisible = false;
+      this.listLoading = true;
+
       this.$http({
         // 客户列表
         method: "post", //方法
@@ -273,8 +300,10 @@ export default {
           usersG[i].cst_type = change._cstType(usersG[i].cst_type);
           usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
         }
-        this.users = usersG;
+        this.usersData = usersG;
         this.listLoading = false;
+        this.filters = {};
+        this.checkList = [];
       });
     },
     handleAdd: function() {

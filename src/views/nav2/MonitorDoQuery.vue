@@ -14,8 +14,11 @@
 				</el-form-item>
 			</el-form>
 		</el-col>
-        <el-card v-for="(o, index) in codeSystem" :key="index"  class="box-card">
-            <div @click="onClickSystem(o.name)">
+        <!-- <div v-for="(o, index) in codeSystem" :key="index" :class="clicked ? 'box-card-active' : 'box-card'"> -->
+            <div @click="onClickSystem(o.name, index)"
+            v-for="(o, index) in codeSystem"
+            :key="index" 
+            :class="ind === index?'box-card-active':'box-card'">
                 <div  class="text item">
                     {{o.name}}
                 </div>
@@ -26,7 +29,7 @@
                     修改客户: {{o.modifyNum}}
                 </div>
             </div>
-        </el-card>
+        <!-- </div> -->
 
         <!--列表-->
         <el-table :data="listData" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
@@ -67,7 +70,8 @@ export default {
         end_date: new Date().toLocaleDateString(),
         from_sys: null
       },
-      listData: []
+      listData: [],
+      ind: ""
     };
   },
   methods: {
@@ -93,7 +97,8 @@ export default {
         this.dateForm.from_sys = null;
       }
     },
-    onClickSystem(system) {
+    onClickSystem(system, index) {
+      this.ind = index;
       if (system) {
         this.dateForm.from_sys = system;
         this.doLoadDataBody(); //加载数据
@@ -272,16 +277,26 @@ export default {
     padding: 18px 0;
   } */
 .box-card {
+  padding-top: 10px;
   width: 20%;
+  height: 105px;
+  line-height: 30px;
   display: inline-block;
   margin: 15px 15px;
   text-align: center;
+  border: 1px solid #dfdfdf;
+  border-radius: 4px;
 }
-.box-card:active {
+.box-card-active {
+  padding-top: 10px;
   width: 20%;
+  height: 105px;
+  line-height: 30px;
   display: inline-block;
   margin: 15px 15px;
-  color: red;
   text-align: center;
+  border: 1px solid #20a0ff;
+  color: #20a0ff;
+  border-radius: 4px;
 }
 </style>
