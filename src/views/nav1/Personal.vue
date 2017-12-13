@@ -10,11 +10,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="客户类型" class="rulesinput">
-                            <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
+                        <el-form-item label="客户类型" class="rulesinput" prop="cst_type">
+                            <el-input v-model="addUser.cst_type" placeholder="个人客户" disabled="disabled"></el-input>
+                            <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
                                 <el-option value="0" label="个人客户">个人客户</el-option>
                                 <el-option value="1" label="企业客户">企业客户</el-option>
-                            </el-select>
+                            </el-select> -->
                         </el-form-item> 
                     </el-col>  
                     <el-col :span="6" style="padding-bottom: 0px;">
