@@ -238,10 +238,17 @@ export default {
       };
       this.listLoading = true;
       //NProgress.start();
-      getUserListPage(para).then(res => {         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }
+      getUserListPage(para).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.total = res.data.total;
         this.users = res.data.users;
-        this.addFormVisible = false
+        this.addFormVisible = false;
         this.listLoading = false;
         //NProgress.done();
       });
@@ -255,7 +262,14 @@ export default {
           this.listLoading = true;
           //NProgress.start();
           let para = { id: row.id };
-          removeUser(para).then(res => {         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }
+          removeUser(para).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             this.listLoading = false;
             //NProgress.done();
             this.$message({
@@ -295,7 +309,14 @@ export default {
               !para.birth || para.birth == ""
                 ? ""
                 : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            editUser(para).then(res => {         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }
+            editUser(para).then(res => {
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
               this.editLoading = false;
               //NProgress.done();
               this.$message({
@@ -322,7 +343,14 @@ export default {
               !para.birth || para.birth == ""
                 ? ""
                 : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            addUser(para).then(res => {         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }
+            addUser(para).then(res => {
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
               this.addLoading = false;
               //NProgress.done();
               this.$message({
@@ -350,7 +378,14 @@ export default {
           this.listLoading = true;
           //NProgress.start();
           let para = { ids: ids };
-          batchRemoveUser(para).then(res => {         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }
+          batchRemoveUser(para).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             this.listLoading = false;
             //NProgress.done();
             this.$message({

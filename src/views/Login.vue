@@ -48,10 +48,13 @@ export default {
   },
   created: function() {
     var user = sessionStorage.getItem("user");
-    user = user !== null && user !== undefined ? JSON.parse(user) : {
-      oper_id : "",
-      oper_pwd : ""
-    };
+    user =
+      user !== null && user !== undefined
+        ? JSON.parse(user)
+        : {
+            oper_id: "",
+            oper_pwd: ""
+          };
     this._data.ruleForm2.oper_id = user.oper_id;
     this._data.ruleForm2.oper_pwd = user.oper_pwd;
   },
@@ -77,15 +80,23 @@ export default {
               res => {
                 //   let { error_code } = res;
                 if (
+                  res.code == "ECONNABORTED" &&
+                  res.message.indexOf("timeout") != -1
+                ) {
+                  this.$message.error("网络异常,请求超时");
+                  return false;
+                }
+                if (
                   res.data.error_code == 0 &&
                   res.data.error_code != undefined
                 ) {
                   self.sign = res.data.data.sign;
                   self.logining = false;
-                  var has_permission = res.data.data.permission_list !== undefined //
-                                && res.data.data.permission_list !== null //
-                                && res.data.data.permission_list.length > 0;
-                  if(!has_permission) {
+                  var has_permission =
+                    res.data.data.permission_list !== undefined && //
+                    res.data.data.permission_list !== null && //
+                    res.data.data.permission_list.length > 0;
+                  if (!has_permission) {
                     self.$message.error({
                       message: "您没有权限登录系统,请联系管理员",
                       type: "warning"
@@ -109,7 +120,7 @@ export default {
                     "listId",
                     JSON.stringify(res.data.data.permission_list)
                   );
-                  
+
                   self.$router.push({ path: "/echarts" });
                 } else {
                   self.logining = false;
@@ -131,7 +142,7 @@ export default {
       //   ruleForm2.oper_pwd,
       //   JSON.stringify(ruleForm2.oper_pwd)
       // );
-      if(this.checked) {
+      if (this.checked) {
         sessionStorage.setItem("user", JSON.stringify(this._data.ruleForm2));
       }
     }

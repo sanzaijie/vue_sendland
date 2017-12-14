@@ -489,8 +489,6 @@ export default {
     },
     // 个人需求信息项目名称
     handleClickNeed(tab, event) {
-      //   debugger;
-      console.log(tab.name);
       this.$http({
         method: "post",
         url: "cust/person/project/detail",
@@ -509,7 +507,6 @@ export default {
             this.$message.error("网络异常,请求超时");
             return false;
           }
-          //   console.log(res);
           this.projectData = res.data.data;
         })
         .then(res => {
