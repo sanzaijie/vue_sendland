@@ -465,25 +465,6 @@ export default {
     sendPersonal() {
       let addUser = this.addUser;
       let reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}@[0-9]{1,3}$/;
-      //   this.addUser.gender = Number(this.addUser.gender);
-      //   this.addUser.cst_type = Number(this.addUser.cst_type);
-      //   this.addUser.card_type = Number(this.addUser.card_type);
-      //   this.addUser.cst_status = Number(this.addUser.cst_status);
-      //   this.addUser.work_type = Number(this.addUser.work_type);
-      //   this.addUser.children_cnt = Number(this.addUser.children_cnt);
-      //   this.addUser.family = Number(this.addUser.family);
-      //   this.addUser.edu_level = Number(this.addUser.edu_level);
-      //   this.addUser.cst_sort = Number(this.addUser.cst_sort);
-      //   this.addUser.viptag = Number(this.addUser.viptag);
-      //   this.addUser.resided_state = Number(this.addUser.resided_state);
-      //   this.addUser.comefrom = Number(this.addUser.comefrom);
-      //   this.addUser.have_bm = Number(this.addUser.have_bm);
-      //   this.addUser.ismain_jcz = Number(this.addUser.ismain_jcz);
-      //   this.addUser.pet_stag = Number(this.addUser.pet_stag);
-      //   this.addUser.birthday = moment(this.addUser.birthday).format(
-      //     "YYYY/MM/DD"
-      //   );
-
       if (addUser.cst_phone == "") {
         alert("请输入手机号码");
       } else if (!reg.test(addUser.cst_phone)) {

@@ -1,6 +1,6 @@
 <template>
     <section class="bg">
-        <el-form :model="{addUser}" :rules="rules" ref="addUser" class="formBG demo-form-inline">
+        <el-form :model="{addUser}" :rules="rulesEnter" ref="addUser" class="formBG demo-form-inline">
             <el-row class="rows">
                 <strong class="title">客户核心信息</strong>
                     <el-col :span="6">
@@ -9,7 +9,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="客户类型" prop="cst_type">   
+                        <el-form-item label="客户类型">   
                           <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
                             <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型">
                                 <el-option value="0" label="个人客户">个人客户</el-option>
@@ -73,7 +73,7 @@
             <el-row class="rows">
                 <strong class="title">联系人</strong>
                 <el-col :span="6">
-                    <el-form-item label="联系人姓名" prop="cst_name">
+                    <el-form-item label="联系人姓名" prop="link_man">
                         <el-input v-model="addUser.link_man" placeholder="联系人姓名"></el-input>
                     </el-form-item>
                 </el-col>
@@ -111,7 +111,7 @@
             </el-row>
         </el-form>
         <hr />
-        <el-form :model="{banks}" :rules="rules" ref="banks">        
+        <el-form :model="{banks}" :rules="rulesEnter" ref="banks">        
             <el-col class="toolbar">
                 <strong class="title">银行账户</strong>
                 <el-row>
@@ -197,11 +197,17 @@ import * as change from "../../api/change.js";
 
 export default {
   data() {
+    let validatePhone = (rule, value, callback) => {
+      let reg = 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+      if (value === "") {
+        callback(new Error("请输入手机号码!"));
+      } else if (!reg.test(value)) {
+        callback(new Error("手机号码格式不正确!"));
+      } else {
+        callback();
+      }
+    };
     return {
-      rules: {
-        cst_name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        cst_phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }]
-      },
       banks: [
         {
           aid: 0,
@@ -213,7 +219,7 @@ export default {
       ],
       addUser: {
         cst_name: "",
-        cst_type: "", // 客户类型(0个人、1公司)
+        cst_type: 1, // 客户类型(0个人、1公司)
         corporation: "",
         func_type: "",
         enter_nature: "",
@@ -224,11 +230,18 @@ export default {
         cer_no: "",
         fax: "",
         link_man: "",
-        cst_phone: null,
-        contact1: null,
-        contact2: null,
-        contact3: null,
+        cst_phone: "",
+        contact1: "",
+        contact2: "",
+        contact3: "",
         email: ""
+      },
+      rulesEnter: {
+        cst_name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        cst_phone: [
+          { required: true, validator: validatePhone, trigger: "blur" }
+        ],
+        link_man: [{ required: true, message: "请输入联系人姓名", trigger: "blur" }]
       }
     };
   },
@@ -259,7 +272,11 @@ export default {
       addUser.cust_id = this.$route.query.cust_id;
       let reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}@[0-9]{1,3}$/;
       if (addUser.cst_phone == "") {
-        alert("请输入手机号码");
+        this.$message({
+          message: "请输入手机号码",
+          type:
+           warning
+        });
       } else if (!reg.test(addUser.cst_phone)) {
         alert("手机格式不正确");
       } else {

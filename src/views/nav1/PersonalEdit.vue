@@ -437,7 +437,8 @@ export default {
         gender: ""
       },
       rulesPerson: {
-        cst_phone: [{ validator: validatePhone, trigger: "blur" }]
+        cst_name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        cst_phone: [{ required: true,validator: validatePhone, trigger: "blur" }]
       },
       pickerOptions0: {
         disabledDate(time) {
@@ -512,10 +513,12 @@ export default {
       addUser.ismain_jcz = Number(addUser.ismain_jcz);
       addUser.pet_stag = Number(addUser.pet_stag);
 
-      if(addUser.birthday !== null && addUser.birthday !== undefined && addUser.birthday !== "" ) {
-        addUser.birthday = moment(addUser.birthday).format(
-          "YYYY/MM/DD"
-        );
+      if (
+        addUser.birthday !== null &&
+        addUser.birthday !== undefined &&
+        addUser.birthday !== ""
+      ) {
+        addUser.birthday = moment(addUser.birthday).format("YYYY/MM/DD");
       }
       if (addUser.cst_phone == "") {
         alert("请输入手机号码");
@@ -706,8 +709,8 @@ export default {
       usersG.family = String(usersG.family);
       usersG.edu_level = String(usersG.edu_level);
       usersG.cst_sort = String(usersG.cst_sort);
-    //   usersG.viptag = String(usersG.viptag);
-    //   usersG.resided_state = String(usersG.resided_state);
+      //   usersG.viptag = String(usersG.viptag);
+      //   usersG.resided_state = String(usersG.resided_state);
       usersG.comefrom = String(usersG.comefrom);
       usersG.have_bm = String(usersG.have_bm);
       usersG.ismain_jcz = String(usersG.ismain_jcz);

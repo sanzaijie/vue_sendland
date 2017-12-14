@@ -26,7 +26,7 @@ Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
 Axios.defaults.headers = {
     "Content-Type": "application/json;charset=UTF-8"
 }
-Axios.defaults.timeout = 5000;
+Axios.defaults.timeout = 6000;
 
 // http response 拦截器
 

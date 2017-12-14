@@ -350,14 +350,6 @@ export default {
               }
               this.setCheckedKeys(this.arrayId);
             }
-            // this.myFormData = threeIdArr;
-            // for (let i = 0; i < this.myFormData.length; i++) {
-            //   this.arrayId.push(this.myFormData[i].id);
-            //   for (let j = 0; j < this.myFormData[i].sub; j++) {
-            //     this.arrayId.push(this.myFormData[j].id);
-            //   }
-            //   this.setCheckedKeys(this.arrayId);
-            // }
           }
         });
       this.premFormVisible = true;

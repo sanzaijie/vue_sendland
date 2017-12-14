@@ -357,9 +357,9 @@
                                 <el-input v-model="filters.change_user" placeholder="操作人"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-date-picker v-model="filters.begin_date" type="date" placeholder="开始日期">
+                                <el-date-picker v-model="filters.begin_time" type="date" placeholder="开始日期">
                                 </el-date-picker>    
-                                <el-date-picker v-model="filters.end_date" type="date" placeholder="结束日期">
+                                <el-date-picker v-model="filters.end_time" type="date" placeholder="结束日期">
                                 </el-date-picker>
                             </el-form-item>
                             <el-form-item>
@@ -431,10 +431,10 @@ export default {
     return {
       filters: {
         cust_id: this.$route.query.cust_id,
-        change_user: "",
-        begin_date: "",
-        end_date: "",
-        fromsys: ""
+        change_user: null,
+        begin_time: null,
+        end_time: null,
+        fromsys: null
       },
       detailUser: [],
       bankData: [],
@@ -641,12 +641,12 @@ export default {
       });
     },
     // 获取变更记录
-    getChange(filters) {
-      if (this.filters.begin_date != "") {
-        this.filters.begin_date = moment(this.filters.begin_date).format(
+    getChange(tab) {
+      if (this.filters.begin_time != "") {
+        this.filters.begin_time = moment(this.filters.begin_time).format(
           "YYYY/MM/DD"
         );
-        this.filters.end_date = moment(this.filters.end_date).format(
+        this.filters.end_time = moment(this.filters.end_time).format(
           "YYYY/MM/DD"
         );
       }
