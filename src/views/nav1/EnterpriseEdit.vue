@@ -9,11 +9,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="客户类型">   
-                            <el-select v-model="addUser.cst_type" placeholder="客户类型">
+                        <el-form-item label="客户类型" prop="cst_type">   
+                          <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
+                            <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型">
                                 <el-option value="0" label="个人客户">个人客户</el-option>
                                 <el-option value="1" label="企业客户">企业客户</el-option>
-                            </el-select>
+                            </el-select> -->
                         </el-form-item>  
                     </el-col>
                     <el-col :span="6">
@@ -254,6 +255,7 @@ export default {
     },
     send() {
       let addUser = this.addUser;
+      addUser.cst_type = 1;
       addUser.cust_id = this.$route.query.cust_id;
       let reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}@[0-9]{1,3}$/;
       if (addUser.cst_phone == "") {
@@ -376,7 +378,7 @@ export default {
     }).then(res => {
       this.addUser = res.data.data;
       let usersG = this.addUser;
-      usersG.cst_type = String(usersG.cst_type);
+      usersG.cst_type = "企业客户";
       usersG.card_type = String(usersG.card_type);
       this.addUser = usersG;
     });

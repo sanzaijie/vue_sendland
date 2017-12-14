@@ -10,10 +10,11 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="客户类型" prop="cst_type">   
-                        <el-select v-model="addUser.cst_type" placeholder="客户类型">
+                       <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
+                        <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型" >
                             <el-option value="0" label="个人客户">个人客户</el-option>
                             <el-option value="1" label="企业客户">企业客户</el-option>
-                        </el-select>
+                        </el-select> -->
                     </el-form-item>  
                 </el-col>
                 <el-col :span="6">
@@ -398,7 +399,7 @@ export default {
       addUser: {
         cust_id: "",
         cst_name: "",
-        cst_type: "",
+        cst_type: 0,
         cst_phone: "",
         gender: "",
         card_type: "",
@@ -496,7 +497,7 @@ export default {
       //   };
       let reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$|^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}@[0-9]{1,3}$/;
       addUser.gender = Number(addUser.gender);
-      addUser.cst_type = Number(addUser.cst_type);
+      addUser.cst_type = 0;
       addUser.card_type = Number(addUser.card_type);
       addUser.cst_status = Number(addUser.cst_status);
       addUser.work_type = Number(addUser.work_type);
@@ -510,10 +511,12 @@ export default {
       addUser.have_bm = Number(addUser.have_bm);
       addUser.ismain_jcz = Number(addUser.ismain_jcz);
       addUser.pet_stag = Number(addUser.pet_stag);
-      addUser.birthday = moment(addUser.birthday).format(
-        "YYYY/MM/DD"
-      );
 
+      if(addUser.birthday !== null && addUser.birthday !== undefined && addUser.birthday !== "" ) {
+        addUser.birthday = moment(addUser.birthday).format(
+          "YYYY/MM/DD"
+        );
+      }
       if (addUser.cst_phone == "") {
         alert("请输入手机号码");
       } else if (!reg.test(addUser.cst_phone)) {
@@ -695,7 +698,7 @@ export default {
       this.addUser = res.data.data;
       let usersG = this.addUser;
       usersG.gender = String(usersG.gender);
-      usersG.cst_type = String(usersG.cst_type);
+      usersG.cst_type = "个人客户";
       usersG.card_type = String(usersG.card_type);
       usersG.cst_status = String(usersG.cst_status);
       usersG.work_type = String(usersG.work_type);
