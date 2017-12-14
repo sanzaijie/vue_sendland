@@ -335,14 +335,29 @@ export default {
           this.premFormData = res.data.data.permission_list;
           this.myFormData = res.data.data.my_permission;
           if (this.myFormData) {
-            for (let i = 0; i < this.myFormData.length; i++) {
-              //   this.arrayId.push(this.myFormData[i].id);
-              for (let j = 0; j < this.myFormData[i].sub; j++) {
-                debugger;
-                this.arrayId.push(this.myFormData[j].id);
+            // var threeIdArr = [];
+            for (var i = 0; i < this.myFormData.length; i++) {
+              for (var j = 0; j < this.myFormData[i].sub.length; j++) {
+                if (this.myFormData[i].sub[j].sub) {
+                  for (
+                    var k = 0;
+                    k < this.myFormData[i].sub[j].sub.length;
+                    k++
+                  ) {
+                    this.arrayId.push(this.myFormData[i].sub[j].sub[k].id);
+                  }
+                }
               }
               this.setCheckedKeys(this.arrayId);
             }
+            // this.myFormData = threeIdArr;
+            // for (let i = 0; i < this.myFormData.length; i++) {
+            //   this.arrayId.push(this.myFormData[i].id);
+            //   for (let j = 0; j < this.myFormData[i].sub; j++) {
+            //     this.arrayId.push(this.myFormData[j].id);
+            //   }
+            //   this.setCheckedKeys(this.arrayId);
+            // }
           }
         });
       this.premFormVisible = true;
