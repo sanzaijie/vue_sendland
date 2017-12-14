@@ -91,7 +91,7 @@
 <script>
 import util from "../../common/js/util";
 //import moment from '../../api/moment'
-import {dateFormat1, formatDate} from "../../api/dateutil";
+import { dateFormat1, formatDate } from "../../api/dateutil";
 
 //import NProgress from 'nprogress'
 import {
@@ -109,10 +109,10 @@ export default {
       totalCount: 0,
       pageSize: 20,
       currentPage: 1,
-      activeNames: ['1'],
+      activeNames: ["1"],
       listLoading: false,
       custChange: {
-        cust_name:null,
+        cust_name: null,
         mobile: null,
         change_type: null,
         change_user: null,
@@ -122,24 +122,24 @@ export default {
         page_size: 20
       },
       pickerBeginDateBefore: {
-          disabledDate(time) {
-              return time.getTime() > Date.now();
-          }
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
       },
       pickerBeginDateAfter: {
-          disabledDate: (time) => {
-            let beginDateVal = this.custChange.begin_time;
-            if (beginDateVal) {
-                return time.getTime() < beginDateVal || time.getTime() > Date.now();
-            }else{
-                return time.getTime() > Date.now();
-            }  
-         }
+        disabledDate: time => {
+          let beginDateVal = this.custChange.begin_time;
+          if (beginDateVal) {
+            return time.getTime() < beginDateVal || time.getTime() > Date.now();
+          } else {
+            return time.getTime() > Date.now();
+          }
+        }
       }
     };
   },
   methods: {
-     //时间格式化
+    //时间格式化
     hangleDateFormat: function(row, column) {
       var date = row[column.property];
       if (date == undefined) {
@@ -147,24 +147,31 @@ export default {
       }
       return dateFormat1(row, column);
     },
-    checkCustChange() { //''处理
-      if(this.custChange.cust_name == '') {
-          this.custChange.cust_name = null;
+    checkCustChange() {
+      //''处理
+      if (this.custChange.cust_name == "") {
+        this.custChange.cust_name = null;
       }
-      if(this.custChange.mobile == '') {
-          this.custChange.mobile = null;
+      if (this.custChange.mobile == "") {
+        this.custChange.mobile = null;
       }
-      if(this.custChange.change_type == '') {
-          this.custChange.change_type = null;
+      if (this.custChange.change_type == "") {
+        this.custChange.change_type = null;
       }
-      if(this.custChange.change_user == '') {
-          this.custChange.change_user = null;
+      if (this.custChange.change_user == "") {
+        this.custChange.change_user = null;
       }
-      if(this.custChange.begin_time) {
-          this.custChange.begin_time = formatDate(this.custChange.begin_time, 'YYYY/MM/DD');
+      if (this.custChange.begin_time) {
+        this.custChange.begin_time = formatDate(
+          this.custChange.begin_time,
+          "YYYY/MM/DD"
+        );
       }
-      if(this.custChange.end_time) {
-          this.custChange.end_time = formatDate(this.custChange.end_time, 'YYYY/MM/DD');
+      if (this.custChange.end_time) {
+        this.custChange.end_time = formatDate(
+          this.custChange.end_time,
+          "YYYY/MM/DD"
+        );
       }
     },
     //加载分页数据
@@ -175,29 +182,40 @@ export default {
       this.custChange.page_num = pageNum;
       this.custChange.page_size = pageSize;
       this.$http({
-        method: "post",           //方法
+        method: "post", //方法
         url: "monitor/cust/list", //URL地址
         data: this.custChange,
         headers: {
           sign: localStorage.getItem("sign")
         }
-      }).then(response => {
-        let custLogData = response.data.data;  
-        this.custLog = custLogData.result;
-        this.totalCount = custLogData.total_count;
-        this.listLoading = false;
-      }).catch(error => {  //function (error) {
-        //console.log(error);
-        this.listLoading = false;
-      });
+      })
+        .then(response => {
+          if (
+            response.code == "ECONNABORTED" &&
+            response.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          let custLogData = response.data.data;
+          this.custLog = custLogData.result;
+          this.totalCount = custLogData.total_count;
+          this.listLoading = false;
+        })
+        .catch(error => {
+          //function (error) {
+          //console.log(error);
+          this.listLoading = false;
+        });
     },
-    onSearchData() {  //查询数据
-       this.currentPage = 1;
-       this.loadData(this.currentPage, this.pageSize);
+    onSearchData() {
+      //查询数据
+      this.currentPage = 1;
+      this.loadData(this.currentPage, this.pageSize);
     },
     logTimeChange(val) {
-      if(!this.custChange.begin_time){
-        this.$message({message: "请先选择开始时间",type: "warning"});
+      if (!this.custChange.begin_time) {
+        this.$message({ message: "请先选择开始时间", type: "warning" });
         this.custChange.end_time = null;
         return;
       }
@@ -209,7 +227,7 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
       this.loadData(this.currentPage, this.pageSize);
-    },
+    }
   },
   mounted() {
     //首次加载页面

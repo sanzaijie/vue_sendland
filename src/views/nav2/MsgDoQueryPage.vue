@@ -109,7 +109,7 @@
 
 <script>
 import util from "../../common/js/util";
-import {dateFormat1, formatDate} from "../../api/dateutil";
+import { dateFormat1, formatDate } from "../../api/dateutil";
 //import {_fromTo, _PubMsgLogStatus} from "../../api/change";
 import * as change from "../../api/change.js";
 
@@ -138,19 +138,19 @@ export default {
         page_size: 20
       },
       pickerBeginDateBefore: {
-          disabledDate(time) {
-              return time.getTime() > Date.now();
-          }
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
       },
       pickerBeginDateAfter: {
-          disabledDate: (time) => {
-            let beginDateVal = this.msgDoQuery.begin_time;
-            if (beginDateVal) {
-                return time.getTime() < beginDateVal || time.getTime() > Date.now();
-            }else{
-                return time.getTime() > Date.now();
-            }  
-         }
+        disabledDate: time => {
+          let beginDateVal = this.msgDoQuery.begin_time;
+          if (beginDateVal) {
+            return time.getTime() < beginDateVal || time.getTime() > Date.now();
+          } else {
+            return time.getTime() > Date.now();
+          }
+        }
       }
     };
   },
@@ -159,34 +159,41 @@ export default {
     hangleDateFormat: function(row, column) {
       return dateFormat1(row, column);
     },
-    checkMessage() { //''处理
-      if(this.msgDoQuery.message_type_name == '') {
-          this.msgDoQuery.message_type_name = null;
+    checkMessage() {
+      //''处理
+      if (this.msgDoQuery.message_type_name == "") {
+        this.msgDoQuery.message_type_name = null;
       }
-      if(this.requestStatus == '') {
-          this.msgDoQuery.status = null;
-      }else{
-          this.msgDoQuery.status = change._PubMsgLogStatus(this.requestStatus);
+      if (this.requestStatus == "") {
+        this.msgDoQuery.status = null;
+      } else {
+        this.msgDoQuery.status = change._PubMsgLogStatus(this.requestStatus);
       }
-      if(this.requestFromTo == '') {
-          this.msgDoQuery.from_to = null;
-      }else{
-          this.msgDoQuery.from_to = change._fromTo(this.requestFromTo);
+      if (this.requestFromTo == "") {
+        this.msgDoQuery.from_to = null;
+      } else {
+        this.msgDoQuery.from_to = change._fromTo(this.requestFromTo);
       }
-      if(this.msgDoQuery.request_system == '') {
-          this.msgDoQuery.request_system = null;
+      if (this.msgDoQuery.request_system == "") {
+        this.msgDoQuery.request_system = null;
       }
-      if(this.msgDoQuery.request_content == '') {
-          this.msgDoQuery.request_content = null;
+      if (this.msgDoQuery.request_content == "") {
+        this.msgDoQuery.request_content = null;
       }
-      if(this.msgDoQuery.message == '') {
-          this.msgDoQuery.message = null;
+      if (this.msgDoQuery.message == "") {
+        this.msgDoQuery.message = null;
       }
-      if(this.msgDoQuery.begin_time) {
-          this.msgDoQuery.begin_time = formatDate(this.msgDoQuery.begin_time, 'YYYY/MM/DD');
+      if (this.msgDoQuery.begin_time) {
+        this.msgDoQuery.begin_time = formatDate(
+          this.msgDoQuery.begin_time,
+          "YYYY/MM/DD"
+        );
       }
-      if(this.msgDoQuery.end_time) {
-          this.msgDoQuery.end_time = formatDate(this.msgDoQuery.end_time, 'YYYY/MM/DD');
+      if (this.msgDoQuery.end_time) {
+        this.msgDoQuery.end_time = formatDate(
+          this.msgDoQuery.end_time,
+          "YYYY/MM/DD"
+        );
       }
     },
     //加载分页数据
@@ -203,30 +210,33 @@ export default {
         headers: {
           sign: localStorage.getItem("sign")
         }
-      }).then(response => {
-        let msgData = response.data.data;  
-        let sysData = msgData.result;
-        for (let temp of sysData){
+      })
+        .then(response => {
+          let msgData = response.data.data;
+          let sysData = msgData.result;
+          for (let temp of sysData) {
             temp.from_to = change.fromTo(temp.from_to);
-            temp.status  = change.PubMsgLogStatus(temp.status);
-        }
-        this.system = sysData;
-        this.totalCount = msgData.total_count;
-        this.listLoading = false;
-      }).catch(function (error) {
-        this.listLoading = false;
-      });
-    },  
+            temp.status = change.PubMsgLogStatus(temp.status);
+          }
+          this.system = sysData;
+          this.totalCount = msgData.total_count;
+          this.listLoading = false;
+        })
+        .catch(function(error) {
+          listLoading = false;
+        });
+    },
     logTimeChange(val) {
-      if(!this.msgDoQuery.begin_time){
-        this.$message({message: "请先选择开始时间",type: "warning"});
+      if (!this.msgDoQuery.begin_time) {
+        this.$message({ message: "请先选择开始时间", type: "warning" });
         this.msgDoQuery.end_time = null;
         return;
       }
     },
-    onSearchData() {  //查询数据
-       this.currentPage = 1;
-       this.loadData(this.currentPage, this.pageSize);
+    onSearchData() {
+      //查询数据
+      this.currentPage = 1;
+      this.loadData(this.currentPage, this.pageSize);
     },
     handleSizeChange: function(val) {
       handleCurrentChange(val);
@@ -238,14 +248,14 @@ export default {
     handleEdit: function(index, row) {
       this.detailFormVisible = true;
       let jsonTmp = JSON.parse(row["message_body"]);
-      let messageBody = JSON.stringify(jsonTmp, null, 4)
+      let messageBody = JSON.stringify(jsonTmp, null, 4);
       //let jsonData = JSON.stringify(messageBody, null, '\t')
       //this.editForm = Object.assign({},  jsonData); //row,
       this.editForm = messageBody; //row
     }
   },
   mounted() {
-     //首次加载页面
+    //首次加载页面
     this.loadData(this.currentPage, this.pageSize);
   }
 };
@@ -293,15 +303,15 @@ export default {
   box-sizing: border-box;
   text-overflow: ellipsis;
 }
-.align-r{
-    text-align: right;
+.align-r {
+  text-align: right;
 }
 
 .textareaColor {
-    background-color: #eef1f6;
-    border-color: #d1dbe5;
-    color: #211f1f;
-    cursor: not-allowed;
+  background-color: #eef1f6;
+  border-color: #d1dbe5;
+  color: #211f1f;
+  cursor: not-allowed;
 }
 </style>
 

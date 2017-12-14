@@ -190,6 +190,27 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.users = res.data.data.result;
         this.listLoading = false;
       });
@@ -218,6 +239,27 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.users = res.data.data.result;
         this.totalCount = res.data.data.total_count;
         this.listLoading = false;
@@ -243,6 +285,27 @@ export default {
                 sign: localStorage.getItem("sign")
               }
             }).then(res => {
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
               this.editLoading = false;
               //NProgress.done();
               this.$message({
@@ -283,6 +346,18 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
       this.users = res.data.data.result;
       this.totalCount = res.data.data.total_count;
       this.listLoading = false;

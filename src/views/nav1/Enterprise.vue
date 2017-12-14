@@ -51,11 +51,12 @@
                     <el-col :span="6" style="padding-bottom: 0px;">
                         <el-form-item label="证件类型" class="rulesinput">   
                             <el-select v-model="addUser.card_type" placeholder="证件类型" style="width: 100%;">
-                                <el-option value="-1">身份证</el-option>
-                                <el-option value="1">护照</el-option>
-                                <el-option value="2">军官证</el-option>
-                                <el-option value="3">港澳身份证</el-option>
-                                <el-option value="4">台胞证</el-option>
+                                <el-option value="0" label="身份证">身份证</el-option>
+                                <el-option value="1" label="护照">护照</el-option>
+                                <el-option value="2" label="军官证">军官证</el-option>
+                                <el-option value="3" label="港澳身份证">港澳身份证</el-option>
+                                <el-option value="4" label="台胞证">台胞证</el-option>
+                                <el-option value="-1" label="未知">未知</el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -65,11 +66,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="客户类型" class="rulesinput">   
-                            <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
-                                <el-option value="0">个人客户</el-option>
-                                <el-option value="1">企业客户</el-option>
-                            </el-select>
+                        <el-form-item label="客户类型" class="rulesinput">  
+                             <el-input v-model="addUser.cst_type" placeholder="企业客户" disabled="disabled"></el-input> 
+                            <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型" style="width: 100%;">
+                                <el-option value="0" label="个人客户">个人客户</el-option>
+                                <el-option value="1" label="企业客户">企业客户</el-option>
+                            </el-select> -->
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -184,7 +186,7 @@ export default {
         //   }
         // ],
         cst_name: "",
-        cst_type: "",
+        cst_type: 1,
         cst_phone: "",
         corporation: "",
         func_type: "",
@@ -203,7 +205,9 @@ export default {
       },
       rulesEnter: {
         cst_name: [{ required: true, message: "公司名称不能为空", trigger: "blur" }],
-        cst_phone: [{ validator: validatePhone, trigger: "blur" }],
+        cst_phone: [
+          { required: true, validator: validatePhone, trigger: "blur" }
+        ],
         link_man: [{ required: true, message: "联系人名称不能为空", trigger: "blur" }],
         contact1: [{ validator: validatePhone, trigger: "blur" }],
         contact2: [{ validator: validatePhone, trigger: "blur" }],
@@ -239,9 +243,15 @@ export default {
       //   );
 
       if (addUser.cst_phone == "") {
-        alert("请输入手机号码");
+        this.$message({
+          message: "请输入手机号码",
+          type: warning
+        });
       } else if (!reg.test(addUser.cst_phone)) {
-        alert("手机格式不正确");
+        this.$message({
+          message: "手机号码格式不正确",
+          type: warning
+        });
       } else {
         // 新增企业客户
         this.$http({
@@ -252,6 +262,41 @@ export default {
             sign: localStorage.getItem("sign")
           }
         }).then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           if (res.data.error_code === 0) {
             this.$message({
               message: "企业客户新增成功!",

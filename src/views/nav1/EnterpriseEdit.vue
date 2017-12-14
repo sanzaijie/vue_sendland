@@ -1,6 +1,6 @@
 <template>
     <section class="bg">
-        <el-form :model="{addUser}" :rules="rulesEnter" ref="addUser" class="formBG demo-form-inline">
+        <el-form :model="addUser" :rules="rulesEnter" ref="addUser" class="formBG demo-form-inline">
             <el-row class="rows">
                 <strong class="title">客户核心信息</strong>
                     <el-col :span="6">
@@ -219,29 +219,32 @@ export default {
       ],
       addUser: {
         cst_name: "",
-        cst_type: 1, // 客户类型(0个人、1公司)
+        cst_type: 1,
+        cst_phone: "",
         corporation: "",
         func_type: "",
         enter_nature: "",
         by_sector: "",
         lic_no: "",
         orientation: "",
-        cer_type: "", // 证件类型(0 身份证,1 护照,2 军官证,3 港澳身份证,4 台胞证)
+        card_type: "-1",
         cer_no: "",
-        fax: "",
         link_man: "",
-        cst_phone: "",
         contact1: "",
         contact2: "",
         contact3: "",
-        email: ""
+        email: "",
+        fax: ""
       },
       rulesEnter: {
-        cst_name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        cst_name: [{ required: true, message: "公司名称不能为空", trigger: "blur" }],
         cst_phone: [
           { required: true, validator: validatePhone, trigger: "blur" }
         ],
-        link_man: [{ required: true, message: "请输入联系人姓名", trigger: "blur" }]
+        link_man: [{ required: true, message: "联系人名称不能为空", trigger: "blur" }],
+        contact1: [{ validator: validatePhone, trigger: "blur" }],
+        contact2: [{ validator: validatePhone, trigger: "blur" }],
+        contact3: [{ validator: validatePhone, trigger: "blur" }]
       }
     };
   },
@@ -258,6 +261,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         if (res.data.data) {
           this.banks = res.data.data;
         }
@@ -274,11 +284,13 @@ export default {
       if (addUser.cst_phone == "") {
         this.$message({
           message: "请输入手机号码",
-          type:
-           warning
+          type: warning
         });
       } else if (!reg.test(addUser.cst_phone)) {
-        alert("手机格式不正确");
+        this.$message({
+          message: "手机号码格式不正确",
+          type: warning
+        });
       } else {
         this.$http({
           method: "post",
@@ -288,6 +300,13 @@ export default {
             sign: localStorage.getItem("sign")
           }
         }).then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           if (res.data.error_code === 0) {
             this.$message({
               message: "更新成功!",
@@ -317,6 +336,13 @@ export default {
               sign: localStorage.getItem("sign")
             }
           }).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             if (res.data.error_code === 0) {
               this.$message({
                 message: "银行卡更新成功!",
@@ -342,6 +368,13 @@ export default {
               sign: localStorage.getItem("sign")
             }
           }).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             if (res.data.error_code === 0) {
               this.$message({
                 message: "银行卡更新成功!",
@@ -393,6 +426,10 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
       this.addUser = res.data.data;
       let usersG = this.addUser;
       usersG.cst_type = "企业客户";
@@ -410,6 +447,10 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
       if (res.data.data) {
         this.banks = res.data.data;
       }

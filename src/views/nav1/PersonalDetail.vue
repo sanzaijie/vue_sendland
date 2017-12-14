@@ -476,6 +476,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.changeUser = res.data.data;
         console.log(this.changeUser);
       });
@@ -495,10 +502,24 @@ export default {
         }
       })
         .then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           //   console.log(res);
           this.projectData = res.data.data;
         })
         .then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           this.$http({
             method: "post",
             url: "cust/person/need/detail",
@@ -510,6 +531,13 @@ export default {
               sign: localStorage.getItem("sign")
             }
           }).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             if (res.data.data) {
               this.needUser = res.data.data;
               var intenID = this.needUser.intention_id;
@@ -526,6 +554,13 @@ export default {
                     sign: localStorage.getItem("sign")
                   }
                 }).then(res => {
+                  if (
+                    res.code == "ECONNABORTED" &&
+                    res.message.indexOf("timeout") != -1
+                  ) {
+                    this.$message.error("网络异常,请求超时");
+                    return false;
+                  }
                   //   console.log(res);
                   this.followUser = res.data.data;
                 });
@@ -555,6 +590,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         //   console.log(res);
         this.detailUser = res.data.data;
         let usersG = this.detailUser;
@@ -588,6 +630,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         //   console.log(res);
         this.bankData = res.data.data;
       });
@@ -604,6 +653,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         //   console.log(res);
         this.projectData = res.data.data;
       });
@@ -620,6 +676,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         //   console.log(res);
         this.relationData = res.data.data;
       });
@@ -636,6 +699,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         //   console.log(res);
         this.projectData = res.data.data;
       });
@@ -658,6 +728,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.changeUser = res.data.data;
         console.log(this.changeUser);
       });
@@ -676,6 +753,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.usersData = res.data.data.result;
         this.total = res.data.data.total_count;
         let usersG = this.usersData;
@@ -710,6 +794,10 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
       //   console.log(res);
       this.detailUser = res.data.data;
       let usersG = this.detailUser;
