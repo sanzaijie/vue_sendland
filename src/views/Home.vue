@@ -29,7 +29,64 @@
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
                 <el-menu
-                :default-openeds="['$index']"
+                class="el-menu-vertical-demo"
+                background-color="#545c64"
+                text-color="#303133"
+                active-text-color="#409EFF"
+                unique-opened
+                v-if="!collapsed">
+                    <el-menu-item index="0">
+                        <router-link to="echarts" class="link">
+                            <!-- <i class="el-icon-upload"></i> -->
+                            Dashboard
+                            <!-- <span slot="title">Dashboard</span> -->
+                        </router-link>
+                    </el-menu-item>
+                    <el-submenu index="1" v-for="item in navbars" v-if="item.name === '客户管理'">
+                        <template slot="title" style="color:#fff;">
+                            <!-- <i class="el-icon-star-on"></i> -->
+                            <span>客户管理</span>
+                        </template>
+                        <el-menu-item index="1-1" v-for="item1 in item.sub" v-if="item1.name === '个人客户列表'">
+                            <router-link :to="{name: item1.name}" class="link">个人客户列表</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="1-2" v-for="item1 in item.sub" v-if="item1.name === '企业客户列表'">
+                            <router-link :to="{name: item1.name}" class="link">企业客户列表</router-link>
+                        </el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="2" v-for="item in navbars" v-if="item.name === '监控管理'">
+                        <template slot="title">
+                            <!-- <i class="el-icon-menu"></i> -->
+                            <span slot="title">监控管理</span>
+                        </template>
+                        <el-menu-item index="2-1" v-for="item1 in item.sub" v-if="item1.name === '系统监控'">
+                            <router-link :to="{name: item1.name}" class="link">系统监控</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="2-2" v-for="item1 in item.sub" v-if="item1.name === '客户日志'">
+                            <router-link :to="{name: item1.name}" class="link">客户日志</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="2-3" v-for="item1 in item.sub" v-if="item1.name === '接口日志'">
+                            <router-link :to="{name: item1.name}" class="link">接口日志</router-link>
+                        </el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="3" v-for="item in navbars" v-if="item.name === '系统管理'">
+                        <template slot="title">
+                            <!-- <i class="el-icon-setting"></i> -->
+                            <span slot="title">系统管理</span>
+                        </template>
+                        <el-menu-item index="3-1" v-for="item1 in item.sub" v-if="item1.name === '角色管理'">
+                            <router-link :to="{name: item1.name}" class="link">角色管理</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="3-2" v-for="item1 in item.sub" v-if="item1.name === '用户管理'">
+                            <router-link :to="{name: item1.name}" class="link">用户管理</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="3-3" v-for="item1 in item.sub" v-if="item1.name === '字典管理'">
+                            <router-link :to="{name: item1.name}" class="link">字典管理</router-link>
+                        </el-menu-item>
+                    </el-submenu>
+                </el-menu>
+                <!-- <el-menu
+                :default-openeds="[index]"
                 class="el-menu-vertical-demo overf" 
                 @open="handleopen" 
                 @close="handleclose" 
@@ -37,7 +94,7 @@
                 router 
                 v-if="!collapsed">
                     <template v-for="(item,index) in navbars" v-if="!item.hidden">
-                        <el-submenu :index="'$index'" v-if="item.name">
+                        <el-submenu :index="index + ''" v-if="item.name">
                             <template slot="title">{{item.name}}</template>
                                 <router-link v-for="subs in item.sub" :key="subs.id" :name="subs.name"
                                 :to="{name: subs.name}" tag="li"
@@ -47,7 +104,7 @@
                                 </router-link>
                         </el-submenu>
                     </template>
-				</el-menu>
+				</el-menu> -->
 				<!--导航菜单-折叠后-->
                 <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
 					<li v-for="(item,index) in navbars" v-if="!item.hidden" class="el-submenu item">
@@ -282,14 +339,17 @@ export default {
 .link {
   text-decoration: none;
   display: block;
-  width: 130%;
+  width: 100%;
   color: #48576a;
 }
-.router-link-active .link {
-  color: #fff;
-}
-.router-link-active {
+// .router-link-active {
+//   color: #fff;
+// }
+.el-submenu .is-active {
   background-color: #20a0ff;
+}
+.el-submenu__title {
+  color: red;
 }
 .container {
   position: absolute;
@@ -321,7 +381,7 @@ export default {
     .logo {
       //width:230px;
       height: 60px;
-      font-size: 22px;
+      font-size: 28px;
       padding-left: 20px;
       padding-right: 20px;
       border-color: rgba(238, 241, 146, 0.3);

@@ -4,10 +4,10 @@
             <el-col :span="12">
                 <div id="chartColumn" style="width:100%; height:400px;"></div>
             </el-col>
-            <el-col :span="12">
+            <!-- <el-col :span="12">
                 <div id="chartBar" style="width:100%; height:400px;"></div>
-            </el-col>
-            <el-col :span="12">
+            </el-col> -->
+            <!-- <el-col :span="12">
                 <div id="chartLine" style="width:100%; height:400px;"></div>
             </el-col>
             <el-col :span="12">
@@ -15,7 +15,7 @@
             </el-col>
             <el-col :span="24">
                 <a href="http://echarts.baidu.com/examples.html" target="_blank" style="float: right;">more>></a>
-            </el-col>
+            </el-col> -->
         </el-row>
     </section>
 </template>
@@ -40,13 +40,13 @@
                   title: { text: 'Column Chart' },
                   tooltip: {},
                   xAxis: {
-                      data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+                      data: ["数量", "新增客户", "修改客户", "已发送", "接收成功"]
                   },
                   yAxis: {},
                   series: [{
-                      name: '销量',
+                      name: '数量',
                       type: 'bar',
-                      data: [5, 20, 36, 10, 10, 20]
+                      data: [5, 20, 36, 10, 10]
                     }]
                 });
             },

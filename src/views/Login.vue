@@ -110,7 +110,7 @@ export default {
                     JSON.stringify(res.data.data.permission_list)
                   );
                   
-                  self.$router.push({ path: "/custList" });
+                  self.$router.push({ path: "/echarts" });
                 } else {
                   self.logining = false;
                   self.$message.error(res.data.error_message);

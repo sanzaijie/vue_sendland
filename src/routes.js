@@ -2,6 +2,7 @@ import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 import Main from './views/Main.vue'
+import Echarts from './views/charts/echarts.vue'
 import Cust_List from './views/nav1/Cust_List.vue'
 import EnCust_List from './views/nav1/EnCust_List.vue'
 import Personal from './views/nav1/Personal.vue'
@@ -37,7 +38,7 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '',
+        name: '首页',
         meta: {
             // 添加该字段，表示进入这个路由是需要登录的
             requireAuth: true,
@@ -46,10 +47,10 @@ let routes = [
         iconCls: 'el-icon-menu',
         leaf: true,//只有一个节点
         children: [
-            { 
-                path: '/main',
-                component: Main,
-                name: '首页'
+            {
+                path: '/echarts',
+                component: Echarts,
+                name: 'echarts'
             }
         ]
     },

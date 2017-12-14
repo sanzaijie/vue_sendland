@@ -336,8 +336,9 @@ export default {
           this.myFormData = res.data.data.my_permission;
           if (this.myFormData) {
             for (let i = 0; i < this.myFormData.length; i++) {
-              this.arrayId.push(this.myFormData[i].id);
-              for (let j = 0; j < this.myFormData[i]; j++) {
+              //   this.arrayId.push(this.myFormData[i].id);
+              for (let j = 0; j < this.myFormData[i].sub; j++) {
+                debugger;
                 this.arrayId.push(this.myFormData[j].id);
               }
               this.setCheckedKeys(this.arrayId);
@@ -453,6 +454,8 @@ export default {
           }
         });
       });
+
+      // 通过子节点找父节点
     },
     //时间格式化
     dateFormat: function(row, column) {

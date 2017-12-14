@@ -288,6 +288,7 @@ export default {
   border-radius: 4px;
 }
 .box-card-active {
+  font-size: 16px;
   padding-top: 10px;
   width: 20%;
   height: 105px;
@@ -295,7 +296,7 @@ export default {
   display: inline-block;
   margin: 15px 15px;
   text-align: center;
-  border: 1px solid #20a0ff;
+  border: 2px solid #20a0ff;
   color: #20a0ff;
   border-radius: 4px;
 }

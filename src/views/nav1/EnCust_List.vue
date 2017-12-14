@@ -115,7 +115,11 @@ export default {
         cst_type: 1,
         value: ""
       },
-      queryParams: {},
+      queryParams: {
+        cst_type: 1,
+        cst_name: null,
+        cst_phone: null
+      },
       checkList: [
         // type: []
         //   gender: [],
@@ -255,12 +259,9 @@ export default {
     },
     //获取更多查询用户列表
     getUsers(checkList) {
-      //   let self = this;
-      var json = {
-        cst_type: 1,
-        cst_name: this.filters.cst_name,
-        cst_phone: this.filters.cst_phone
-      };
+      var json = {};
+
+      var json = {};
       for (var i = 0; i < this.checkList.length; i++) {
         var item = this.checkList[i].split(":");
         if (hasKey(json, item[0])) {
@@ -271,7 +272,18 @@ export default {
           json[item[0]] = key;
         }
       }
-      this.queryParams = json;
+      for (var key in json) {
+        var valueArrs = [];
+        if (json[key].toString().indexOf(",") > 0) {
+          var strArrs = json[key].toString().split(",");
+          for (var i = 0; i < strArrs.length; i++) {
+            valueArrs.push(parseInt(strArrs[i]));
+          }
+        } else {
+          valueArrs.push(parseInt(json[key]));
+        }
+        this.queryParams[key] = valueArrs;
+      }
       function hasKey(json, key) {
         var hasKey = eval("json." + key);
         if (hasKey !== undefined && hasKey !== null) {
@@ -279,7 +291,8 @@ export default {
         }
         return true;
       }
-
+      this.queryParams.cst_name = this.filters.cst_name;
+      this.queryParams.cst_phone = this.filters.cst_phone;
       this.addFormVisible = false;
       this.listLoading = true;
 
@@ -292,18 +305,25 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
-        this.usersData = res.data.data.result;
-        this.total = res.data.data.total_count;
-        let usersG = this.usersData;
-        for (let i = 0; i < usersG.length; i++) {
-          usersG[i].gender = change.Gender(usersG[i].gender);
-          usersG[i].cst_type = change._cstType(usersG[i].cst_type);
-          usersG[i].card_type = change._cardTcard_typeype(usersG[i].card_type);
+        if (res.data.error_code == 0 && res.data.error_code != undefined) {
+          this.usersData = res.data.data.result;
+          this.total = res.data.data.total_count;
+          let usersG = this.usersData;
+          for (let i = 0; i < usersG.length; i++) {
+            usersG[i].gender = change.Gender(usersG[i].gender);
+            usersG[i].cst_type = change._cstType(usersG[i].cst_type);
+            usersG[i].card_type = change._cardTcard_typeype(
+              usersG[i].card_type
+            );
+          }
+          this.usersData = usersG;
+          this.listLoading = false;
+        //   this.filters = {};
+          this.checkList = [];
+        } else {
+          this.$message.error(res.data.error_message);
+          this.listLoading = false;
         }
-        this.usersData = usersG;
-        this.listLoading = false;
-        this.filters = {};
-        this.checkList = [];
       });
     },
     handleAdd: function() {
