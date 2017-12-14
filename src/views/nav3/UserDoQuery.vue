@@ -148,7 +148,6 @@ import util from "../../common/js/util";
 
 export default {
   data() {
-
     var validatePassword = (rule, value, callback) => {
       var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
       if (!reg.test(value)) {
@@ -182,7 +181,9 @@ export default {
       editFormRules: {
         name: [{ required: true, message: "请输入用户姓名", trigger: "blur" }],
         oper_id: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
-        oper_pwd: [{ required: true, validator: validatePassword, trigger: "blur" }]
+        oper_pwd: [
+          { required: true, validator: validatePassword, trigger: "blur" }
+        ]
       },
       //编辑界面数据
       editForm: {
@@ -197,7 +198,9 @@ export default {
       addFormRules: {
         oper_id: [{ required: true, message: "请输入登陆账号", trigger: "blur" }],
         name: [{ required: true, message: "请输入用户姓名", trigger: "blur" }],
-        oper_pwd: [{ required: true, validator: validatePassword, trigger: "blur" }]
+        oper_pwd: [
+          { required: true, validator: validatePassword, trigger: "blur" }
+        ]
       },
       //新增界面数据
       addForm: {
@@ -242,6 +245,20 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.users = res.data.data.result;
         this.totalCount = res.data.data.total_count;
         this.listLoading = false;
@@ -257,6 +274,20 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.users = res.data.data.result;
         this.totalCount = res.data.data.total_count;
         this.listLoading = false;
@@ -276,6 +307,20 @@ export default {
               sign: localStorage.getItem("sign")
             }
           }).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             if (res.data.error_code === 0) {
               this.$message({
                 message: "删除成功！",
@@ -289,7 +334,7 @@ export default {
 
           // this.listLoading = true;
           // let para = { id: row.id };
-          // removeUser(para).then(res => {
+          // removeUser(para).then(res => {         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }         if (           res.code == "ECONNABORTED" &&           res.message.indexOf("timeout") != -1         ) {           this.$message.error("网络异常,请求超时");           return false;         }
           //   this.listLoading = false;
           //   this.$message({
           //     message: "删除成功",
@@ -337,6 +382,20 @@ export default {
           }
         })
         .then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           self.checkNames = res.data.data.role_list;
           let retChenkList = res.data.data.my_role;
           var i = 0;
@@ -379,6 +438,20 @@ export default {
             sign: localStorage.getItem("sign")
           }
         }).then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           this.permLoading = false;
           if (res.data.error_code === 0) {
             this.$message({
@@ -409,6 +482,20 @@ export default {
                 sign: localStorage.getItem("sign")
               }
             }).then(res => {
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
               this.editLoading = false;
               //NProgress.done();
               if (res.data.error_code === 0) {
@@ -441,6 +528,20 @@ export default {
                 sign: localStorage.getItem("sign")
               }
             }).then(res => {
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
               this.addLoading = false;
               //NProgress.done();
               if (res.data.error_code === 0) {

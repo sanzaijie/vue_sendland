@@ -147,6 +147,13 @@ export default {
         },
         responseType: "blob" // 表明返回服务器返回的数据类型
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         // 处理返回的文件流
         const content = res.data;
         const elink = document.createElement("a"); // 创建a标签
@@ -173,6 +180,14 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+
         this.usersData = res.data.data.result;
         this.total = res.data.data.total_count;
         let usersG = this.usersData;
@@ -199,7 +214,7 @@ export default {
     getSelect(filters) {
       this.listLoading = true;
       this.queryParams.cst_name = filters.cst_name;
-      this.queryParams.cst_phone = filters.cst_phone
+      this.queryParams.cst_phone = filters.cst_phone;
 
       this.$http({
         method: "post",
@@ -209,6 +224,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         this.usersData = res.data.data.result;
         this.total = res.data.data.total_count;
         let usersG = this.usersData;
@@ -270,6 +292,13 @@ export default {
           sign: localStorage.getItem("sign")
         }
       }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
         if (res.data.error_code == 0 && res.data.error_code != undefined) {
           this.usersData = res.data.data.result;
           this.total = res.data.data.total_count;
@@ -296,7 +325,7 @@ export default {
       //     name: this.filters.cst_name
       //   };
       //   this.listLoading = true;
-      //   //   getUserListPage(para).then(res => {
+      //   //   getUserListPage(para).then(res => {         if(res.code == 'ECONNABORTED' && res.message.indexOf('timeout')!=-1) {           this.$message.error("网络异常,请求超时");           return false;         }
       //   //     this.total = res.data.total;
       //   //     this.users = res.data.users;
       //   //     this.addFormVisible = false;
@@ -315,6 +344,13 @@ export default {
           }
         })
         .then(res => {
+          if (
+            res.code == "ECONNABORTED" &&
+            res.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           if (res.data.error_code == 0 && res.data.error_code != undefined) {
             self.addForm = res.data.data;
           }
@@ -336,6 +372,13 @@ export default {
               sign: localStorage.getItem("sign")
             }
           }).then(res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             if (res.data.error_code === 0) {
               this.$message({
                 message: "删除成功！",
@@ -365,6 +408,10 @@ export default {
         sign: localStorage.getItem("sign")
       }
     }).then(res => {
+      if (res.code == "ECONNABORTED" && res.message.indexOf("timeout") != -1) {
+        this.$message.error("网络异常,请求超时");
+        return false;
+      }
       //   console.log(res);
       this.listId = res.data.data;
       //   console.log(this.listId);

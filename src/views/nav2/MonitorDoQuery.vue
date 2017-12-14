@@ -118,6 +118,13 @@ export default {
         }
       })
         .then(response => {
+          if (
+            response.code == "ECONNABORTED" &&
+            response.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           let data = response.data.data;
           this.handleListData(data.bottom_body); //显示每个接口请求成功数，失败数
           this.listLoading = false;
@@ -233,6 +240,13 @@ export default {
         }
       })
         .then(response => {
+          if (
+            response.code == "ECONNABORTED" &&
+            response.message.indexOf("timeout") != -1
+          ) {
+            this.$message.error("网络异常,请求超时");
+            return false;
+          }
           let data = response.data.data;
           this.handleTopBody(data.code_system, data.top_body); //显示每个系统新增，修改数量
           this.handleListData(data.bottom_body); //显示每个接口请求成功数，失败数

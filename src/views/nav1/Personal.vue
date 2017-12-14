@@ -499,6 +499,13 @@ export default {
           }
         }).then(
           res => {
+            if (
+              res.code == "ECONNABORTED" &&
+              res.message.indexOf("timeout") != -1
+            ) {
+              this.$message.error("网络异常,请求超时");
+              return false;
+            }
             if (res.data.error_code === 0) {
               this.$message({
                 message: "个人客户新增成功!",

@@ -26,15 +26,29 @@ Axios.defaults.baseURL = 'http://192.168.64.216:9091/api/rest/1.0/'
 Axios.defaults.headers = {
     "Content-Type": "application/json;charset=UTF-8"
 }
-Axios.defaults.timeout = 5000;
+Axios.defaults.timeout = 500;
 
 // http response 拦截器
-
 Axios.interceptors.response.use(
     response => {
         return response;
     },
     error => {
+        if(error.code == 'ECONNABORTED' && error.message.indexOf('timeout')!=-1){
+            return error;
+            // var res = {
+            //     status: 408,
+            //     data: "请求超时"
+            // }
+            // return Promise.reject(res);
+            // Message.error("wizzds");
+            // debugger;
+            // Axios.response.Message({
+            //     showClose: true,
+            //     message: error,
+            //     type: "error.data.error.message"
+            //   });
+        }
         if (error.response) {
             switch (error.response.status) {
                 case 401:
@@ -49,6 +63,7 @@ Axios.interceptors.response.use(
         return Promise.reject(error.response.data) // 返回接口返回的错误信息
     }
 );
+
 Vue.prototype.$http = Axios
 const router = new VueRouter({
     routes
