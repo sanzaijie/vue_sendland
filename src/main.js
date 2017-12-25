@@ -35,7 +35,7 @@ Axios.interceptors.response.use(
         return response;
     },
     error => {
-        if(error.code == 'ECONNABORTED' && error.message.indexOf('timeout')!=-1){
+        if (error.code == 'ECONNABORTED' && error.message.indexOf('timeout') != -1) {
             return error;
             // var res = {
             //     status: 408,

@@ -3,18 +3,18 @@
         <el-form :model="ruleForm2" ref="ruleForm2" :rules="rules2" label-position="left" class="demo-ruleForm login-container">
             <h3 class="title">实地客户主数据系统</h3>
             <el-form-item prop="oper_id">
-            <el-input type="text" v-model="ruleForm2.oper_id" auto-complete="off" placeholder="账号"></el-input>
+                <el-input type="text" v-model="ruleForm2.oper_id" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
             <el-form-item prop="oper_pwd">
-            <el-input type="password" v-model="ruleForm2.oper_pwd" auto-complete="off" placeholder="密码"></el-input>
+                <el-input type="password" v-model="ruleForm2.oper_pwd" auto-complete="off" placeholder="密码"></el-input>
             </el-form-item>
             <!-- <el-checkbox v-model="checked" class="remember">记住密码</el-checkbox> -->
             <span @click="rmPwd" class="remember">
-              <el-checkbox v-model="checked" class="rm-box">记住密码</el-checkbox>
+                <el-checkbox v-model="checked" class="rm-box">记住密码</el-checkbox>
             </span>
             <el-button type="text" @click="forget" class="fr">忘记密码</el-button>
             <el-form-item class="wid">
-            <el-button type="primary" class="wid" @click.native.prevent="handleSubmit2(ruleForm2)" :loading="logining">登录</el-button>
+                <el-button type="primary" class="wid" @click.native.prevent="handleSubmit2(ruleForm2)" :loading="logining">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -84,6 +84,7 @@ export default {
                   res.message.indexOf("timeout") != -1
                 ) {
                   this.$message.error("网络异常,请求超时");
+                  self.logining = false;
                   return false;
                 }
                 if (

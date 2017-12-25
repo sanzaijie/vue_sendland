@@ -222,6 +222,7 @@ export default {
           res.message.indexOf("timeout") != -1
         ) {
           this.$message.error("网络异常,请求超时");
+          this.listLoading = false;
           return false;
         }
         this.usersData = res.data.data.result;
