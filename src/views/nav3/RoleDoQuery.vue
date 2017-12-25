@@ -1,118 +1,104 @@
 <template>
-	<section>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="RoleDoQuery">
-				<el-form-item>
-					<el-input v-model="RoleDoQuery.name" placeholder="角色名称"></el-input>
-				</el-form-item>
+    <section>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+            <el-form :inline="true" :model="RoleDoQuery">
                 <el-form-item>
-					<el-select v-model="RoleDoQuery.status" placeholder="角色状态">
+                    <el-input v-model="RoleDoQuery.name" placeholder="角色名称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-select v-model="RoleDoQuery.status" placeholder="角色状态">
                         <el-option value="全部">全部</el-option>
                         <el-option value="有效">有效</el-option>
                         <el-option value="无效">无效</el-option>
                     </el-select>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" v-on:click="getUsersByQuery">查询</el-button>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" @click="handleAdd">新增角色</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" v-on:click="getUsersByQuery">查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleAdd">新增角色</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
 
-		<!--列表-->
-		<el-table :data="users" highlight-current-row stripe v-loading="listLoading"  style="width: 100%;">
-			<el-table-column type="index" label="序号" align="center" width="70">
-			</el-table-column>
-			<el-table-column prop="name" label="角色姓名" width="100" align="center">
-			</el-table-column>
-			<el-table-column prop="creator_name" label="创建人" min-width="100" align="center">
-			</el-table-column>
-			<el-table-column prop="createtime" label="创建时间" :formatter="dateFormat" align="center">
-			</el-table-column>
-			<el-table-column prop="status" label="角色状态" width="100" align="center">
-			</el-table-column>
-			<el-table-column label="操作" min-width="100" align="center">
-				<template slot-scope="scope">
-					<el-button size="small" @click="handlePrem(scope.$index, scope.row)">权限设置</el-button>                    
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
+        <!--列表-->
+        <el-table :data="users" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
+            <el-table-column type="index" label="序号" align="center" width="70">
+            </el-table-column>
+            <el-table-column prop="name" label="角色姓名" width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="creator_name" label="创建人" min-width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="createtime" label="创建时间" :formatter="dateFormat" align="center">
+            </el-table-column>
+            <el-table-column prop="status" label="角色状态" width="100" align="center">
+            </el-table-column>
+            <el-table-column label="操作" min-width="100" align="center">
+                <template slot-scope="scope">
+                    <el-button size="small" @click="handlePrem(scope.$index, scope.row)">权限设置</el-button>
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
 
-		<!--工具条-->
-		<el-col :span="24" class="toolbar">
-			<el-pagination layout="total, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            :total="total"
-            style="float:right;">
-			</el-pagination>
-		</el-col>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar">
+            <el-pagination layout="total, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" :total="total" style="float:right;">
+            </el-pagination>
+        </el-col>
 
-		<!--编辑界面-->
-		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="角色名称" prop="name">
-					<el-input v-model="editForm.name" :disabled="true"></el-input>
-				</el-form-item>
-                <el-form-item label="角色状态" prop="status">
-					<el-select v-model="editForm.status" placeholder="请选择">
-                        <el-option value="有效">有效</el-option>
-                        <el-option value="无效">无效</el-option>
-                    </el-select>
-				</el-form-item>
-                <el-form-item label="角色描述">
-					<el-input type="textarea" :rows="5" v-model="editForm.remark" auto-complete="off"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="editFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-			</div>
-		</el-dialog>
-
-		<!--新增界面-->
-		<el-dialog title="新增角色" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm" class="demo-ruleForm">
+        <!--编辑界面-->
+        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
                 <el-form-item label="角色名称" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off"></el-input>
-				</el-form-item>
+                    <el-input v-model="editForm.name" :disabled="true"></el-input>
+                </el-form-item>
                 <el-form-item label="角色状态" prop="status">
-					<el-select v-model="addForm.status" placeholder="请选择">
+                    <el-select v-model="editForm.status" placeholder="请选择">
                         <el-option value="有效">有效</el-option>
                         <el-option value="无效">无效</el-option>
                     </el-select>
-				</el-form-item>
+                </el-form-item>
                 <el-form-item label="角色描述">
-					<el-input type="textarea" :rows="5" v-model="addForm.remark" auto-complete="off"></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click="addSubmit('addForm')" :loading="addLoading">提交</el-button>
-			</div>
-		</el-dialog>
+                    <el-input type="textarea" :rows="5" v-model="editForm.remark" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+            </div>
+        </el-dialog>
+
+        <!--新增界面-->
+        <el-dialog title="新增角色" v-model="addFormVisible" :close-on-click-modal="false">
+            <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm" class="demo-ruleForm">
+                <el-form-item label="角色名称" prop="name">
+                    <el-input v-model="addForm.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="角色状态" prop="status">
+                    <el-select v-model="addForm.status" placeholder="请选择">
+                        <el-option value="有效">有效</el-option>
+                        <el-option value="无效">无效</el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="角色描述">
+                    <el-input type="textarea" :rows="5" v-model="addForm.remark" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="addFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="addSubmit('addForm')" :loading="addLoading">提交</el-button>
+            </div>
+        </el-dialog>
 
         <!-- 权限管理界面 -->
-        <el-dialog title="权限设置" v-model="premFormVisible" v-loading="permLoading" :close-on-click-modal="false">
+        <el-dialog title="权限设置" v-model="premFormVisible" :loading="permLoading" :close-on-click-modal="false">
             <el-form :model="permForm" label-width="80px;" ref="permForm">
                 <el-row>
                     <el-col :span="24">
-                        <el-tree
-                        :data="premFormData"
-                        :default-checked-keys="arrayId"
-                        :default-expanded-keys="arrayId"
-                        show-checkbox
-                        node-key="id"
-                        ref="tree"
-                        highlight-current
-                        :props="defaultProps">
+                        <el-tree :data="premFormData" :default-checked-keys="arrayId" :default-expanded-keys="arrayId" show-checkbox node-key="id" ref="tree" highlight-current :props="defaultProps">
                         </el-tree>
                     </el-col>
                 </el-row>
@@ -122,7 +108,7 @@
                 <el-button type="primary" @click.native="premSubmit" :loading="addLoading">提交</el-button>
             </div>
         </el-dialog>
-	</section>
+    </section>
 </template>
 
 <script>
@@ -344,8 +330,8 @@ export default {
     },
     //显示权限设置界面
     handlePrem: function(index, row) {
-      this.arrayId = [];
       this.permLoading = true;
+      this.arrayId = [];
       this.permForm = Object.assign({}, row);
       let self = this;
       self

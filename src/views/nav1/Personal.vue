@@ -1,12 +1,12 @@
 <template>
     <section>
-        <el-form :inline="true" :model="addUser"  status-icon :rules="rulesPerson">
+        <el-form :inline="true" :model="addUser" status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">客户核心信息</strong>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
                         <el-form-item label="客户名称" class="rulesinput" prop="cst_name" :rules="[{required: true, message: '客户名称不能为空'}]">
-                            <el-input v-model="addUser.cst_name" placeholder="客户名称（必填）" ></el-input>
+                            <el-input v-model="addUser.cst_name" placeholder="客户名称（必填）"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
@@ -16,26 +16,26 @@
                                 <el-option value="0" label="个人客户">个人客户</el-option>
                                 <el-option value="1" label="企业客户">企业客户</el-option>
                             </el-select> -->
-                        </el-form-item> 
-                    </el-col>  
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="性别" class="rulesinput">                        
+                        <el-form-item label="性别" class="rulesinput">
                             <el-select v-model="addUser.gender" placeholder="性别" style="width: 100%;">
                                 <el-option value="2" label="未知">未知</el-option>
                                 <el-option value="0" label="男">男</el-option>
                                 <el-option value="1" label="女">女</el-option>
                             </el-select>
-                        </el-form-item>                         
+                        </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
                         <el-form-item label="身份识别手机号" class="rulesinput" prop="cst_phone">
-                            <el-input v-model="addUser.cst_phone" placeholder="身份识别手机号（必填）" ></el-input>
+                            <el-input v-model="addUser.cst_phone" placeholder="身份识别手机号（必填）"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="证件类型" class="rulesinput">                        
+                        <el-form-item label="证件类型" class="rulesinput">
                             <el-select v-model="addUser.card_type" placeholder="证件类型" style="width: 100%;">
                                 <el-option value="-1" label="未知">未知</el-option>
                                 <el-option value="0" label="身份证">身份证</el-option>
@@ -47,19 +47,19 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="证件号码" class="rulesinput">   
+                        <el-form-item label="证件号码" class="rulesinput">
                             <el-input v-model="addUser.cer_no" placeholder="证件号码"></el-input>
                         </el-form-item>
-                    </el-col> 
+                    </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="出生日期" class="rulesinput"> 
+                        <el-form-item label="出生日期" class="rulesinput">
                             <el-date-picker v-model="addUser.birthday" type="date" placeholder="出生日期" :picker-options="pickerOptions0">
                             </el-date-picker>
                         </el-form-item>
                         <!-- <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker> -->
                     </el-col>
-                    <el-col :span="6" style="padding-bottom: 0px;">   
-                        <el-form-item label="客户类别" class="rulesinput"> 
+                    <el-col :span="6" style="padding-bottom: 0px;">
+                        <el-form-item label="客户类别" class="rulesinput">
                             <el-select v-model="addUser.cst_sort" placeholder="客户类别" style="width: 100%;">
                                 <el-option value="0" label="业主">业主</el-option>
                                 <el-option value="1" label="租户">租户</el-option>
@@ -68,7 +68,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-            <!-- </el-col>
+                <!-- </el-col>
             <el-col class="toolbar" style="border-radius: 4px;"> -->
                 <strong class="title">客户基础信息</strong>
                 <el-row :gutter="50">
@@ -78,12 +78,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="民族" class="rulesinput">   
+                        <el-form-item label="民族" class="rulesinput">
                             <el-input v-model="addUser.nation" placeholder="民族"></el-input>
                         </el-form-item>
-                    </el-col>  
+                    </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="VIP客户" class="rulesinput"> 
+                        <el-form-item label="VIP客户" class="rulesinput">
                             <el-select v-model="addUser.viptag" placeholder="VIP客户" style="width: 100%;">
                                 <el-option value="1" label="是">是</el-option>
                                 <el-option value="0" label="否">否</el-option>
@@ -117,9 +117,10 @@
                             <el-input v-model="addUser.office_phone" placeholder="公司电话"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row><el-row :gutter="50">
+                </el-row>
+                <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="居住业态" class="rulesinput">   
+                        <el-form-item label="居住业态" class="rulesinput">
                             <el-select v-model="addUser.resided_state" placeholder="居住业态" style="width: 100%;">
                                 <el-option value="1" label="高层住宅">高层住宅</el-option>
                                 <el-option value="2" label="商业">商业</el-option>
@@ -144,9 +145,10 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                </el-row><el-row :gutter="50">
+                </el-row>
+                <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="来自区域" class="rulesinput">   
+                        <el-form-item label="来自区域" class="rulesinput">
                             <el-select v-model="addUser.comefrom" placeholder="来自区域" style="width: 100%;">
                                 <el-option value="1" label="中国大陆">中国大陆</el-option>
                                 <el-option value="2" label="港/澳">港/澳</el-option>
@@ -174,7 +176,7 @@
                 </el-row>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="职业身份" class="rulesinput">   
+                        <el-form-item label="职业身份" class="rulesinput">
                             <el-select v-model="addUser.work_type" placeholder="职业身份" style="width: 100%;">
                                 <el-option value="108" label="公务员">公务员</el-option>
                                 <el-option value="109" label="教师">教师</el-option>
@@ -203,7 +205,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="家庭结构" class="rulesinput">  
+                        <el-form-item label="家庭结构" class="rulesinput">
                             <el-select v-model="addUser.family" placeholder="家庭结构" style="width: 100%;">
                                 <el-option value="1" label="单身贵族">单身贵族</el-option>
                                 <el-option value="2" label="二人世界">二人世界</el-option>
@@ -217,7 +219,7 @@
                 </el-row>
                 <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="子女人数" class="rulesinput">  
+                        <el-form-item label="子女人数" class="rulesinput">
                             <el-input v-model="addUser.children_cnt" placeholder="子女人数"></el-input>
                         </el-form-item>
                     </el-col>
@@ -244,7 +246,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="是否为主要决策者" class="rulesinput">  
+                        <el-form-item label="是否为主要决策者" class="rulesinput">
                             <el-select v-model="addUser.ismain_jcz" placeholder="是否为主要决策者" style="width: 100%;">
                                 <el-option value="0" label="是">是</el-option>
                                 <el-option value="1" label="否">否</el-option>
@@ -252,9 +254,10 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                </el-row><el-row :gutter="50">
+                </el-row>
+                <el-row :gutter="50">
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="是否养犬" class="rulesinput">   
+                        <el-form-item label="是否养犬" class="rulesinput">
                             <el-select v-model="addUser.pet_stag" placeholder="是否养犬" style="width: 100%;">
                                 <el-option value="1" label="是">是</el-option>
                                 <el-option value="0" label="否">否</el-option>
@@ -273,7 +276,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 0px;">
-                        <el-form-item label="置业次数" class="rulesinput">   
+                        <el-form-item label="置业次数" class="rulesinput">
                             <el-input v-model="addUser.pro_pertycnt" placeholder="置业次数"></el-input>
                         </el-form-item>
                     </el-col>

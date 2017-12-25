@@ -1,88 +1,82 @@
 <template>
-	<section>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="filters">
-				<el-form-item>
-					<el-input v-model="filters.cst_name" placeholder="客户姓名"></el-input>
-				</el-form-item>
+    <section>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+            <el-form :inline="true" :model="filters">
                 <el-form-item>
-					<el-input v-model="filters.cst_phone" placeholder="手机号码"></el-input>
-				</el-form-item>
-				<el-form-item v-for="item in listId" v-if="item.name==='查询'">
-					<el-button type="primary" @click="getSelect(filters)" >查询</el-button>
-				</el-form-item>
-				<el-form-item v-for="item in listId" v-if="item.name==='更多查询'">
-					<el-button type="primary" @click="handleAdd">更多查询</el-button>
-				</el-form-item>
+                    <el-input v-model="filters.cst_name" placeholder="客户姓名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="filters.cst_phone" placeholder="手机号码"></el-input>
+                </el-form-item>
+                <el-form-item v-for="item in listId" v-if="item.name==='查询'">
+                    <el-button type="primary" @click="getSelect(filters)">查询</el-button>
+                </el-form-item>
+                <el-form-item v-for="item in listId" v-if="item.name==='更多查询'">
+                    <el-button type="primary" @click="handleAdd">更多查询</el-button>
+                </el-form-item>
                 <el-form-item v-for="item in listId" v-if="item.name==='新增'">
-					<el-button type="primary" @click="$router.push('/custList/personal')">新增个人客户</el-button>
-				</el-form-item>
+                    <el-button type="primary" @click="$router.push('/custList/personal')">新增个人客户</el-button>
+                </el-form-item>
                 <el-form-item v-for="item in listId" v-if="item.name==='导出'">
-					<el-button type="primary" @click="export2Excel">导出</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
+                    <el-button type="primary" @click="export2Excel">导出</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
 
-		<!--列表-->
-		<el-table :data="usersData" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
-			<!-- <el-table-column type="selection" width="0">
+        <!--列表-->
+        <el-table :data="usersData" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
+            <!-- <el-table-column type="selection" width="0">
 			</el-table-column> -->
-			<el-table-column type="index" label="序号" align="center" width="70">
-			</el-table-column>
-			<el-table-column prop="cst_name" label="客户姓名" min-width="100" align="center">
-			</el-table-column>
-			<el-table-column prop="gender" label="性别" width="70" align="center">
-			</el-table-column>
-			<el-table-column prop="cst_phone" label="手机号码" align="center">
-			</el-table-column>
-			<el-table-column prop="cst_type" label="客户类型" width="100" align="center">
-			</el-table-column>
-			<el-table-column prop="card_type" label="证件类型" width="100" align="center">
-			</el-table-column>
+            <el-table-column type="index" label="序号" align="center" width="70">
+            </el-table-column>
+            <el-table-column prop="cst_name" label="客户姓名" min-width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="gender" label="性别" width="70" align="center">
+            </el-table-column>
+            <el-table-column prop="cst_phone" label="手机号码" align="center">
+            </el-table-column>
+            <el-table-column prop="cst_type" label="客户类型" width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="card_type" label="证件类型" width="100" align="center">
+            </el-table-column>
             <el-table-column prop="cer_no" label="证件号码" min-width="100" align="center">
-			</el-table-column>
-			<el-table-column label="操作" min-width="150" align="center">
-				<template slot-scope="scope">
-					<el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
+            </el-table-column>
+            <el-table-column label="操作" min-width="150" align="center">
+                <template slot-scope="scope">
+                    <el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
                         <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
-                    </el-button>                                                          
-					<el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
+                    </el-button>
+                    <el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
                         <router-link class="routerBtn" :to="{path: `/home/custList/personaledit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
                     </el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar">
-			<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
-			<el-pagination layout="total, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            :total="total"
-            style="float:right;">
-			</el-pagination>
-		</el-col>
-		<!--更多查询界面-->
-		<el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="true">
-			<el-form :model="{checkList}" label-width="80px" ref="addForm">
+                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-for="item in listId" v-if="item.name==='删除'">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar">
+            <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
+            <el-pagination layout="total, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" :total="total" style="float:right;">
+            </el-pagination>
+        </el-col>
+        <!--更多查询界面-->
+        <el-dialog title="更多查询" v-model="addFormVisible" :close-on-click-modal="true">
+            <el-form :model="{checkList}" label-width="80px" ref="addForm">
                 <el-col style="margin-bottom:10px;">
-                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark" >
+                    <el-checkbox-group v-model="checkList" style="margin-bottom:10px;" v-for="(name, index) in addForm" :key="name.remark">
                         <span class="checkBoxs_name">{{name.remark + "："}}</span>
                         <el-checkbox :label="valueName.type + ':' + valueName.code" class="checkWidth" v-for="valueName in name.value" :key="valueName.code">{{valueName.name}}</el-checkbox>
                         <hr>
                     </el-checkbox-group>
                 </el-col>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click="getUsers" :loading="addLoading">查询</el-button>
-			</div>
-		</el-dialog>
-	</section>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="addFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="getUsers" :loading="addLoading">查询</el-button>
+            </div>
+        </el-dialog>
+    </section>
 </template>
 
 <script>
@@ -168,14 +162,18 @@ export default {
     },
     //加载分页数据
     loadData(pageNum, pageSize) {
+      this.queryParams.page_num = pageNum;
+      this.queryParams.page_size = pageSize;
+      this.listLoading = true;
       this.$http({
         method: "post", //方法
         url: "cust/list", //地址
-        data: {
-          cst_type: 0,
-          page_num: pageNum,
-          page_size: pageSize
-        },
+        data: this.queryParams,
+        // data: {
+        //   cst_type: 0,
+        //   page_num: pageNum,
+        //   page_size: pageSize
+        // },
         headers: {
           sign: localStorage.getItem("sign")
         }

@@ -1,138 +1,132 @@
 <template>
-	<section>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="UserDoQuery">
-				<el-form-item>
-					<el-input v-model="UserDoQuery.name" placeholder="用户姓名"></el-input>
-				</el-form-item>
+    <section>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+            <el-form :inline="true" :model="UserDoQuery">
                 <el-form-item>
-					<el-input v-model="UserDoQuery.oper_id" placeholder="登陆账号"></el-input>
-				</el-form-item>
+                    <el-input v-model="UserDoQuery.name" placeholder="用户姓名"></el-input>
+                </el-form-item>
                 <el-form-item>
-					<el-select v-model="UserDoQuery.status" placeholder="账号状态">
+                    <el-input v-model="UserDoQuery.oper_id" placeholder="登陆账号"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-select v-model="UserDoQuery.status" placeholder="账号状态">
                         <el-option value="有效">有效</el-option>
                         <el-option value="无效">无效</el-option>
                     </el-select>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" v-on:click="getUsersByQuery">查询</el-button>
-				</el-form-item>
+                </el-form-item>
                 <el-form-item>
-					<el-button type="primary" @click="handleAdd">新增用户</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
+                    <el-button type="primary" v-on:click="getUsersByQuery">查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleAdd">新增用户</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
 
-		<!--列表-->
-		<el-table :data="users" highlight-current-row stripe v-loading="listLoading"  style="width: 100%;">
-			<!-- <el-table-column type="index" label="序号" align="center" width="70">
+        <!--列表-->
+        <el-table :data="users" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
+            <!-- <el-table-column type="index" label="序号" align="center" width="70">
 			</el-table-column> -->
-			<el-table-column prop="name" label="用户姓名" width="200" align="center">
-			</el-table-column>
-			<el-table-column prop="oper_id" label="登陆账号" width="200" align="center">
-			</el-table-column>
-			<!-- <el-table-column prop="department" label="所在部门" width="100" align="center">
+            <el-table-column prop="name" label="用户姓名" width="200" align="center">
+            </el-table-column>
+            <el-table-column prop="oper_id" label="登陆账号" width="200" align="center">
+            </el-table-column>
+            <!-- <el-table-column prop="department" label="所在部门" width="100" align="center">
 			</el-table-column>
 			<el-table-column prop="position" label="职位" width="100" align="center">
 			</el-table-column> -->
-      <el-table-column prop="status" label="账号状态" width="200" align="center">
-			</el-table-column>
-			<el-table-column label="操作" min-width="150" align="center">
-				<template slot-scope="scope">
-					<el-button size="small" @click="handlePerm(scope.$index, scope.row)">权限设置</el-button>                    
-					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
+            <el-table-column prop="status" label="账号状态" width="200" align="center">
+            </el-table-column>
+            <el-table-column label="操作" min-width="150" align="center">
+                <template slot-scope="scope">
+                    <el-button size="small" @click="handlePerm(scope.$index, scope.row)">权限设置</el-button>
+                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
 
-		<!--工具条-->
-		<el-col :span="24" class="toolbar">
-      <el-pagination layout="total, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            :total="totalCount"
-            style="float:right;">
-			</el-pagination>
-		</el-col>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar">
+            <el-pagination layout="total, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" :total="totalCount" style="float:right;">
+            </el-pagination>
+        </el-col>
 
-		<!--编辑界面-->
-		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="登陆账号" prop="oper_id">
-					<el-input v-model="editForm.oper_id" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="用户姓名" prop="name">
-					<el-input v-model="editForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="重置密码" prop="oper_pwd">
-					<el-input type="password" v-model="editForm.oper_pwd" auto-complete="off"></el-input>
-				</el-form-item>
-				<!-- <el-form-item label="所在部门">
+        <!--编辑界面-->
+        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+                <el-form-item label="登陆账号" prop="oper_id">
+                    <el-input v-model="editForm.oper_id" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="用户姓名" prop="name">
+                    <el-input v-model="editForm.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="重置密码" prop="oper_pwd">
+                    <el-input type="password" v-model="editForm.oper_pwd" auto-complete="off"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="所在部门">
 					<el-input v-model="editForm.department" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="职位">
 					<el-input v-model="editForm.position" auto-complete="off"></el-input>
 				</el-form-item> -->
-         <el-form-item label="状态">
-					          <el-radio v-model="editForm.status" label="有效">有效</el-radio>
+                <el-form-item label="状态">
+                    <el-radio v-model="editForm.status" label="有效">有效</el-radio>
                     <el-radio v-model="editForm.status" label="无效">无效</el-radio>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="editFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="editUserSubmit" :loading="editLoading">提交</el-button>
-			</div>
-		</el-dialog>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="editUserSubmit" :loading="editLoading">提交</el-button>
+            </div>
+        </el-dialog>
 
         <!--新增界面-->
-		<el-dialog title="新增用户" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="登陆账号" prop="oper_id">
-					<el-input v-model="addForm.oper_id" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="用户姓名" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="登录密码" prop="oper_pwd">
-					<el-input type="password" v-model="addForm.oper_pwd" auto-complete="off"></el-input>
-				</el-form-item>
-				<!-- <el-form-item label="所在部门">
+        <el-dialog title="新增用户" v-model="addFormVisible" :close-on-click-modal="false">
+            <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+                <el-form-item label="登陆账号" prop="oper_id">
+                    <el-input v-model="addForm.oper_id" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="用户姓名" prop="name">
+                    <el-input v-model="addForm.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="登录密码" prop="oper_pwd">
+                    <el-input type="password" v-model="addForm.oper_pwd" auto-complete="off"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="所在部门">
 					<el-input v-model="addForm.department" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="职位">
 					<el-input v-model="addForm.position" auto-complete="off"></el-input>
 				</el-form-item> -->
-         <el-form-item label="状态">
-					   <el-radio v-model="addForm.status"  label="有效">有效</el-radio>
-             <el-radio v-model="addForm.status"  label="无效">无效</el-radio>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="addFormVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addUserSubmit" :loading="addLoading">提交</el-button>
-			</div>
-		</el-dialog>
-		
+                <el-form-item label="状态">
+                    <el-radio v-model="addForm.status" label="有效">有效</el-radio>
+                    <el-radio v-model="addForm.status" label="无效">无效</el-radio>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="addFormVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="addUserSubmit" :loading="addLoading">提交</el-button>
+            </div>
+        </el-dialog>
+
         <!--用户权限界面-->
-		<el-dialog title="用户权限" v-model="permFormVisible" :close-on-click-modal="false">
-			<!-- <el-form :model="permForm" label-width="80px" ref="permForm"> -->
-                <el-checkbox-group v-model="checkList" style="margin-bottom:10px;">
-                    <el-col :span="24">
-                        <el-checkbox v-for="checkName in checkNames" :label="checkName.id"  >{{checkName.name}}</el-checkbox> 
-                    </el-col>
-                </el-checkbox-group>
+        <el-dialog title="用户权限" v-model="permFormVisible" :close-on-click-modal="false">
+            <!-- <el-form :model="permForm" label-width="80px" ref="permForm"> -->
+            <el-checkbox-group v-model="checkList" style="margin-bottom:10px;">
+                <el-col :span="24">
+                    <el-checkbox v-for="checkName in checkNames" :label="checkName.id">{{checkName.name}}</el-checkbox>
+                </el-col>
+            </el-checkbox-group>
             <!-- <el-checkbox v-for="checkName in checkNames" :key="checkName.id" v-model="permForm.checkList">{{checkName.name}}</el-checkbox> -->
-			<!-- </el-form> -->
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="closePermWindow">取消</el-button>
-				<el-button type="primary" @click.native="permSubmit" :loading="permLoading">提交</el-button>
-			</div>
-		</el-dialog>
-	</section>
+            <!-- </el-form> -->
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="closePermWindow">取消</el-button>
+                <el-button type="primary" @click.native="permSubmit" :loading="permLoading">提交</el-button>
+            </div>
+        </el-dialog>
+    </section>
 </template>
 
 <script>
@@ -233,6 +227,7 @@ export default {
     },
     //获取用户列表
     getUsers(pageNum, pageSize) {
+      this.listLoading = true;
       this.$http({
         // 字典列表
         method: "post", //方法
