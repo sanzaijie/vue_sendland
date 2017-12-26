@@ -1,50 +1,47 @@
 <template>
-	<section>
-		<!--工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="dateForm">
+    <section>
+        <!--工具条-->
+        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+            <el-form :inline="true" :model="dateForm">
                 <el-form-item>
                     <el-date-picker v-model="dateForm.begin_date" type="date" placeholder="开始日期" @change="logTimeChange">
-                    </el-date-picker>    
+                    </el-date-picker>
                     <el-date-picker v-model="dateForm.end_date" type="date" placeholder="结束日期" @change="logTimeChange">
                     </el-date-picker>
                 </el-form-item>
-				<el-form-item>
-					<el-button type="primary" @click="onSearchData">查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-col>
+                <el-form-item>
+                    <el-button type="primary" @click="onSearchData">查询</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
         <!-- <div v-for="(o, index) in codeSystem" :key="index" :class="clicked ? 'box-card-active' : 'box-card'"> -->
-            <div @click="onClickSystem(o.name, index)"
-            v-for="(o, index) in codeSystem"
-            :key="index" 
-            :class="ind === index?'box-card-active':'box-card'">
-                <div  class="text item">
-                    {{o.name}}
-                </div>
-                <div class="text item">
-                    新增客户: {{o.addNum}}
-                </div>
-                <div class="text item">
-                    修改客户: {{o.modifyNum}}
-                </div>
+        <div @click="onClickSystem(o.name, index)" v-for="(o, index) in codeSystem" :key="index" :class="ind === index?'box-card-active':'box-card'">
+            <div class="text item">
+                {{o.name}}
             </div>
+            <div class="text item">
+                新增客户: {{o.addNum}}
+            </div>
+            <div class="text item">
+                修改客户: {{o.modifyNum}}
+            </div>
+        </div>
         <!-- </div> -->
 
         <!--列表-->
         <el-table :data="listData" highlight-current-row stripe v-loading="listLoading" style="width: 100%;">
             <el-table-column type="index" label="序号" align="center" width="70">
-			</el-table-column>
-			<el-table-column prop="name" label="接口名称" min-width="100" align="center">
-			</el-table-column>
-			<el-table-column prop="totalCount" label="消息数量" width="100" align="center">
-			</el-table-column>
-			<el-table-column prop="requestSystem" label="调用系统" width="150" align="center">
-			</el-table-column>
-			<el-table-column prop="count_result" sortable label="消息结果" min-width="100" align="center" >
             </el-table-column>
-		</el-table>
-	</section>
+            <el-table-column prop="name" label="接口名称" min-width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="totalCount" label="消息数量" width="100" align="center">
+            </el-table-column>
+            <el-table-column prop="request_system" label="调用系统" width="150" align="center">
+            </el-table-column>
+            <el-table-column prop="count_result" sortable label="消息结果" min-width="100" align="center">
+            </el-table-column>
+        </el-table>
+    </section>
 </template>
 
 <script>
@@ -170,7 +167,7 @@ export default {
           for (let j = 0; j < dataArray.length; j++) {
             if (dataArray[j]) {
               if (
-                dataArray[j].requestSystem == bottomBody[i].requestSystem &&
+                dataArray[j].request_system == bottomBody[i].request_system &&
                 dataArray[j].name == bottomBody[i].name
               ) {
                 isFind = true;
@@ -198,14 +195,14 @@ export default {
           }
           if (!isFind) {
             let _dataTmp = {
-              requestSystem: "",
+              request_system: "",
               name: null,
               successCount: 0,
               failCount: 0,
               totalCount: 0,
               count_result: null
             };
-            _dataTmp.requestSystem = bottomBody[i].requestSystem;
+            _dataTmp.request_system = bottomBody[i].request_system;
             _dataTmp.name = bottomBody[i].name;
             if (bottomBody[i].status == 1) {
               //成功数

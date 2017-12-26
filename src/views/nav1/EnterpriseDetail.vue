@@ -1,9 +1,9 @@
 <template>
     <section class="bg">
         <el-row>
-        <el-col :span="1" class="close">
-			<el-button type="danger" size="small" @click="close">告辞</el-button>
-		</el-col>
+            <el-col :span="1" class="close">
+                <el-button type="danger" size="small" @click="close">告辞</el-button>
+            </el-col>
         </el-row>
         <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
             <el-tab-pane label="客户资料" name="first">
@@ -23,11 +23,11 @@
                                         <label>公司名称:</label>
                                         <span>{{detailUser.cst_name}}</span>
                                     </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
+                                    <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>传真:</label>
                                         <span>{{detailUser.fax}}</span>
-                                    </el-col>  
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
+                                    </el-col>
+                                    <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>法人代表:</label>
                                         <span>{{detailUser.corporation}}</span>
                                     </el-col>
@@ -37,32 +37,32 @@
                                     </el-col>
                                 </el-row>
                                 <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
+                                    <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>公司类别:</label>
                                         <span>{{detailUser.enter_nature}}</span>
                                     </el-col>
                                     <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>所属行业:</label>
                                         <span>{{detailUser.by_sector}}</span>
-                                    </el-col> 
+                                    </el-col>
                                     <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>营业执照:</label>
                                         <span>{{detailUser.lic_no}}</span>
                                     </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
+                                    <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>主营业务:</label>
                                         <span>{{detailUser.orientation}}</span>
                                     </el-col>
                                 </el-row>
                                 <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
+                                    <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>证件类型:</label>
                                         <span>{{detailUser.card_type}}</span>
                                     </el-col>
                                     <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>证件号码:</label>
                                         <span>{{detailUser.cer_no}}</span>
-                                    </el-col> 
+                                    </el-col>
                                     <el-col :span="6" style="padding-bottom: 0px;">
                                         <label>客户类型:</label>
                                         <span>{{detailUser.cst_type}}</span>
@@ -98,11 +98,11 @@
                                     <label>联系人姓名:</label>
                                     <span>{{detailUser.link_man}}</span>
                                 </el-col>
-                                <el-col :span="6" style="padding-bottom: 0px;">   
+                                <el-col :span="6" style="padding-bottom: 0px;">
                                     <label>身份识别手机号:</label>
                                     <span>{{detailUser.cst_phone}}</span>
-                                </el-col>  
-                                <el-col :span="6" style="padding-bottom: 0px;">   
+                                </el-col>
+                                <el-col :span="6" style="padding-bottom: 0px;">
                                     <label>手机号码1:</label>
                                     <span>{{detailUser.contact1}}</span>
                                 </el-col>
@@ -112,7 +112,7 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="50">
-                                <el-col :span="6" style="padding-bottom: 0px;">   
+                                <el-col :span="6" style="padding-bottom: 0px;">
                                     <label>手机号码3:</label>
                                     <span>{{detailUser.contact3}}</span>
                                 </el-col>
@@ -143,116 +143,111 @@
                     </el-collapse-item>
                 </el-collapse>
 
-
                 <el-collapse accordion @change="getNeed">
                     <el-collapse-item title="客户需求信息">
-                        
-                        <el-tabs v-model="activeName3" type="border-card" @tab-click="handleClickNeed">
-                            <el-tab-pane 
-                            :label="item.pj_name" 
-                            :name="item.proj_id" 
-                            v-for="(item, index) in projectData" 
-                            :key="item.proj_id">
 
-                        <el-form :inline="true" :model="{needUser}" ref="needUser"> 
-                            <el-col class="toolbar">
-                                <strong class="title">客户需求信息</strong>
-                                <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>需求业态:</label>
-                                        <span>{{needUser.demand}}</span>
+                        <el-tabs v-model="activeName3" type="border-card" @tab-click="handleClickNeed">
+                            <el-tab-pane :label="item.pj_name" :name="item.proj_id" v-for="(item, index) in projectData" :key="item.proj_id">
+
+                                <el-form :inline="true" :model="{needUser}" ref="needUser">
+                                    <el-col class="toolbar">
+                                        <strong class="title">客户需求信息</strong>
+                                        <el-row :gutter="50">
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>需求业态:</label>
+                                                <span>{{needUser.demand}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>需求楼层:</label>
+                                                <span>{{needUser.louceng}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>需求户型:</label>
+                                                <span>{{needUser.house_type}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>需求套数:</label>
+                                                <span>{{needUser.xqts}}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row :gutter="50">
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>购房预算:</label>
+                                                <span>{{needUser.gfys}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>购房用途:</label>
+                                                <span>{{needUser.gfyt}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>需求面积:</label>
+                                                <span>{{needUser.area}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>关注景观:</label>
+                                                <span>{{needUser.gzjg}}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row :gutter="50">
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>意向房间:</label>
+                                                <span>{{needUser.intention}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>意向分期:</label>
+                                                <span>{{needUser.stages}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>关注期数:</label>
+                                                <span>{{needUser.gzqs}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>客户分级:</label>
+                                                <span>{{needUser.cst_level}}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row :gutter="50">
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>最关注方面:</label>
+                                                <span>{{needUser.favorite}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>最关注因素:</label>
+                                                <span>{{needUser.favorite_bc}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>来访次数:</label>
+                                                <span>{{needUser.visiting_times}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>认知媒体大类:</label>
+                                                <span>{{needUser.media_big}}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row :gutter="50">
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>认知媒体子类:</label>
+                                                <span>{{needUser.media_small}}</span>
+                                            </el-col>
+                                            <el-col :span="6" style="padding-bottom: 0px;">
+                                                <label>来源渠道:</label>
+                                                <span>{{needUser.cognitive_approach}}</span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-table :data="followUser" style="width: 100%">
+                                                <el-table-column type="index" label="序号" width="80px"></el-table-column>
+                                                <el-table-column prop="intention_level" label="意向等级" width="100"></el-table-column>
+                                                <el-table-column prop="key_behaviors" label="关键行为"> </el-table-column>
+                                                <el-table-column prop="contact_content" label="沟通内容"> </el-table-column>
+                                                <el-table-column prop="next_content" label="跟进详情"> </el-table-column>
+                                                <el-table-column prop="contact_mode" label="跟进方式"> </el-table-column>
+                                                <el-table-column prop="contact_person" label="跟进人"> </el-table-column>
+                                                <el-table-column prop="createtime" label="跟进日期"> </el-table-column>
+                                            </el-table>
+                                        </el-row>
                                     </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>需求楼层:</label>
-                                        <span>{{needUser.louceng}}</span>
-                                    </el-col>  
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>需求户型:</label>
-                                        <span>{{needUser.house_type}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>需求套数:</label>
-                                        <span>{{needUser.xqts}}</span>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>购房预算:</label>
-                                        <span>{{needUser.gfys}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>购房用途:</label>
-                                        <span>{{needUser.gfyt}}</span>
-                                    </el-col> 
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>需求面积:</label>
-                                        <span>{{needUser.area}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>关注景观:</label>
-                                        <span>{{needUser.gzjg}}</span>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>意向房间:</label>
-                                        <span>{{needUser.intention}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>意向分期:</label>
-                                        <span>{{needUser.stages}}</span>
-                                    </el-col> 
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>关注期数:</label>
-                                        <span>{{needUser.gzqs}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>客户分级:</label>
-                                        <span>{{needUser.cst_level}}</span>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>最关注方面:</label>
-                                        <span>{{needUser.favorite}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>最关注因素:</label>
-                                        <span>{{needUser.favorite_bc}}</span>
-                                    </el-col> 
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>来访次数:</label>
-                                        <span>{{needUser.visiting_times}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>认知媒体大类:</label>
-                                        <span>{{needUser.media_big}}</span>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="50">
-                                    <el-col :span="6" style="padding-bottom: 0px;">   
-                                        <label>认知媒体子类:</label>
-                                        <span>{{needUser.media_small}}</span>
-                                    </el-col>
-                                    <el-col :span="6" style="padding-bottom: 0px;">
-                                        <label>来源渠道:</label>
-                                        <span>{{needUser.cognitive_approach}}</span>
-                                    </el-col> 
-                                </el-row>
-                                <el-row>
-                                    <el-table :data="followUser" style="width: 100%">
-                                        <el-table-column type="index" label="序号" width="80px"></el-table-column>
-                                        <el-table-column prop="intention_level" label="意向等级" width="100"></el-table-column>
-                                        <el-table-column prop="key_behaviors" label="关键行为"> </el-table-column>
-                                        <el-table-column prop="contact_content" label="沟通内容"> </el-table-column>
-                                        <el-table-column prop="next_content" label="跟进详情"> </el-table-column>
-                                        <el-table-column prop="contact_mode" label="跟进方式"> </el-table-column>
-                                        <el-table-column prop="contact_person" label="跟进人"> </el-table-column>
-                                        <el-table-column prop="createtime" label="跟进日期"> </el-table-column>
-                                    </el-table>
-                                </el-row>
-                            </el-col>
-                        </el-form>
+                                </el-form>
                             </el-tab-pane>
                         </el-tabs>
                     </el-collapse-item>
@@ -268,13 +263,13 @@
                         </el-form-item>
                         <el-form-item>
                             <el-date-picker v-model="filters.begin_time" type="date" placeholder="开始日期">
-                            </el-date-picker>    
+                            </el-date-picker>
                             <el-date-picker v-model="filters.end_time" type="date" placeholder="结束日期">
                             </el-date-picker>
                         </el-form-item>
                         <el-form-item>
                             <el-select v-model="filters.fromsys" placeholder="请选择">
-                                <el-option vaule=" ">全部</el-option>                                
+                                <el-option vaule=" ">全部</el-option>
                                 <el-option value="拓客系统app">拓客系统app</el-option>
                                 <el-option value="移动案场app">移动案场app</el-option>
                                 <el-option value="销售系统">销售系统</el-option>
@@ -283,7 +278,8 @@
                                 <el-option value="贝壳树微信号">贝壳树微信号</el-option>
                                 <el-option value="微信客服系统">微信客服系统</el-option>
                                 <el-option value="客户服务管理系统">客户服务管理系统</el-option>
-                                <el-option value="物业客户服务管理系统">物业客户服务管理系统</el-option>                                    <el-option value="普及E家app">普及E家app</el-option>
+                                <el-option value="物业客户服务管理系统">物业客户服务管理系统</el-option>
+                                <el-option value="普及E家app">普及E家app</el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item>
@@ -315,13 +311,7 @@
                 <!--工具条-->
                 <el-col :span="24" class="toolbar">
                     <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
-                    <el-pagination layout="total, prev, pager, next, jumper"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="pageSize"
-                    :total="total"
-                    style="float:right;">
+                    <el-pagination layout="total, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" :total="total" style="float:right;">
                     </el-pagination>
                 </el-col>
             </el-tab-pane>
@@ -371,7 +361,7 @@ export default {
       ],
       activeName: "1",
       activeName2: "first",
-      activeName3: "",
+      activeName3: ""
     };
   },
   methods: {
@@ -472,6 +462,13 @@ export default {
                   }
                   //   console.log(res);
                   this.followUser = res.data.data;
+                  let followG = this.followUser;
+                  for (let i = 0; i < followG.length; i++) {
+                    followG[i].createtime = moment(
+                      followG[i].createtime
+                    ).format("YYYY/MM/DD");
+                  }
+                  this.followUser = followG;
                 });
               }
             }
@@ -571,6 +568,11 @@ export default {
         }
         //   console.log(res);
         this.projectData = res.data.data;
+        let usersG = this.projectData;
+        for (let i = 0; i < usersG.length; i++) {
+          usersG[i].join_status = change._joinStatus(usersG[i].join_status);
+        }
+        this.projectData = usersG;
       });
     },
     getNeed() {

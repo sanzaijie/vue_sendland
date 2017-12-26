@@ -14,6 +14,7 @@
 * 有无保姆同住 have_bm
 * 是否为主要决策者 ismain_jcz
 * 是否养犬 pet_stag
+* 客户状态 join_status
 */
 
 // 性别 gender
@@ -171,7 +172,7 @@ export function _cardTcard_typeype(card_type) {
     } else if (card_type == 4) {
         card_type = "台胞证"
     } else if (card_type == 0) {
-        card_type = "身份证"        
+        card_type = "身份证"
     } else {
         card_type = "未知"
     }
@@ -252,15 +253,39 @@ export function _petStag(pet_stag) {
     return pet_stag
 }
 
+// 客户状态 join_status
+export function _joinStatus(join_status) {
+    if (join_status == 1) {
+        join_status = "推荐"
+    } else if (join_status == 2) {
+        join_status = "拓客"
+    } else if (join_status == 3) {
+        join_status = "来电（问询）"
+    } else if (join_status == 4) {
+        join_status = "来访（看房，预约）"
+    } else if (join_status == 5) {
+        join_status = "认筹"
+    } else if (join_status == 6) {
+        join_status = "认购"
+    } else if (join_status == 7) {
+        join_status = "签约"
+    } else if (join_status == 8) {
+        join_status = "入住（交楼）"
+    } else if (join_status == 9) {
+        join_status = "迁出（丢失）"
+    }
+    return join_status
+}
+
 export function fromTo(fromTo1) {
     let fromTo = fromTo1;
     if (fromTo1 == "from") {
         fromTo = "请求";
     } else if (fromTo1 == "to") {
-        fromTo ="应答";
+        fromTo = "应答";
     } else if (fromTo1 == "sync") {
         fromTo = "反向同步";
-    } 
+    }
     return fromTo;
 }
 
@@ -271,10 +296,10 @@ export function _fromTo(fromTo1) {
     } else if (fromTo1 == "请求") {
         fromTo = "from";
     } else if (fromTo1 == "应答") {
-        fromTo ="to";
+        fromTo = "to";
     } else if (fromTo1 == "反向同步") {
         fromTo = "sync";
-    } 
+    }
     return fromTo;
 }
 
@@ -288,7 +313,7 @@ export function PubMsgLogStatus(status1) {
         status = "对方已接收";
     } else if (status1 == -1) {
         status = "失败";
-    } 
+    }
     return status;
 }
 
@@ -304,6 +329,7 @@ export function _PubMsgLogStatus(status1) {
         status = 3;
     } else if (status1 == "失败") {
         status = -1;
-    } 
+    }
     return status;
 }
+
