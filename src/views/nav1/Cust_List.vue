@@ -45,7 +45,7 @@
             <el-table-column label="操作" min-width="150" align="center">
                 <template slot-scope="scope">
                     <el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
-                        <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" @click="opennew">详情</router-link>
+                        <router-link class="routerBtn" :to="{path: `/home/custList/personaldetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>
                     </el-button>
                     <el-button size="small" v-for="item in listId" v-if="item.name==='编辑'">
                         <router-link class="routerBtn" :to="{path: `/home/custList/personaledit?cust_id=${scope.row.cust_id}`}" target="_blank">编辑</router-link>
@@ -128,9 +128,6 @@ export default {
   },
   beforeCreate() {},
   methods: {
-    opennew() {
-      window.open(" ");
-    },
     // 导出列表
     export2Excel() {
       // const form = this.getSearchForm(); // 要发送到后台的数据

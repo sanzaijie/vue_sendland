@@ -238,7 +238,7 @@
                         <el-collapse-item title="客户需求信息">
 
                             <el-tabs v-model="activeName3" type="border-card" @tab-click="handleClickNeed">
-                                <el-tab-pane :label="item.pj_name" :name="item.proj_id" v-for="(item, index) in projectData" :key="item.proj_id">
+                                <el-tab-pane :label="item.pj_name" :name="item.intention_id" v-for="(item, index) in projectData" :key="item.intention_id">
                                     <el-form :inline="true" :model="{needUser}" ref="needUser">
                                         <el-col class="toolbar">
                                             <strong class="title">客户需求信息</strong>
@@ -480,92 +480,92 @@ export default {
     },
     // 个人需求信息项目名称
     handleClickNeed(tab, event) {
+      //   this.$http({
+      //     method: "post",
+      //     url: "cust/person/need/list",
+      //     data: {
+      //       cust_id: this.$route.query.cust_id
+      //     },
+      //     headers: {
+      //       sign: localStorage.getItem("sign")
+      //     }
+      //   })
+      //     .then(res => {
+      //       if (
+      //         "ECONNABORTED" == res.code &&
+      //         res.message.indexOf("timeout") != -1
+      //       ) {
+      //         this.$message.error("网络异常,请求超时");
+      //         return false;
+      //       }
+      //       this.projectData = res.data.data;
+      //     })
+      //     .then(res => {
+      //       try {
+      //         if (
+      //           "ECONNABORTED" == res.code &&
+      //           res.message.indexOf("timeout") != -1
+      //         ) {
+      //           this.$message.error("网络异常,请求超时");
+      //           return false;
+      //         }
+      //       } catch (error) {}
+
       this.$http({
         method: "post",
-        url: "cust/person/project/detail",
+        url: "cust/person/need/detail",
         data: {
-          cust_id: this.$route.query.cust_id
+          //   cust_id: this.$route.query.cust_id,
+          intention_id: tab.name
         },
         headers: {
           sign: localStorage.getItem("sign")
         }
-      })
-        .then(res => {
-          if (
-            "ECONNABORTED" == res.code &&
-            res.message.indexOf("timeout") != -1
-          ) {
-            this.$message.error("网络异常,请求超时");
-            return false;
-          }
-          this.projectData = res.data.data;
-        })
-        .then(res => {
-          try {
-            if (
-              "ECONNABORTED" == res.code &&
-              res.message.indexOf("timeout") != -1
-            ) {
-              this.$message.error("网络异常,请求超时");
-              return false;
-            }
-          } catch (error) {}
-
-          this.$http({
-            method: "post",
-            url: "cust/person/need/detail",
-            data: {
-              cust_id: this.$route.query.cust_id,
-              proj_id: tab.name
-            },
-            headers: {
-              sign: localStorage.getItem("sign")
-            }
-          }).then(res => {
-            if (
-              res.code == "ECONNABORTED" &&
-              res.message.indexOf("timeout") != -1
-            ) {
-              this.$message.error("网络异常,请求超时");
-              return false;
-            }
-            if (res.data.data) {
-              this.needUser = res.data.data;
-              var intenID = this.needUser.intention_id;
-              if (intenID != "") {
-                // 查看个人客户跟进信息
-                this.$http({
-                  method: "post",
-                  url: "cust/person/follow/detail",
-                  data: {
-                    cust_id: this.$route.query.cust_id,
-                    intention_id: intenID
-                  },
-                  headers: {
-                    sign: localStorage.getItem("sign")
-                  }
-                }).then(res => {
-                  if (
-                    res.code == "ECONNABORTED" &&
-                    res.message.indexOf("timeout") != -1
-                  ) {
-                    this.$message.error("网络异常,请求超时");
-                    return false;
-                  }
-                  //   console.log(res);
-                  this.followUser = res.data.data;
-                  let followG = this.followUser;
-                  for (let i = 0; i < followG.length; i++) {
-                    followG[i].createtime = moment(
-                      followG[i].createtime
-                    ).format("YYYY/MM/DD");
-                  }
-                  this.followUser = followG;
-                });
+      }).then(res => {
+        if (
+          res.code == "ECONNABORTED" &&
+          res.message.indexOf("timeout") != -1
+        ) {
+          this.$message.error("网络异常,请求超时");
+          return false;
+        }
+        if (res.data.data) {
+          this.needUser = res.data.data;
+          var intenID = this.needUser.intention_id;
+          if (intenID != "") {
+            // 查看个人客户跟进信息
+            this.$http({
+              method: "post",
+              url: "cust/person/follow/detail",
+              data: {
+                cust_id: this.$route.query.cust_id,
+                intention_id: intenID
+              },
+              headers: {
+                sign: localStorage.getItem("sign")
               }
-            }
-          });
-        });
+            }).then(res => {
+              if (
+                res.code == "ECONNABORTED" &&
+                res.message.indexOf("timeout") != -1
+              ) {
+                this.$message.error("网络异常,请求超时");
+                return false;
+              }
+              //   console.log(res);
+              this.followUser = res.data.data;
+              let followG = this.followUser;
+              for (let i = 0; i < followG.length; i++) {
+                followG[i].createtime = moment(followG[i].createtime).format(
+                  "YYYY/MM/DD"
+                );
+              }
+              this.followUser = followG;
+            });
+          }
+        }
+      });
+      // });
     },
     close() {
       this.$confirm("确定要关闭此页面嘛？", "关闭", {
@@ -645,6 +645,7 @@ export default {
         method: "post",
         url: "cust/person/project/detail",
         data: {
+          //   cust_id: this.$route.query.cust_id
           cust_id: this.$route.query.cust_id
         },
         headers: {
@@ -688,13 +689,24 @@ export default {
         }
         //   console.log(res);
         this.relationData = res.data.data;
+        for (let i = 0; i < this.relationData.length; i++) {
+          this.relationData[i].rela_type = change.relaType(
+            this.relationData[i].rela_type
+          );
+          this.relationData[i].rela_type2 = change.relaType2(
+            this.relationData[i].rela_type2
+          );
+          this.relationData[i].gender = change.Gender(
+            this.relationData[i].gender
+          );
+        }
       });
     },
     getNeed() {
       // 查看个人客户需求信息
       this.$http({
         method: "post",
-        url: "cust/person/project/detail",
+        url: "cust/person/need/list",
         data: {
           cust_id: this.$route.query.cust_id
         },

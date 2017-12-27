@@ -79,14 +79,14 @@ export default {
             .then(
               res => {
                 //   let { error_code } = res;
-                // if (
-                //   res.code == "ECONNABORTED" &&
-                //   res.message.indexOf("timeout") != -1
-                // ) {
-                //   this.$message.error("网络异常,请求超时");
-                //   self.logining = false;
-                //   return false;
-                // }
+                if (
+                  res.code == "ECONNABORTED" &&
+                  res.message.indexOf("timeout") != -1
+                ) {
+                  this.$message.error("网络异常,请求超时");
+                  self.logining = false;
+                  return false;
+                }
                 if (
                   res.data.error_code == 0 &&
                   res.data.error_code != undefined
@@ -127,10 +127,10 @@ export default {
                   self.logining = false;
                   self.$message.error(res.data.error_message);
                 }
+              },
+              err => {
+                self.$message.error(res.data.error_message);
               }
-              //   err => {
-              //     self.$message.error(res.data.error_message);
-              //   }
             );
         } else {
           self.$message.error(res.data.error_message);

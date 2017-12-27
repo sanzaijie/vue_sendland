@@ -15,6 +15,8 @@
 * 是否为主要决策者 ismain_jcz
 * 是否养犬 pet_stag
 * 客户状态 join_status
+* 客户一级关系 rela_type
+* 客户二级关系 rela_type2
 */
 
 // 性别 gender
@@ -275,6 +277,32 @@ export function _joinStatus(join_status) {
         join_status = "迁出（丢失）"
     }
     return join_status
+}
+
+// 客户一级关系 rela_type
+export function relaType(rela_type) {
+    if (rela_type == 1) {
+        rela_type = "家人"
+    } else if (rela_type == 2) {
+        rela_type = "租客"
+    } else if (rela_type == 3) {
+        rela_type = "保姆"
+    } else if (rela_type == 4) {
+        rela_type = "暂住"
+    }
+    return rela_type
+}
+
+// 客户二级关系 rela_type2
+export function relaType2(rela_type2) {
+    if (rela_type2 == 28001) {
+        rela_type2 = "夫妻"
+    } else if (rela_type2 == 28002) {
+        rela_type2 = "子女"
+    } else if (rela_type2 == 28003) {
+        rela_type2 = "亲戚"
+    }
+    return rela_type2
 }
 
 export function fromTo(fromTo1) {

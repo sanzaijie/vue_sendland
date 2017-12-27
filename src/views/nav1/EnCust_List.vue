@@ -51,7 +51,7 @@
             </el-table-column>
             <el-table-column prop="cer_no" label="证件号码" min-width="100" align="center">
             </el-table-column>
-            <el-table-column label="操作" width="200" align="center">
+            <el-table-column label="操作" min-width="150" align="center">
                 <template slot-scope="scope">
                     <el-button size="small" v-for="item in listId" v-if="item.name==='详细'">
                         <router-link class="routerBtn" :to="{path: `/home/encustlist/enterprisedetail?cust_id=${scope.row.cust_id}`}" target="_blank">详情</router-link>

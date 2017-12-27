@@ -14,6 +14,7 @@ Vue.prototype.change = change
 //Vue.prototype.$dateFormat = dateFormat
 // import Mock from './mock'
 import 'font-awesome/css/font-awesome.min.css'
+import locale from 'element-ui/lib/mixins/locale';
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
@@ -27,16 +28,21 @@ Axios.defaults.headers = {
     "Content-Type": "application/json;charset=UTF-8"
 }
 
-Axios.defaults.timeout = 1;
+Axios.defaults.timeout = 6000;
 
 // http response 拦截器
 Axios.interceptors.response.use(
     response => {
+        if (location.href.indexOf("?") > -1) {
+            location.href += ("&_v=" + new Date().getTime())
+        } else {
+            location.href += ("?_v=" + new Date().getTime())
+        }
         return response;
     },
     error => {
         if (error.code == 'ECONNABORTED' && error.message.indexOf('timeout') != -1) {
-            ElementUI.Message.error("请求超时")
+            // ElementUI.Message.error("请求超时")
             return error;
             // var res = {
             //     status: 408,
