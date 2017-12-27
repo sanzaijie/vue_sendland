@@ -381,7 +381,7 @@ export default {
       relaisNuN: false,
       banks: [
         {
-          aid: 0,
+          aid: null,
           bank_name: "",
           bank_delegate: "",
           bank_account_name: "",
@@ -583,11 +583,14 @@ export default {
       }
     },
     addBank() {
-      this.bankisNuN = true;
-      this.banks.push({
-        value: "",
-        key: Date.now()
-      });
+      if (!this.bankisNuN) {
+        this.bankisNuN = true;
+      } else {
+        this.banks.push({
+          value: "",
+          key: Date.now()
+        });
+      }
     },
     removeRelaCust(item) {
       var index = this.relaCusts.indexOf(item);
@@ -596,11 +599,14 @@ export default {
       }
     },
     addRelaCust() {
-      this.relaisNuN = true;
-      this.relaCusts.push({
-        value: "",
-        key: Date.now()
-      });
+      if (!this.relaisNuN) {
+        this.relaisNuN = true;
+      } else {
+        this.relaCusts.push({
+          value: "",
+          key: Date.now()
+        });
+      }
     },
     sendBank() {
       // 新增个人客户银行卡

@@ -397,11 +397,14 @@ export default {
       }
     },
     addBank() {
-      this.bankisNuN = true;
-      this.banks.push({
-        value: "",
-        key: Date.now()
-      });
+      if (!this.bankisNuN) {
+        this.bankisNuN = true;
+      } else {
+        this.banks.push({
+          value: "",
+          key: Date.now()
+        });
+      }
     }
     // removeRelaCust(item) {
     //   var index = this.addUser.relaCusts.indexOf(item);
