@@ -44,12 +44,6 @@ Axios.interceptors.response.use(
         if (error.code == 'ECONNABORTED' && error.message.indexOf('timeout') != -1) {
             // ElementUI.Message.error("请求超时")
             return error;
-            ElementUI.Message.error("请求超时");
-            var res = {
-                status: 408,
-                data: "请求超时"
-            }
-            return Promise.reject();
             // var res = {
             //     status: 408,
             //     data: "请求超时"
