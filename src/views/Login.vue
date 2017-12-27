@@ -132,6 +132,9 @@ export default {
                 self.$message.error(res.data.error_message);
               }
             );
+          // ).catch(()=>{
+          //   self.logining = false;
+          // });
         } else {
           self.$message.error(res.data.error_message);
         }
