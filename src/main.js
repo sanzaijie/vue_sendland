@@ -27,7 +27,7 @@ Axios.defaults.headers = {
     "Content-Type": "application/json;charset=UTF-8"
 }
 
-Axios.defaults.timeout = 6000;
+Axios.defaults.timeout = 1;
 
 // http response 拦截器
 Axios.interceptors.response.use(
@@ -36,6 +36,7 @@ Axios.interceptors.response.use(
     },
     error => {
         if (error.code == 'ECONNABORTED' && error.message.indexOf('timeout') != -1) {
+            ElementUI.Message.error("请求超时")
             return error;
             // var res = {
             //     status: 408,

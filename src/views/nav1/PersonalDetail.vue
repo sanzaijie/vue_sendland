@@ -26,7 +26,7 @@
                                             <span>{{detailUser.gender}}</span>
                                         </el-col>
                                         <el-col :span="6" style="padding-bottom: 0px;">
-                                            <label>客户姓名:</label>
+                                            <label>手机号码:</label>
                                             <span>{{detailUser.cst_phone}}</span>
                                         </el-col>
                                     </el-row>
