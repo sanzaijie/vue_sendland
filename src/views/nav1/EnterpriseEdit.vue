@@ -3,72 +3,72 @@
         <el-form :model="addUser" :rules="rulesEnter" ref="addUser" class="formBG demo-form-inline">
             <el-row class="rows">
                 <strong class="title">客户核心信息</strong>
-                    <el-col :span="6">
-                        <el-form-item label="公司名称" prop="cst_name">
-                            <el-input v-model="addUser.cst_name" placeholder="公司名称"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="客户类型">   
-                          <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
-                            <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型">
+                <el-col :span="6">
+                    <el-form-item label="公司名称" prop="cst_name">
+                        <el-input v-model="addUser.cst_name" placeholder="公司名称"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="客户类型">
+                        <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
+                        <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型">
                                 <el-option value="0" label="个人客户">个人客户</el-option>
                                 <el-option value="1" label="企业客户">企业客户</el-option>
                             </el-select> -->
-                        </el-form-item>  
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="法人代表">   
-                            <el-input v-model="addUser.corporation" placeholder="法人代表"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="资金类别">
-                            <el-input v-model="addUser.func_type" placeholder="资金类别"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item :span="6" label="公司类别">                          
-                            <el-input v-model="addUser.enter_nature" placeholder="公司类别"></el-input>         
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item :span="6" label="所属行业">
-                            <el-input v-model="addUser.by_sector" placeholder="所属行业"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6"> 
-                        <el-form-item :span="6" label="营业执照" prop="birthday">
-                            <el-input v-model="addUser.lic_no" placeholder="营业执照"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6"> 
-                        <el-form-item :span="6" label="主营业务" prop="birthday">
-                            <el-input v-model="addUser.orientation" placeholder="主营业务"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item :span="6" label="证件类型">                          
-                            <el-select v-model="addUser.cer_type" placeholder="证件类型">
-                                <el-option value="-1" label="未知">未知</el-option>
-                                <el-option value="0" label="身份证">身份证</el-option>
-                                <el-option value="1" label="护照">护照</el-option>
-                                <el-option value="2" label="军官证">军官证</el-option>
-                                <el-option value="3" label="港澳身份证">港澳身份证</el-option>
-                                <el-option value="4" label="台胞证">台胞证</el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6"> 
-                        <el-form-item :span="6" label="证件号码">
-                            <el-input v-model="addUser.cer_no" placeholder="证件号码"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6"> 
-                        <el-form-item :span="6" label="传真">
-                            <el-input v-model="addUser.fax" placeholder="传真"></el-input>
-                        </el-form-item>
-                    </el-col>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="法人代表">
+                        <el-input v-model="addUser.corporation" placeholder="法人代表"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="资金类别">
+                        <el-input v-model="addUser.func_type" placeholder="资金类别"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="公司类别">
+                        <el-input v-model="addUser.enter_nature" placeholder="公司类别"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="所属行业">
+                        <el-input v-model="addUser.by_sector" placeholder="所属行业"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="营业执照" prop="birthday">
+                        <el-input v-model="addUser.lic_no" placeholder="营业执照"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="主营业务" prop="birthday">
+                        <el-input v-model="addUser.orientation" placeholder="主营业务"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="证件类型">
+                        <el-select v-model="addUser.cer_type" placeholder="证件类型">
+                            <el-option value="-1" label="未知">未知</el-option>
+                            <el-option value="0" label="身份证">身份证</el-option>
+                            <el-option value="1" label="护照">护照</el-option>
+                            <el-option value="2" label="军官证">军官证</el-option>
+                            <el-option value="3" label="港澳身份证">港澳身份证</el-option>
+                            <el-option value="4" label="台胞证">台胞证</el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="证件号码">
+                        <el-input v-model="addUser.cer_no" placeholder="证件号码"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item :span="6" label="传真">
+                        <el-input v-model="addUser.fax" placeholder="传真"></el-input>
+                    </el-form-item>
+                </el-col>
             </el-row>
             <el-row class="rows">
                 <strong class="title">联系人</strong>
@@ -111,15 +111,15 @@
             </el-row>
         </el-form>
         <hr />
-        <el-form :model="{banks}" :rules="rulesEnter" ref="banks">        
+        <el-form :model="{banks}" :rules="rulesEnter" ref="banks">
             <el-col class="toolbar">
                 <strong class="title">银行账户</strong>
                 <el-row>
                     <el-button type="primary" @click="addBank">新增银行</el-button>
                 </el-row>
 
-              <!-- 新增银行 -->
-                <el-form-item v-for="(bank, index) in banks">
+                <!-- 新增银行 -->
+                <el-form-item v-for="(bank, index) in banks" v-if="bankisNuN">
                     <el-row :gutter="20">
                         <el-input v-model="bank.aid" v-show="false"></el-input>
                         <el-col :span="4" style="padding-bottom: 0px;">
@@ -208,6 +208,7 @@ export default {
       }
     };
     return {
+      bankisNuN: false,
       banks: [
         {
           aid: 0,
@@ -396,6 +397,7 @@ export default {
       }
     },
     addBank() {
+      this.bankisNuN = true;
       this.banks.push({
         value: "",
         key: Date.now()
@@ -453,6 +455,7 @@ export default {
       }
       if (res.data.data) {
         this.banks = res.data.data;
+        this.bankisNuN = true;
       }
     });
   }

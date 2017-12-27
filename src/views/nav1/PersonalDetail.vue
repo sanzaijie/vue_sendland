@@ -208,7 +208,7 @@
                                         <el-table-column prop="ban_name" label="楼栋" width="180"></el-table-column>
                                         <el-table-column prop="house_name" label="入住房间号"> </el-table-column>
                                         <el-table-column prop="join_status" label="客户状态"> </el-table-column>
-                                        <el-table-column prop="modifytime" label="交易时间"> </el-table-column>
+                                        <el-table-column prop="createtime" label="交易时间"> </el-table-column>
                                     </el-table>
                                 </el-row>
                             </el-col>
@@ -344,7 +344,7 @@
                         </el-collapse-item>
                     </el-collapse>
                 </el-tab-pane>
-
+                <hr>
                 <!-- 变更记录 -->
                 <el-tab-pane label="变更记录" name="second">
                     <!--工具条-->
@@ -510,7 +510,6 @@ export default {
       //           return false;
       //         }
       //       } catch (error) {}
-
       this.$http({
         method: "post",
         url: "cust/person/need/detail",
@@ -664,6 +663,9 @@ export default {
         let usersG = this.projectData;
         for (let i = 0; i < usersG.length; i++) {
           usersG[i].join_status = change._joinStatus(usersG[i].join_status);
+          usersG[i].createtime = moment(usersG[i].createtime).format(
+            "YYYY/MM/DD"
+          );
         }
         this.projectData = usersG;
       });

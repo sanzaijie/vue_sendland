@@ -9,16 +9,16 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="客户类型" prop="cst_type">   
-                       <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
+                    <el-form-item label="客户类型" prop="cst_type">
+                        <el-input v-model="addUser.cst_type" placeholder="客户类型" disabled="disabled"></el-input>
                         <!-- <el-select v-model="addUser.cst_type" placeholder="客户类型" >
                             <el-option value="0" label="个人客户">个人客户</el-option>
                             <el-option value="1" label="企业客户">企业客户</el-option>
                         </el-select> -->
-                    </el-form-item>  
+                    </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="性别" prop="gender">   
+                    <el-form-item label="性别" prop="gender">
                         <el-select v-model="addUser.gender" placeholder="性别">
                             <el-option value="2" label="未知">未知</el-option>
                             <el-option value="0" label="男">男</el-option>
@@ -32,7 +32,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="证件类型" prop="card_type">                          
+                    <el-form-item :span="6" label="证件类型" prop="card_type">
                         <el-select v-model="addUser.card_type" placeholder="证件类型">
                             <el-option value="-1" label="未知">未知</el-option>
                             <el-option value="0" label="身份证">身份证</el-option>
@@ -48,14 +48,14 @@
                         <el-input v-model="addUser.cer_no" placeholder="证件号码"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6"> 
+                <el-col :span="6">
                     <el-form-item :span="6" label="出生日期">
                         <el-date-picker v-model="addUser.birthday" type="date" format="yyyy/MM/dd" value-format="yyyy/MM/dd" placeholder="出生日期">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="客户类别" prop="cst_sort">  
+                    <el-form-item :span="6" label="客户类别" prop="cst_sort">
                         <el-select v-model="addUser.cst_sort" placeholder="客户类别">
                             <el-option value="0" label="业主">业主</el-option>
                             <el-option value="1" label="租户">租户</el-option>
@@ -68,17 +68,17 @@
             <el-row class="rows">
                 <strong class="title">客户基础信息</strong>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="国籍" prop="nationality"> 
+                    <el-form-item :span="6" label="国籍" prop="nationality">
                         <el-input v-model="addUser.nationality" placeholder="国籍"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="民族国籍" prop="nation">   
+                    <el-form-item :span="6" label="民族国籍" prop="nation">
                         <el-input v-model="addUser.nation" placeholder="民族"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">  
-                    <el-form-item :span="6" label="VIP客户国籍" prop="viptag">  
+                <el-col :span="6">
+                    <el-form-item :span="6" label="VIP客户国籍" prop="viptag">
                         <el-select v-model="addUser.viptag" placeholder="VIP客户">
                             <el-option value="1" label="是">是</el-option>
                             <el-option value="0" label="否">否</el-option>
@@ -86,32 +86,32 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="手机号码1" prop="contact1"> 
+                    <el-form-item :span="6" label="手机号码1" prop="contact1">
                         <el-input v-model="addUser.contact1" placeholder="手机号码1"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="手机号码2" prop="contact2"> 
+                    <el-form-item :span="6" label="手机号码2" prop="contact2">
                         <el-input v-model="addUser.contact2" placeholder="手机号码2"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="手机号码3" prop="contact3"> 
+                    <el-form-item :span="6" label="手机号码3" prop="contact3">
                         <el-input v-model="addUser.contact3" placeholder="手机号码3"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="家庭电话" prop="residential_phones"> 
+                    <el-form-item :span="6" label="家庭电话" prop="residential_phones">
                         <el-input v-model="addUser.residential_phones" placeholder="家庭电话"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="公司电话" prop="office_phone"> 
+                    <el-form-item :span="6" label="公司电话" prop="office_phone">
                         <el-input v-model="addUser.office_phone" placeholder="公司电话"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="居住业态" prop="resided_state">  
+                    <el-form-item :span="6" label="居住业态" prop="resided_state">
                         <el-select v-model="addUser.resided_state" placeholder="居住业态">
                             <el-option value="1" label="高层住宅">高层住宅</el-option>
                             <el-option value="2" label="商业">商业</el-option>
@@ -131,17 +131,17 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="置业次数" prop="pro_pertycnt">  
+                    <el-form-item :span="6" label="置业次数" prop="pro_pertycnt">
                         <el-input v-model="addUser.pro_pertycnt" placeholder="置业次数:"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="来自区域" prop="comefrom">    
+                    <el-form-item :span="6" label="来自区域" prop="comefrom">
                         <el-select v-model="addUser.comefrom" placeholder="来自区域">
                             <el-option value="1" label="中国大陆"></el-option>
-                            <el-option  value="2" label="港/澳"></el-option>
-                            <el-option  value="3" label="台湾"></el-option>
-                            <el-option  value="4" label="海外"></el-option>
+                            <el-option value="2" label="港/澳"></el-option>
+                            <el-option value="3" label="台湾"></el-option>
+                            <el-option value="4" label="海外"></el-option>
                             <!-- <el-option key="1" value="1" label="中国大陆">中国大陆</el-option>
                             <el-option key="2" value="2" label="港/澳">港/澳</el-option>
                             <el-option key="3" value="3" label="台湾">台湾</el-option>
@@ -150,22 +150,22 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="居住区域" prop="home_area">  
+                    <el-form-item :span="6" label="居住区域" prop="home_area">
                         <el-input v-model="addUser.home_area" placeholder="居住区域"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="工作区域" prop="work_area">  
+                    <el-form-item :span="6" label="工作区域" prop="work_area">
                         <el-input v-model="addUser.work_area" placeholder="工作区域"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="详细地址" prop="address">  
+                    <el-form-item :span="6" label="详细地址" prop="address">
                         <el-input v-model="addUser.address" placeholder="详细地址"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="职业身份" prop="work_type">   
+                    <el-form-item :span="6" label="职业身份" prop="work_type">
                         <el-select v-model="addUser.work_type" placeholder="职业身份">
                             <el-option value="108" label="公务员">公务员</el-option>
                             <el-option value="109" label="教师">教师</el-option>
@@ -185,17 +185,17 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="电子邮箱" prop="email"> 
+                    <el-form-item :span="6" label="电子邮箱" prop="email">
                         <el-input v-model="addUser.email" placeholder="电子邮箱"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="邮政编码" prop="post_code"> 
+                    <el-form-item :span="6" label="邮政编码" prop="post_code">
                         <el-input v-model="addUser.post_code" placeholder="邮政编码"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="家庭结构" prop="family"> 
+                    <el-form-item :span="6" label="家庭结构" prop="family">
                         <el-select v-model="addUser.family" placeholder="家庭结构">
                             <el-option value="1" label="单身贵族">单身贵族</el-option>
                             <el-option value="2" label="二人世界">二人世界</el-option>
@@ -207,12 +207,12 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="子女人数" prop="children_cnt">   
+                    <el-form-item :span="6" label="子女人数" prop="children_cnt">
                         <el-input v-model="addUser.children_cnt" placeholder="子女人数"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="教育程度" prop="edu_level"> 
+                    <el-form-item :span="6" label="教育程度" prop="edu_level">
                         <el-select v-model="addUser.edu_level" placeholder="教育程度">
                             <el-option value="7" label="未选择">未选择</el-option>
                             <el-option value="6" label="未知">未知</el-option>
@@ -225,7 +225,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="有无保姆" prop="have_bm"> 
+                    <el-form-item :span="6" label="有无保姆" prop="have_bm">
                         <el-select v-model="addUser.have_bm" placeholder="有无保姆同住">
                             <el-option value="1" label="有">有</el-option>
                             <el-option value="0" label="无">无</el-option>
@@ -234,7 +234,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="主要决策者" prop="ismain_jcz"> 
+                    <el-form-item :span="6" label="主要决策者" prop="ismain_jcz">
                         <el-select v-model="addUser.ismain_jcz" placeholder="是否为主要决策者">
                             <el-option value="0" label="是">是</el-option>
                             <el-option value="1" label="否">否</el-option>
@@ -243,7 +243,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="是否养犬" prop="pet_stag"> 
+                    <el-form-item :span="6" label="是否养犬" prop="pet_stag">
                         <el-select v-model="addUser.pet_stag" placeholder="是否养犬">
                             <el-option value="1" label="是">是</el-option>
                             <el-option value="0" label="否">否</el-option>
@@ -252,12 +252,12 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="兴趣爱好" prop="hobby"> 
+                    <el-form-item :span="6" label="兴趣爱好" prop="hobby">
                         <el-input v-model="addUser.hobby" placeholder="兴趣爱好"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item :span="6" label="传真" prop="fax"> 
+                    <el-form-item :span="6" label="传真" prop="fax">
                         <el-input v-model="addUser.fax" placeholder="传真"></el-input>
                     </el-form-item>
                 </el-col>
@@ -270,14 +270,14 @@
             </el-row>
         </el-form>
         <hr />
-        <el-form :inline="true" :model="{banks}"  status-icon :rules="rulesPerson">
+        <el-form :inline="true" :model="{banks}" status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">银行账户</strong>
                 <el-row>
                     <el-button type="primary" @click="addBank">新增银行</el-button>
                 </el-row>
-            <!-- 新增银行 -->
-                <el-form-item v-for="(bank, index) in banks">
+                <!-- 新增银行 -->
+                <el-form-item v-for="(bank, index) in banks" v-if="bankisNuN">
                     <el-row :gutter="50">
                         <el-input v-model="bank.aid" v-show="false"></el-input>
                         <el-col :span="4" style="padding-bottom: 0px;">
@@ -308,14 +308,14 @@
             </el-col>
         </el-form>
         <hr />
-        <el-form :inline="true" :model="{relaCusts}"  status-icon :rules="rulesPerson">
+        <el-form :inline="true" :model="{relaCusts}" status-icon :rules="rulesPerson">
             <el-col class="toolbar" style="border-radius: 4px;">
                 <strong class="title">关联客户</strong>
                 <el-row>
                     <el-button type="primary" @click="addRelaCust">新增关联客户</el-button>
                 </el-row>
-              <!-- 新增关联客户 -->
-                <el-form-item v-for="(relaCust, index) in relaCusts" >
+                <!-- 新增关联客户 -->
+                <el-form-item v-for="(relaCust, index) in relaCusts" v-if="relaisNuN">
                     <el-row :gutter="50">
                         <el-input v-model="relaCust.cust_id_rela" v-show="false"></el-input>
                         <el-col :span="4" style="padding-bottom: 0px;">
@@ -377,6 +377,8 @@ export default {
       }
     };
     return {
+      bankisNuN: false,
+      relaisNuN: false,
       banks: [
         {
           aid: 0,
@@ -581,6 +583,7 @@ export default {
       }
     },
     addBank() {
+      this.bankisNuN = true;
       this.banks.push({
         value: "",
         key: Date.now()
@@ -593,6 +596,7 @@ export default {
       }
     },
     addRelaCust() {
+      this.relaisNuN = true;
       this.relaCusts.push({
         value: "",
         key: Date.now()
@@ -795,6 +799,7 @@ export default {
       }
       if (res.data.data) {
         this.banks = res.data.data;
+        this.bankisNuN = true;
       }
     });
     // 获取个人客户关联客户详细信息
@@ -814,6 +819,7 @@ export default {
       }
       if (res.data.data) {
         this.relaCusts = res.data.data;
+        this.relaisNuN = true;
         for (let item of this.relaCusts) {
           item.gender = String(item.gender);
         }
